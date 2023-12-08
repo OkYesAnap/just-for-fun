@@ -10,19 +10,22 @@ interface ModalWindowProps {
 
 const ModalWindow: React.FC<ModalWindowProps> = ({okCallback, cancelCallback, visible, message}) => {
     useEffect(() => {
-        const handleKeyDown = (event: KeyboardEvent) => {
+        const handleKeyPress = (event: KeyboardEvent) => {
             if (event.key === 'Enter' && visible) {
                 okCallback();
             }
         };
-        document.addEventListener('keydown', handleKeyDown);
+        document.addEventListener('keypress', handleKeyPress);
+        return () => {
+            document.removeEventListener('keypress', handleKeyPress);
+        };
     }, [okCallback, visible]);
 
     return (
         <>
             <Modal
                 title="Are you sure you want to clear the dialog context?"
-                visible={visible}
+                open={visible}
                 onOk={okCallback}
                 onCancel={cancelCallback}
             >

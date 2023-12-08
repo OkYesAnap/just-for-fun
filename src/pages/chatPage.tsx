@@ -114,11 +114,11 @@ function ChatPage() {
                 <Input.TextArea rows={4} className={'text-props'} value={text}
                                 onChange={({target}) => setText(target.value)} onKeyDown={handleEnterPress}/>
             </InputBlock>
-            <ModalWindow visible={showClearModal}
+            {<ModalWindow visible={showClearModal}
                          okCallback={clearChat}
                          cancelCallback={() => setShowClearModal(false)}
                          message={'If you click the OK button, the chat will be reset to its initial context. You will have to start the entire dialogue from the beginning.'}
-            />
+            />}
         </>
     );
 }
