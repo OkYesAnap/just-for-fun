@@ -1,0 +1,51 @@
+.App {
+  text-align: center;
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  width: 100%;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.ant-spin-dot-item {
+  background-color: white !important;
+}
+
+.text-props {
+  font-size: 40px;
+  border-radius: 8px;
+  width: 70%;
+}
+
+/* Скрыть стандартный скролл */
+::-webkit-scrollbar {
+  width: 4px;
+  background-color: #F5F5F5;
+}
+
+/* Кастомное оформление подложки скролла */
+::-webkit-scrollbar-track {
+  border-radius: 6px;
+}
+/* Кастомное оформление ползунка скролла */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 6px;
+}
+
+/* Изменение цвета активного ползунка */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Изменение цвета активного ползунка при наведении на ползунок */
+::-webkit-scrollbar-thumb:active {
+  background-color: #444;
+}
