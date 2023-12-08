@@ -10,7 +10,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Main />} />
-          <Route path="gptChat3-5" element={<ChatPage />} />
+          <Route path="/gptChat35" element={<ChatPage />} />
         </Routes>
       </BrowserRouter>
     </div>

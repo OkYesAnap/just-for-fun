@@ -1,11 +1,12 @@
 import React from 'react';
+import {Link} from "react-router-dom";
 
 function Main() {
     return (
         <header className="App-header">
-            <a className="App-link" href="/gptChat3-5">
+            <Link className="App-link" to="/gptChat35">
                 Go to chat
-            </a>
+            </Link>
         </header>
     );
 }
