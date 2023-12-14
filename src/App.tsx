@@ -3,17 +3,16 @@ import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import './App.css';
 import ChatPage from './pages/chatPage';
 import Main from './pages/main';
+import Error404 from './pages/error404';
 
 function App() {
-    if (window.location.pathname !== "/" && !window.location.pathname.includes("/index.html")) {
-        window.location.pathname = "/404.html";
-    }
     return (
         <div className="App">
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Main/>}/>
                     <Route path="/gptChat35" element={<ChatPage/>}/>
+                    <Route path="*" element={<Error404/>}/>
                 </Routes>
             </BrowserRouter>
         </div>
