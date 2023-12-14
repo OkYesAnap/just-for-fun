@@ -5,7 +5,14 @@ import styled from 'styled-components';
 import '../App.css';
 import ModalWindow from '../components/modal/modalMessage';
 
-const setBackgroundColor = (role: gptRole) => {
+const ChatBlock = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 75%;
+  overflow: auto;
+  scroll-behavior: smooth;
+`
+const setBeckgroundColor = (role: gptRole) => {
     if (role === gptRole.user) {
         return "darkolivegreen";
     } else if (role === gptRole.error) {
@@ -14,17 +21,10 @@ const setBackgroundColor = (role: gptRole) => {
     return 'green'
 }
 
-const ChatBlock = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 75%;
-  overflow: auto;
-  scroll-behavior: smooth;
-`
 const MessageBlock = styled.div`
   margin: ${({role}) => (role === 'user' ? '10px 10vmin 10px 20px' : '10px 20px 10px 10vmin')};
   text-align: left;
-  background-color: ${({role}) => setBackgroundColor(role as gptRole)};
+  background-color: ${({role}) => setBeckgroundColor(role as gptRole)};
   padding: 20px;
   border-radius: 10px;
   white-space: pre-wrap;
