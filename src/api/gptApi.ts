@@ -15,11 +15,6 @@ export interface IGptMessage {
     role: gptRole
 }
 
-const systemMessage = {
-    "role": "system",
-    "content": "you are software professional with 5 years of experience. expert React, Ant Design and AWS"
-}
-
 class ContextGpt {
     private context: IGptMessage[];
 
@@ -40,12 +35,12 @@ class ContextGpt {
 
 export const contextGPT = new ContextGpt();
 
-export const requestToGpt = async (message: IGptMessage) => {
+export const requestToGpt = async (message: IGptMessage, params: {model: string, sysMessage: IGptMessage[]}) => {
 
     const apiRequestBody = {
-        "model": "gpt-3.5-turbo",
+        "model": params.model, //gpt-4-1106-preview
         "messages": [
-            systemMessage,
+            ...params.sysMessage,
             ...contextGPT.update(message),
         ]
     }
@@ -62,7 +57,7 @@ export const requestToGpt = async (message: IGptMessage) => {
         return data.json();
     }).then((data) => {
         const messages = data?.error ?
-            contextGPT.update({content: data.error.message, role: gptRole.error}):
+            contextGPT.update({content: data.error.message, role: gptRole.error}) :
             contextGPT.update(data.choices[0].message)
         return messages;
     })

@@ -4,6 +4,7 @@ import {contextGPT, gptRole, IGptMessage, requestToGpt} from '../api/gptApi';
 import styled from 'styled-components';
 import '../App.css';
 import ModalWindow from '../components/modal/modalMessage';
+import {ButtonAskBlock} from '../components/styled'
 
 const ChatBlock = styled.div`
   position: absolute;
@@ -45,23 +46,7 @@ const InputBlock = styled.div`
   width: 80%;
 `
 
-const ButtonAskBlock = styled.button`
-  margin-bottom: 0.5rem;
-  padding: 1rem 2rem;
-  background-color: #2196F3;
-  color: white;
-  font-size: 1rem;
-  border: none;
-  border-radius: 0.25rem;
-  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
-  opacity: ${props => props.disabled ? '0.5' : '1'};
-
-  &:hover {
-    background-color: #1976D2;
-  }
-`
-
-function ChatPage() {
+function ChatPage(params: { model: string, sysMessage:IGptMessage[] }) {
     const [text, setText] = useState('');
     const chatBlockRef = useRef<HTMLDivElement>(null);
     const [messages, setMessages] = useState<IGptMessage[]>([]);
@@ -79,7 +64,7 @@ function ChatPage() {
             content: "I am thinking",
             role: gptRole.inprogress
         }]);
-        const messagesFromGpt = await requestToGpt({content: text, role: gptRole.user});
+        const messagesFromGpt = await requestToGpt({content: text, role: gptRole.user}, params);
         setMessages(messagesFromGpt);
         setAskInProgress(false);
         setText('');
