@@ -17,7 +17,7 @@ const mazeGame = {
         2. no need any algorithms only array in sting
         3. output should be in JSON.stringify format`
     }],
-    model: "gpt-3.5-turbo-1106"
+    model: "gpt-3.5-turbo-0125"
 }
 
 const params = {gpt35, mazeGame}
