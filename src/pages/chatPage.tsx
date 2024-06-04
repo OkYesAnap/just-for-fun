@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import '../App.css';
 import ModalWindow from '../components/modal/modalMessage';
 import {ButtonAskBlock} from '../components/styled'
+import {useLocation} from 'react-router-dom';
+import {routeHeader} from "./main";
 
 const ChatBlock = styled.div`
   position: absolute;
@@ -13,7 +15,7 @@ const ChatBlock = styled.div`
   overflow: auto;
   scroll-behavior: smooth;
 `
-const setBeckgroundColor = (role: gptRole) => {
+const setBackgroundColor = (role: gptRole) => {
     if (role === gptRole.user) {
         return "darkolivegreen";
     } else if (role === gptRole.error) {
@@ -25,7 +27,7 @@ const setBeckgroundColor = (role: gptRole) => {
 const MessageBlock = styled.div`
   margin: ${({role}) => (role === 'user' ? '10px 10vmin 10px 20px' : '10px 20px 10px 10vmin')};
   text-align: left;
-  background-color: ${({role}) => setBeckgroundColor(role as gptRole)};
+  background-color: ${({role}) => setBackgroundColor(role as gptRole)};
   padding: 20px;
   border-radius: 10px;
   white-space: pre-wrap;
@@ -52,6 +54,8 @@ function ChatPage(params: { model: string, sysMessage:IGptMessage[] }) {
     const [messages, setMessages] = useState<IGptMessage[]>([]);
     const [askInProgress, setAskInProgress] = useState(false);
     const [showClearModal, setShowClearModal] = useState(false);
+    const location = useLocation().pathname.slice(1);
+    console.log(location)
 
     useEffect(() => {
             if (chatBlockRef?.current) chatBlockRef.current.scrollTop = chatBlockRef.current.scrollHeight;
@@ -87,11 +91,12 @@ function ChatPage(params: { model: string, sysMessage:IGptMessage[] }) {
         setMessages(contextGPT.clear());
         setShowClearModal(false);
     }
+    
 
     return (
         <>
             <ChatBlock ref={chatBlockRef}>
-                <div>Hello page with chat</div>
+                <div>{routeHeader[location]}</div>
                 <>
                     {messages.map((message: IGptMessage | Error, i) => {
                         if (message instanceof Error) return <div>{message.message}</div>
