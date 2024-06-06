@@ -1,14 +1,14 @@
-import React, {useState, useEffect} from 'react'
-import {contextGPT, gptRole, IGptMessage, requestToGpt} from "../api/gptApi";
-import {ButtonAskBlock} from "../components/styled";
+import React, { useState, useEffect } from 'react';
+import { contextGPT, gptRole, IGptMessage, requestToGpt } from '../api/gptApi';
+import { ButtonAskBlock } from '../components/styled';
 
-const messagesFromGpt = async(params: any) => {
+const messagesFromGpt = async (params: any) => {
 	const result = await requestToGpt({
-		content: "",
+		content: '',
 		role: gptRole.user
 	}, params);
-	return result
-}
+	return result;
+};
 
 const MazeGame = (params: { model: string, sysMessage: IGptMessage[] }) => {
 	const [messages, setMessages] = useState<IGptMessage[]>([]);
@@ -19,33 +19,26 @@ const MazeGame = (params: { model: string, sysMessage: IGptMessage[] }) => {
 		// @ts-ignore
 		setMaze(messages[1]);
 		console.log(maze);
-	}, [messages.length])
+	}, [messages.length]);
 
 	const askGpt = async () => {
-		contextGPT.clear()
+		contextGPT.clear();
 		setAskInProgress(true);
 		setMessages([{
-			content: "I am generating",
+			content: 'I am generating',
 			role: gptRole.inprogress
 		}]);
-		const message = await messagesFromGpt(params)
+		const message = await messagesFromGpt(params);
 		setMessages(message);
 
 		setAskInProgress(false);
-	}
+	};
 	return (<>
 		Hello {askInProgress ? 'Generating' : ''}
 		<ButtonAskBlock onClick={askGpt} disabled={askInProgress} className={'text-props'}>Start generating</ButtonAskBlock>
 		<div>
 			{maze?.content}
 		</div>
-		{/*{messages.map((message) => {*/}
-		{/*		const startIndex = message.content.indexOf('[');*/}
-		{/*		const endIndex = message.content.lastIndexOf(']');*/}
-		{/*		console.log(message?.content ?? JSON.parse(message?.content))*/}
-		{/*		return <div style={{whiteSpace: "pre-wrap"}}>{message.content}</div>*/}
-		{/*	}*/}
-		{/*)}*/}
-	</>)
-}
+	</>);
+};
 export default MazeGame;

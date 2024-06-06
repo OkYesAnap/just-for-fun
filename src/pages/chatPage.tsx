@@ -55,12 +55,17 @@ function ChatPage(params: { model: string, sysMessage:IGptMessage[] }) {
     const [askInProgress, setAskInProgress] = useState(false);
     const [showClearModal, setShowClearModal] = useState(false);
     const location = useLocation().pathname.slice(1);
-    console.log(location)
 
     useEffect(() => {
             if (chatBlockRef?.current) chatBlockRef.current.scrollTop = chatBlockRef.current.scrollHeight;
         },
-        [messages])
+        [messages.length]);
+
+    useEffect(() => {
+        return () => {
+                contextGPT.clear();
+        };
+    }, []);
 
     const askGpt = async () => {
         setAskInProgress(true);
