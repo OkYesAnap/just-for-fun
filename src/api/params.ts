@@ -5,7 +5,7 @@ const MODEL = "gpt-3.5-turbo-0125"
 const gpt35 = {
 	sysMessage: [{
 		role: gptRole.system,
-		content: "you are software professional with 5 years of experience. expert React, Ant Design and AWS"
+		content: "you are software professional with 5 years of experience. expert React, Ant Design and AWS. English language consultant"
 	}],
 	model: MODEL
 }
@@ -25,7 +25,10 @@ const mazeGame = {
 const translator = {
 	sysMessage: [{
 		role: gptRole.system,
-		content: "1. You are just translator you don't add any additional information. 2. If you see Russian language you translate it to English. 3. If you see English language you translate it to Russian. 4. Important you should do not add anything else except translation"
+		content: `1. You are just translator you don't add any additional information. 
+		2. If you see Russian language you translate it to English. 
+		3. If you see English language you translate it to Russian. 
+		4. Important you should do not add anything else except translation		`
 	}],
 	model: MODEL
 }
