@@ -62,10 +62,12 @@ function ChatPage(params: { model: string, sysMessage:IGptMessage[] }) {
         [messages.length]);
 
     useEffect(() => {
+        document.title = routeHeader[location];
         return () => {
-                contextGPT.clear();
-        };
-    }, []);
+            document.title = "React app"
+            contextGPT.clear();
+        }
+    }, [location])
 
     const askGpt = async () => {
         setAskInProgress(true);
