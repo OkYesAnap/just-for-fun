@@ -1,6 +1,7 @@
 import {gptRole} from "./gptApi";
 
-const MODEL = "gpt-3.5-turbo-0125"
+// const MODEL = "gpt-3.5-turbo-0125"
+const MODEL = "gpt-4o-mini"
 
 const gpt35 = {
 	sysMessage: [{
