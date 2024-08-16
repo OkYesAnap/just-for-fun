@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useCallback, memo} from 'react';
 import {contextGPT, gptRole, IGptMessage, requestToGpt} from '../api/gptApi';
 import {ButtonAskBlock} from '../components/styled';
 
@@ -33,6 +33,24 @@ const askGpt = async ({
 	setAskInProgress(false);
 };
 
+const Cells = ({line, y}: { line: Array<number>, y: number }) => {
+	return (<>{line.map((cell: number, x: number) => {
+			const cellId = `Cell=${y}x${x}`
+			return <span key={cellId}>{cell}</span>
+		})}
+		</>
+	)
+}
+
+const Maze = ({maze}: { maze: Array<Array<number>> }) => {
+	return (<>{
+		maze.map((line: Array<number>, y: number) => {
+			const lineId = `line-${y}`;
+			return <div key={lineId}><Cells {...{line, y}}/></div>
+		})
+	}</>)
+}
+
 const MazeGame = (params: { model: string, sysMessage: IGptMessage[] }) => {
 	const [maze, setMaze] = useState<Array<Array<number>>>([]);
 	const [askInProgress, setAskInProgress] = useState<boolean>(false);
@@ -41,26 +59,11 @@ const MazeGame = (params: { model: string, sysMessage: IGptMessage[] }) => {
 		askGpt({params, setAskInProgress, setMaze});
 	}, [params])
 
-	useEffect(() => {
-		getGeneratedData()
-	}, [getGeneratedData]);
-
 	return (<>
 		Hello {askInProgress ? 'Generating' : ''}
 		<ButtonAskBlock onClick={getGeneratedData} disabled={askInProgress} className={'text-props'}>Start
 			generating</ButtonAskBlock>
-		{maze.map((line: Array<number>, x: number) => {
-			const colId = `line-${x}`;
-			return (<div id={colId}>
-					{line.map((row: number, y: number) => {
-						const rowId = `cell=y-${y}_x-${x}`
-						return (
-							<span id={rowId}>{row}</span>
-						)
-					})}
-				</div>
-			)
-		})}
+		<Maze {...{maze}}/>
 	</>);
 };
-export default MazeGame;
+export default memo(MazeGame);
