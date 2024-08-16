@@ -5,6 +5,7 @@ import ChatPage from './pages/chatPage';
 import Main from './pages/main';
 import Error404 from './pages/error404';
 import MazeGame from "./pages/mazeGame";
+import TestPage from "./pages/testPage"
 import params from '../src/api/params'
 import params4 from '../src/api/params4'
 
@@ -20,6 +21,7 @@ function App() {
                     <Route path="/gpt-chat-4" element={<ChatPage {...gpt4}/>}/>
                     <Route path="/maze-game" element={<MazeGame {...mazeGame}/>}/>
                     <Route path="/translator" element={<ChatPage {...translator}/>}/>
+                    <Route path="/testPage" element={<TestPage/>}/>
                     <Route path="*" element={<Error404/>}/>
                 </Routes>
             </BrowserRouter>

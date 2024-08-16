@@ -8,7 +8,8 @@ interface RouteHeader {
 export const routeHeader: RouteHeader = {
 	"gpt-chat-3-5": "React specialist",
 	"maze-game": "Maze Game",
-	"translator": "Translator"
+	"translator": "Translator",
+	"testPage": "TestPage"
 }
 
 function Main() {
