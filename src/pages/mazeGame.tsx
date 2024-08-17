@@ -1,6 +1,7 @@
 import React, {useState, useCallback, memo} from 'react';
 import {contextGPT, gptRole, IGptMessage, requestToGpt} from '../api/gptApi';
 import {ButtonAskBlock} from '../components/styled';
+import styled from "styled-components";
 
 const messagesFromGpt = async (params: any) => {
 	const result = await requestToGpt({
@@ -33,28 +34,53 @@ const askGpt = async ({
 	setAskInProgress(false);
 };
 
+interface IMazeCellStyled {
+	type: number;
+}
+
+const MazeCellStyled = styled.div<IMazeCellStyled>`
+  width: 100px;
+  height: 100px;
+  background-color: ${({type}) => !!type ? "blue" : "green"};
+`;
+
 const Cells = ({line, y}: { line: Array<number>, y: number }) => {
 	return (<>{line.map((cell: number, x: number) => {
 			const cellId = `Cell=${y}x${x}`
-			return <span key={cellId}>{cell}</span>
+			return <MazeCellStyled type={cell} key={cellId}/>
 		})}
 		</>
 	)
 }
 
+const MazeLineStyled = styled.div`
+  width: 100%;
+`
+
+interface IGridContainer {
+	mazeSize: number
+}
+
+const GridContainerStyled = styled.div<IGridContainer>`
+  display: grid;
+  grid-template-columns: repeat(${
+          ({mazeSize}) => mazeSize
+  }, 100px); /* 10 колонок по 100px */
+  //grid-template-rows: repeat(10, 100px); /* 10 строк по 100px */
+`;
+
 const Maze = ({maze}: { maze: Array<Array<number>> }) => {
-	return (<>{
+	return (<GridContainerStyled mazeSize={maze.length}>{
 		maze.map((line: Array<number>, y: number) => {
 			const lineId = `line-${y}`;
-			return <div key={lineId}><Cells {...{line, y}}/></div>
+			return <MazeLineStyled key={lineId}><Cells {...{line, y}}/></MazeLineStyled>
 		})
-	}</>)
+	}</GridContainerStyled>)
 }
 
 const MazeGame = (params: { model: string, sysMessage: IGptMessage[] }) => {
 	const [maze, setMaze] = useState<Array<Array<number>>>([]);
 	const [askInProgress, setAskInProgress] = useState<boolean>(false);
-	console.log('Rerender');
 	const getGeneratedData = useCallback(() => {
 		askGpt({params, setAskInProgress, setMaze});
 	}, [params])

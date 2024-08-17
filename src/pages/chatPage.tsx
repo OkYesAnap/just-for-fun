@@ -16,12 +16,12 @@ const ChatBlock = styled.div`
   scroll-behavior: smooth;
 `
 const setBackgroundColor = (role: gptRole) => {
-    if (role === gptRole.user) {
-        return "darkolivegreen";
-    } else if (role === gptRole.error) {
-        return "red";
-    }
-    return 'green'
+	if (role === gptRole.user) {
+		return "darkolivegreen";
+	} else if (role === gptRole.error) {
+		return "red";
+	}
+	return 'green'
 }
 
 const MessageBlock = styled.div`
@@ -48,88 +48,88 @@ const InputBlock = styled.div`
   width: 80%;
 `
 
-function ChatPage(params: { model: string, sysMessage:IGptMessage[] }) {
-    const [text, setText] = useState('');
-    const chatBlockRef = useRef<HTMLDivElement>(null);
-    const [messages, setMessages] = useState<IGptMessage[]>([]);
-    const [askInProgress, setAskInProgress] = useState(false);
-    const [showClearModal, setShowClearModal] = useState(false);
-    const location = useLocation().pathname.slice(1);
+function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
+	const [text, setText] = useState('');
+	const chatBlockRef = useRef<HTMLDivElement>(null);
+	const [messages, setMessages] = useState<IGptMessage[]>([]);
+	const [askInProgress, setAskInProgress] = useState(false);
+	const [showClearModal, setShowClearModal] = useState(false);
+	const location = useLocation().pathname.slice(1);
 
-    useEffect(() => {
-            if (chatBlockRef?.current) chatBlockRef.current.scrollTop = chatBlockRef.current.scrollHeight;
-        },
-        [messages.length]);
+	useEffect(() => {
+			if (chatBlockRef?.current) chatBlockRef.current.scrollTop = chatBlockRef.current.scrollHeight;
+		},
+		[messages.length]);
 
-    useEffect(() => {
-        document.title = routeHeader[location];
-        return () => {
-            document.title = "React app"
-            contextGPT.clear();
-        }
-    }, [location])
+	useEffect(() => {
+		document.title = routeHeader[location];
+		return () => {
+			document.title = "React app"
+			contextGPT.clear();
+		}
+	}, [location])
 
-    const askGpt = async () => {
-        setAskInProgress(true);
-        setMessages([...messages, {content: text, role: gptRole.user}, {
-            content: "I am thinking",
-            role: gptRole.inprogress
-        }]);
-        const messagesFromGpt = await requestToGpt({content: text, role: gptRole.user}, params);
-        setMessages(messagesFromGpt);
-        setAskInProgress(false);
-        setText('');
-    }
+	const askGpt = async () => {
+		setAskInProgress(true);
+		setMessages([...messages, {content: text, role: gptRole.user}, {
+			content: "I am thinking",
+			role: gptRole.inprogress
+		}]);
+		const messagesFromGpt = await requestToGpt({content: text, role: gptRole.user}, params);
+		setMessages(messagesFromGpt);
+		setAskInProgress(false);
+		setText('');
+	}
 
-    const handleEnterPress: React.KeyboardEventHandler<HTMLTextAreaElement> = (event) => {
-        if (event.ctrlKey && event.key === 'Enter' && !askInProgress) {
-            askGpt();
-        }
-        if (event.key === 'Escape' && !askInProgress) {
-            setShowClearModal(true);
-        }
-    };
+	const handleEnterPress: React.KeyboardEventHandler<HTMLTextAreaElement> = (event) => {
+		if (event.ctrlKey && event.key === 'Enter' && !askInProgress) {
+			askGpt();
+		}
+		if (event.key === 'Escape' && !askInProgress) {
+			setShowClearModal(true);
+		}
+	};
 
-    const LoaderAnimation = () => {
-        return <Spin size="large"/>
-    }
+	const LoaderAnimation = () => {
+		return <Spin size="large"/>
+	}
 
-    const clearChat = () => {
-        setMessages(contextGPT.clear());
-        setShowClearModal(false);
-    }
-    
+	const clearChat = () => {
+		setMessages(contextGPT.clear());
+		setShowClearModal(false);
+	}
 
-    return (
-        <>
-            <ChatBlock ref={chatBlockRef}>
-                <div>{routeHeader[location]}</div>
-                <>
-                    {messages.map((message: IGptMessage | Error, i) => {
-                        if (message instanceof Error) return <div>{message.message}</div>
-                        return (
-                            <MessageBlock
-                                role={message.role}
-                                key={i}>
-                                {message.content} {message.role === 'inprogress' && <LoaderAnimation/>}
-                            </MessageBlock>
-                        )
-                    })}
-                </>
-            </ChatBlock>
-            <InputBlock>
-                <ButtonAskBlock onClick={askGpt} disabled={askInProgress} className={'text-props'}>Ask
-                    GPT</ButtonAskBlock>
-                <Input.TextArea rows={4} className={'text-props'} value={text}
-                                onChange={({target}) => setText(target.value)} onKeyDown={handleEnterPress}/>
-            </InputBlock>
-            {<ModalWindow visible={showClearModal}
-                         okCallback={clearChat}
-                         cancelCallback={() => setShowClearModal(false)}
-                         message={'If you click the OK button, the chat will be reset to its initial context. You will have to start the entire dialogue from the beginning.'}
-            />}
-        </>
-    );
+
+	return (
+		<>
+			<ChatBlock ref={chatBlockRef}>
+				<div>{routeHeader[location]}</div>
+				<>
+					{messages.map((message: IGptMessage | Error, i) => {
+						if (message instanceof Error) return <div>{message.message}</div>
+						return (
+							<MessageBlock
+								role={message.role}
+								key={i}>
+								{message.content} {message.role === 'inprogress' && <LoaderAnimation/>}
+							</MessageBlock>
+						)
+					})}
+				</>
+			</ChatBlock>
+			<InputBlock>
+				<ButtonAskBlock onClick={askGpt} disabled={askInProgress} className={'text-props'}>Ask
+					GPT</ButtonAskBlock>
+				<Input.TextArea rows={4} className={'text-props'} value={text}
+				                onChange={({target}) => setText(target.value)} onKeyDown={handleEnterPress}/>
+			</InputBlock>
+			{<ModalWindow visible={showClearModal}
+			              okCallback={clearChat}
+			              cancelCallback={() => setShowClearModal(false)}
+			              message={'If you click the OK button, the chat will be reset to its initial context. You will have to start the entire dialogue from the beginning.'}
+			/>}
+		</>
+	);
 }
 
 export default ChatPage;
