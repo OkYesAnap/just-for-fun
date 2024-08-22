@@ -58,19 +58,19 @@ const MazeLineStyled = styled.div`
 `
 
 interface IGridContainer {
-	mazeSize: number
+	$mazesize: number
 }
 
 const GridContainerStyled = styled.div<IGridContainer>`
   display: grid;
   grid-template-columns: repeat(${
-          ({mazeSize}) => mazeSize
+          ({$mazesize}) => $mazesize
   }, 100px); /* 10 колонок по 100px */
   //grid-template-rows: repeat(10, 100px); /* 10 строк по 100px */
 `;
 
 const Maze = ({maze}: { maze: Array<Array<number>> }) => {
-	return (<GridContainerStyled mazeSize={maze.length}>{
+	return (<GridContainerStyled $mazesize={maze.length}>{
 		maze.map((line: Array<number>, y: number) => {
 			const lineId = `line-${y}`;
 			return <MazeLineStyled key={lineId}><Cells {...{line, y}}/></MazeLineStyled>
@@ -87,8 +87,9 @@ const MazeGame = (params: { model: string, sysMessage: IGptMessage[] }) => {
 
 	return (<>
 		Hello {askInProgress ? 'Generating' : ''}
-		<ButtonAskBlock onClick={getGeneratedData} disabled={askInProgress} className={'text-props'}>Start
-			generating</ButtonAskBlock>
+		<ButtonAskBlock onClick={getGeneratedData} disabled={askInProgress} className={'text-props'}>
+			Start generating
+		</ButtonAskBlock>
 		<Maze {...{maze}}/>
 	</>);
 };

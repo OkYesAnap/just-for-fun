@@ -59,7 +59,7 @@ function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	useEffect(() => {
 			if (chatBlockRef?.current) chatBlockRef.current.scrollTop = chatBlockRef.current.scrollHeight;
 		},
-		[messages.length]);
+		[messages[messages.length - 1]]);
 
 	useEffect(() => {
 		document.title = routeHeader[location];
