@@ -81,6 +81,13 @@ function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 		setText('');
 	}
 
+	const handleDeleteMessage = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, messageNumber: number) => {
+		if (e.ctrlKey) {
+			const messages = contextGPT.deleteMessage(messageNumber);
+			setMessages([...messages]);
+		}
+	}
+
 	const handleEnterPress: React.KeyboardEventHandler<HTMLTextAreaElement> = (event) => {
 		if (event.ctrlKey && event.key === 'Enter' && !askInProgress) {
 			askGpt();
@@ -110,6 +117,7 @@ function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 						return (
 							<MessageBlock
 								role={message.role}
+								onClick={(e) => handleDeleteMessage(e, i)}
 								key={i}>
 								{message.content} {message.role === 'inprogress' && <LoaderAnimation/>}
 							</MessageBlock>
