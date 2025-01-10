@@ -48,6 +48,35 @@ const InputBlock = styled.div`
   width: 80%;
 `
 
+const useRecognition = (isListening: boolean, setIsListening:React.Dispatch<React.SetStateAction<boolean>>, setText: React.Dispatch<React.SetStateAction<string>>) => {
+	//@ts-ignore
+	const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+	recognition.lang = 'en-EN';
+	console.log(recognition);
+	recognition.onaudioend = () => setIsListening(false);
+	useEffect(() => {
+		recognition.continuous = true;
+		recognition.interimResults = true;
+
+		//@ts-ignore
+		recognition.onresult = (event: SpeechRecognitionEvent) => {
+			const currentTranscript = event.results[event.resultIndex][0].transcript;
+			console.log(event.results);
+			const isFinal = event.results[event.resultIndex].isFinal;
+			if (isFinal) setText((prev) => prev + ' ' + currentTranscript);
+		};
+		if (isListening) {
+			recognition.start()
+		} else {
+			recognition.stop();
+		}
+		return () => {
+			recognition.stop();
+		};
+	}, [isListening]);
+
+}
+
 function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	const [text, setText] = useState('');
 	const chatBlockRef = useRef<HTMLDivElement>(null);
@@ -55,6 +84,9 @@ function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	const [askInProgress, setAskInProgress] = useState(false);
 	const [showClearModal, setShowClearModal] = useState(false);
 	const location = useLocation().pathname.slice(1);
+	const [isListening, setIsListening] = useState<boolean>(false);
+
+	useRecognition(isListening, setIsListening, setText);
 
 	useEffect(() => {
 			if (chatBlockRef?.current) chatBlockRef.current.scrollTop = chatBlockRef.current.scrollHeight;
@@ -128,6 +160,10 @@ function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 			<InputBlock>
 				<ButtonAskBlock onClick={askGpt} disabled={askInProgress} className={'text-props'}>Ask
 					GPT</ButtonAskBlock>
+				<div>
+					<button disabled={isListening} onClick={() => setIsListening(true)}>start</button>
+					<button disabled={!isListening} onClick={() => setIsListening(false)}>stop</button>
+				</div>
 				<Input.TextArea rows={4} className={'text-props'} value={text}
 				                onChange={({target}) => setText(target.value)} onKeyDown={handleEnterPress}/>
 			</InputBlock>

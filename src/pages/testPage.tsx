@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {jsTest} from "../utils/jsTest";
 
 const throttle = (delayTime: number) => {
 	let timer: NodeJS.Timeout;
@@ -40,6 +41,9 @@ function TestPage() {
 
 	return (<div>
 		<button onClick={fetchData}>Hello</button>
+		<>
+			<button onClick={jsTest}>TestData</button>
+		</>
 		<div>Click count {clickCount}</div>
 		<div>Click Throttled count {clickThrottledCount}</div>
 		<div>Button can be fired+ {String(canRun)} </div>
