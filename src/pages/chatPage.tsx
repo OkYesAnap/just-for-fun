@@ -48,10 +48,13 @@ const InputBlock = styled.div`
   width: 80%;
 `
 
-const useRecognition = (isListening: boolean, setIsListening:React.Dispatch<React.SetStateAction<boolean>>, setText: React.Dispatch<React.SetStateAction<string>>) => {
+const useRecognition = (isListening: boolean,
+	setIsListening: React.Dispatch<React.SetStateAction<boolean>>,
+	setText: React.Dispatch<React.SetStateAction<string>>,
+	lang: string) => {
 	//@ts-ignore
 	const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-	recognition.lang = 'en-EN';
+	recognition.lang = lang;
 	console.log(recognition);
 	recognition.onaudioend = () => setIsListening(false);
 	useEffect(() => {
@@ -79,6 +82,7 @@ const useRecognition = (isListening: boolean, setIsListening:React.Dispatch<Reac
 
 function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	const [text, setText] = useState('');
+	const [lang, setLang] = useState<string>('')
 	const chatBlockRef = useRef<HTMLDivElement>(null);
 	const [messages, setMessages] = useState<IGptMessage[]>([]);
 	const [askInProgress, setAskInProgress] = useState(false);
@@ -86,7 +90,7 @@ function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	const location = useLocation().pathname.slice(1);
 	const [isListening, setIsListening] = useState<boolean>(false);
 
-	useRecognition(isListening, setIsListening, setText);
+	useRecognition(isListening, setIsListening, setText, lang);
 
 	useEffect(() => {
 			if (chatBlockRef?.current) chatBlockRef.current.scrollTop = chatBlockRef.current.scrollHeight;
@@ -138,6 +142,10 @@ function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 		setShowClearModal(false);
 	}
 
+	const start = (lang: string) => {
+		setLang(lang)
+		setIsListening(true);
+	}
 
 	return (
 		<>
@@ -161,7 +169,8 @@ function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 				<ButtonAskBlock onClick={askGpt} disabled={askInProgress} className={'text-props'}>Ask
 					GPT</ButtonAskBlock>
 				<div>
-					<button disabled={isListening} onClick={() => setIsListening(true)}>start</button>
+					<button disabled={isListening} onClick={() => start("en-EN")}>Start EN</button>
+					<button disabled={isListening} onClick={() => start("ru-RU")}>Start RU</button>
 					<button disabled={!isListening} onClick={() => setIsListening(false)}>stop</button>
 				</div>
 				<Input.TextArea rows={4} className={'text-props'} value={text}
