@@ -126,7 +126,7 @@ function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	}
 
 	const handleDeleteMessage = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, messageNumber: number) => {
-		if (e.ctrlKey) {
+		if (e.ctrlKey || e.metaKey) {
 			const messages = contextGPT.deleteMessage(messageNumber);
 			setMessages([...messages]);
 		}
