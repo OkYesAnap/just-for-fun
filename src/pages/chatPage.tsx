@@ -92,13 +92,17 @@ function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	const [showClearModal, setShowClearModal] = useState(false);
 	const location = useLocation().pathname.slice(1);
 	const [isListening, setIsListening] = useState<boolean>(false);
+	const [autoAsk, setAutoAsk] = useState<boolean>(false);
 
 	useRecognition(isListening, setIsListening, setText, lang);
 
 	useEffect(() => {
+			if (autoAsk && isListening && !askInProgress) {
+				askGpt();
+			}
 			if (chatBlockRef?.current) chatBlockRef.current.scrollTop = chatBlockRef.current.scrollHeight;
 		},
-		[messages[messages.length - 1]]);
+		[messages[messages.length - 1], text]);
 
 	useEffect(() => {
 		document.title = routeHeader[location];
@@ -109,6 +113,7 @@ function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	}, [location])
 
 	const askGpt = async () => {
+		if(!text.length) return;
 		setAskInProgress(true);
 		setMessages([...messages, {content: text, role: gptRole.user}, {
 			content: "I am thinking",
@@ -170,12 +175,16 @@ function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 			</ChatBlock>
 			<InputBlock>
 				<div className={'text-props'} style={{display: "flex"}}>
-					<ButtonAsk onClick={askGpt} style={{flex: "5"}}disabled={askInProgress}>Ask GPT</ButtonAsk>
+					<ButtonAsk onClick={() => {
+						setAutoAsk(false);
+						askGpt()
+					}} style={{flex: "5"}}disabled={askInProgress}>Manual Ask</ButtonAsk>
 					<ButtonAsk disabled={isListening} style={{background: "green"}} onClick={() => start("en-EN")}>Voice EN</ButtonAsk>
 					<ButtonAsk disabled={isListening} style={{background: "green"}} onClick={() => start("ru-RU")}>Voice RU</ButtonAsk>
+					<ButtonAsk disabled={!isListening || autoAsk} style={{background: "purple"}} onClick={() => setAutoAsk((prev) => !prev)}>Auto Ask</ButtonAsk>
 					<ButtonAsk disabled={!isListening} style={{background: "red"}} onClick={() => setIsListening(false)}>stop</ButtonAsk>
 				</div>
-				<Input.TextArea rows={4} className={'text-props'} value={text} disabled={isListening || askInProgress}
+				<Input.TextArea rows={4} className={'text-props'} value={text} disabled={(autoAsk && isListening) || askInProgress}
 				                onChange={({target}) => setText(target.value)} onKeyDown={handleEnterPress}/>
 			</InputBlock>
 			{<ModalWindow visible={showClearModal}

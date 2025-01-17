@@ -21,6 +21,11 @@
 .text-props {
   border-radius: 8px;
   width: 70%;
+  font-size: 24px;
+}
+
+.text-props:disabled {
+  color: white; /* Цвет текста */
 }
 
 /* Скрыть стандартный скролл */
