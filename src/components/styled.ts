@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
 export const ButtonAsk = styled.button`
-  margin: 0.2rem;
-  padding: 1rem 2rem;
+  margin: 0.1rem;
+  padding: 0.5rem 0.2rem;
   background-color: #2196F3;
   color: white;
   font-size: 1rem;

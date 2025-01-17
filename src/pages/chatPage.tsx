@@ -179,8 +179,8 @@ function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 						setAutoAsk(false);
 						askGpt()
 					}} style={{flex: "5"}}disabled={askInProgress}>Manual Ask</ButtonAsk>
-					<ButtonAsk disabled={isListening} style={{background: "green"}} onClick={() => start("en-EN")}>Voice EN</ButtonAsk>
-					<ButtonAsk disabled={isListening} style={{background: "green"}} onClick={() => start("ru-RU")}>Voice RU</ButtonAsk>
+					<ButtonAsk disabled={isListening} style={{background: "blue"}} onClick={() => start("en-EN")}>Voice EN</ButtonAsk>
+					<ButtonAsk disabled={isListening} style={{background: "blue"}} onClick={() => start("ru-RU")}>Voice RU</ButtonAsk>
 					<ButtonAsk disabled={!isListening || autoAsk} style={{background: "purple"}} onClick={() => setAutoAsk((prev) => !prev)}>Auto Ask</ButtonAsk>
 					<ButtonAsk disabled={!isListening} style={{background: "red"}} onClick={() => setIsListening(false)}>stop</ButtonAsk>
 				</div>
