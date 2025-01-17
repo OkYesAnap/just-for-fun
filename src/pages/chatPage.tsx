@@ -4,7 +4,7 @@ import {contextGPT, gptRole, IGptMessage, requestToGpt} from '../api/gptApi';
 import styled from 'styled-components';
 import '../App.css';
 import ModalWindow from '../components/modal/modalMessage';
-import {ButtonAskBlock} from '../components/styled'
+import {ButtonAsk} from '../components/styled'
 import {useLocation} from 'react-router-dom';
 import {routeHeader} from "./main";
 
@@ -43,19 +43,22 @@ const MessageBlock = styled.div`
 
 const InputBlock = styled.div`
   position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   height: 25%;
   bottom: 0;
   width: 80%;
 `
 
 const useRecognition = (isListening: boolean,
-	setIsListening: React.Dispatch<React.SetStateAction<boolean>>,
-	setText: React.Dispatch<React.SetStateAction<string>>,
-	lang: string) => {
+                        setIsListening: React.Dispatch<React.SetStateAction<boolean>>,
+                        setText: React.Dispatch<React.SetStateAction<string>>,
+                        lang: string) => {
 	//@ts-ignore
 	const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 	recognition.lang = lang;
-	console.log(recognition);
 	recognition.onaudioend = () => setIsListening(false);
 	useEffect(() => {
 		recognition.continuous = true;
@@ -166,14 +169,13 @@ function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 				</>
 			</ChatBlock>
 			<InputBlock>
-				<ButtonAskBlock onClick={askGpt} disabled={askInProgress} className={'text-props'}>Ask
-					GPT</ButtonAskBlock>
-				<div>
-					<button disabled={isListening} onClick={() => start("en-EN")}>Start EN</button>
-					<button disabled={isListening} onClick={() => start("ru-RU")}>Start RU</button>
-					<button disabled={!isListening} onClick={() => setIsListening(false)}>stop</button>
+				<div className={'text-props'} style={{display: "flex"}}>
+					<ButtonAsk onClick={askGpt} style={{flex: "5"}}disabled={askInProgress}>Ask GPT</ButtonAsk>
+					<ButtonAsk disabled={isListening} style={{background: "green"}} onClick={() => start("en-EN")}>Voice EN</ButtonAsk>
+					<ButtonAsk disabled={isListening} style={{background: "green"}} onClick={() => start("ru-RU")}>Voice RU</ButtonAsk>
+					<ButtonAsk disabled={!isListening} style={{background: "red"}} onClick={() => setIsListening(false)}>stop</ButtonAsk>
 				</div>
-				<Input.TextArea rows={4} className={'text-props'} value={text}
+				<Input.TextArea rows={4} className={'text-props'} value={text} disabled={isListening || askInProgress}
 				                onChange={({target}) => setText(target.value)} onKeyDown={handleEnterPress}/>
 			</InputBlock>
 			{<ModalWindow visible={showClearModal}
