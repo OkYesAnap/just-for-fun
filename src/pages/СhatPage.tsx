@@ -69,7 +69,6 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	const [autoAsk, setAutoAsk] = useState<boolean>(false);
 	const [voiceInputEngine, setVoiceInputEngine] = useState<VoiceEngineSingleType>(voiceEngines.google);
 
-
 	useGoogleRecognition(isListening && voiceInputEngine === voiceEngines.google, setIsListening, setText, lang);
 	useVoiceRecorder(isListening && voiceInputEngine === voiceEngines.gpt, setText);
 
