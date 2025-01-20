@@ -1,12 +1,14 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useEffect, useCallback} from 'react';
 import {Input, Spin} from 'antd';
 import {contextGPT, gptRole, IGptMessage, requestToGpt} from '../api/gptApi';
 import styled from 'styled-components';
 import '../App.css';
-import ModalWindow from '../components/modal/modalMessage';
 import {ButtonAsk} from '../components/styled'
 import {useLocation} from 'react-router-dom';
-import {routeHeader} from "./main";
+import {routeHeader} from "./Main";
+import {useGoogleRecognition} from "../utils/useGoogleRecongnition";
+import ModalWindow from "../components/modal/ModalMessage";
+import VoiceInput from "../components/voiceInput/VoiceInput";
 
 const ChatBlock = styled.div`
   position: absolute;
@@ -15,6 +17,7 @@ const ChatBlock = styled.div`
   overflow: auto;
   scroll-behavior: smooth;
 `
+
 const setBackgroundColor = (role: gptRole) => {
 	if (role === gptRole.user) {
 		return "darkolivegreen";
@@ -52,38 +55,7 @@ const InputBlock = styled.div`
   width: 80%;
 `
 
-const useRecognition = (isListening: boolean,
-                        setIsListening: React.Dispatch<React.SetStateAction<boolean>>,
-                        setText: React.Dispatch<React.SetStateAction<string>>,
-                        lang: string) => {
-	//@ts-ignore
-	const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-	recognition.lang = lang;
-	recognition.onaudioend = () => setIsListening(false);
-	useEffect(() => {
-		recognition.continuous = true;
-		recognition.interimResults = true;
-
-		//@ts-ignore
-		recognition.onresult = (event: SpeechRecognitionEvent) => {
-			const currentTranscript = event.results[event.resultIndex][0].transcript;
-			console.log(event.results);
-			const isFinal = event.results[event.resultIndex].isFinal;
-			if (isFinal) setText((prev) => prev + ' ' + currentTranscript);
-		};
-		if (isListening) {
-			recognition.start()
-		} else {
-			recognition.stop();
-		}
-		return () => {
-			recognition.stop();
-		};
-	}, [isListening]);
-
-}
-
-function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
+function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	const [text, setText] = useState('');
 	const [lang, setLang] = useState<string>('')
 	const chatBlockRef = useRef<HTMLDivElement>(null);
@@ -94,26 +66,10 @@ function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	const [isListening, setIsListening] = useState<boolean>(false);
 	const [autoAsk, setAutoAsk] = useState<boolean>(false);
 
-	useRecognition(isListening, setIsListening, setText, lang);
+	useGoogleRecognition(isListening, setIsListening, setText, lang);
 
-	useEffect(() => {
-			if (autoAsk && isListening && !askInProgress) {
-				askGpt();
-			}
-			if (chatBlockRef?.current) chatBlockRef.current.scrollTop = chatBlockRef.current.scrollHeight;
-		},
-		[messages[messages.length - 1], text]);
-
-	useEffect(() => {
-		document.title = routeHeader[location];
-		return () => {
-			document.title = "React app"
-			contextGPT.clear();
-		}
-	}, [location])
-
-	const askGpt = async () => {
-		if(!text.length) return;
+	const askGpt = useCallback(async () => {
+		if (!text.length) return;
 		setAskInProgress(true);
 		setMessages([...messages, {content: text, role: gptRole.user}, {
 			content: "I am thinking",
@@ -123,7 +79,24 @@ function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 		setMessages(messagesFromGpt);
 		setAskInProgress(false);
 		setText('');
-	}
+	}, [messages, params, text])
+
+	const lastMessage = messages[messages.length - 1]
+	useEffect(() => {
+			if (autoAsk && isListening && !askInProgress) {
+				askGpt();
+			}
+			if (chatBlockRef?.current) chatBlockRef.current.scrollTop = chatBlockRef.current.scrollHeight;
+		},
+		[lastMessage, text, askInProgress, autoAsk, isListening, askGpt]);
+
+	useEffect(() => {
+		document.title = routeHeader[location];
+		return () => {
+			document.title = "React app"
+			contextGPT.clear();
+		}
+	}, [location])
 
 	const handleDeleteMessage = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, messageNumber: number) => {
 		if (e.ctrlKey || e.metaKey) {
@@ -178,13 +151,11 @@ function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 					<ButtonAsk onClick={() => {
 						setAutoAsk(false);
 						askGpt()
-					}} style={{flex: "5"}}disabled={askInProgress}>Manual Ask</ButtonAsk>
-					<ButtonAsk disabled={isListening} style={{background: "blue"}} onClick={() => start("en-EN")}>Voice EN</ButtonAsk>
-					<ButtonAsk disabled={isListening} style={{background: "blue"}} onClick={() => start("ru-RU")}>Voice RU</ButtonAsk>
-					<ButtonAsk disabled={!isListening || autoAsk} style={{background: "purple"}} onClick={() => setAutoAsk((prev) => !prev)}>Auto Ask</ButtonAsk>
-					<ButtonAsk disabled={!isListening} style={{background: "red"}} onClick={() => setIsListening(false)}>stop</ButtonAsk>
+					}} style={{flex: "5"}} disabled={askInProgress}>Manual Ask</ButtonAsk>
+					<VoiceInput {...{isListening, setIsListening, autoAsk, setAutoAsk, start}}/>
 				</div>
-				<Input.TextArea rows={4} className={'text-props'} value={text} disabled={(autoAsk && isListening) || askInProgress}
+				<Input.TextArea rows={4} className={'text-props'} value={text}
+				                disabled={(autoAsk && isListening) || askInProgress}
 				                onChange={({target}) => setText(target.value)} onKeyDown={handleEnterPress}/>
 			</InputBlock>
 			{<ModalWindow visible={showClearModal}
@@ -196,4 +167,4 @@ function ChatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	);
 }
 
-export default ChatPage;
+export default HatPage;
