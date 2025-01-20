@@ -3,6 +3,7 @@ import {Dispatch, SetStateAction, useState} from 'react';
 import {ButtonAsk} from "../styled";
 import styled from "styled-components";
 import {Dropdown} from "antd";
+import {voiceEngines, VoiceEngineSingleType, VoiceEnginesListType} from "../../utils/constanst";
 
 const VoiceInputBlock = styled.div`
   flex-direction: column;
@@ -17,24 +18,28 @@ interface IVoiceListeningProps {
 	autoAsk: boolean;
 	setAutoAsk: BoolSetState;
 	start: (lang: string) => void;
+	voiceInputEngine: VoiceEngineSingleType;
+	setVoiceInputEngine: React.Dispatch<React.SetStateAction<VoiceEngineSingleType>>
 }
 
-const voiceEngines = {
-	google: "Google Voice Input",
-	gpt: "GPT Api Voice Input",
-}
-
-const VoiceInput: React.FC<IVoiceListeningProps> = ({isListening, setIsListening, autoAsk, setAutoAsk, start}) => {
-	const [voiceInputSelector, setVoiceInputSelector] = useState<string>(voiceEngines.google);
+const VoiceInput: React.FC<IVoiceListeningProps> = ({
+	                                                    isListening,
+	                                                    setIsListening,
+	                                                    autoAsk,
+	                                                    setAutoAsk,
+	                                                    start,
+	                                                    voiceInputEngine,
+	                                                    setVoiceInputEngine
+                                                    }) => {
 
 	const items = [
 		{
 			key: "1",
-			label: (<div onClick={() => setVoiceInputSelector(voiceEngines.google)}>{voiceEngines.google}</div>)
+			label: (<div onClick={() => setVoiceInputEngine(voiceEngines.google)}>{voiceEngines.google}</div>)
 		},
 		{
 			key: "2",
-			label: (<div onClick={() => setVoiceInputSelector(voiceEngines.gpt)}>{voiceEngines.gpt}</div>)
+			label: (<div onClick={() => setVoiceInputEngine(voiceEngines.gpt)}>{voiceEngines.gpt}</div>)
 		}
 	]
 
@@ -46,15 +51,16 @@ const VoiceInput: React.FC<IVoiceListeningProps> = ({isListening, setIsListening
 	</div>);
 
 	const GPTButtons = () => (<>
-		<ButtonAsk disabled={isListening} style={{background: "blue", flexGrow: "1"}}>Listen</ButtonAsk>
+		<ButtonAsk style={{background: "blue", flexGrow: "1"}}
+		           onClick={() => setIsListening((prevState) => !prevState)}>{!isListening ? "Listen" : "Recognize"}</ButtonAsk>
 	</>)
 
 	return <VoiceInputBlock>
 		<Dropdown menu={{items}} placement="top">
-			<div>{voiceInputSelector}</div>
+			<div>{voiceInputEngine}</div>
 		</Dropdown>
 		<div style={{width: "100%", display: "flex"}}>
-			{voiceInputSelector === voiceEngines.google ? <GoogleButtons/> : <GPTButtons/>}
+			{voiceInputEngine === voiceEngines.google ? <GoogleButtons/> : <GPTButtons/>}
 			<ButtonAsk disabled={!isListening || autoAsk} style={{background: "purple"}}
 			           onClick={() => setAutoAsk((prev) => !prev)}>Auto Ask</ButtonAsk>
 			<ButtonAsk disabled={!isListening} style={{background: "red"}}

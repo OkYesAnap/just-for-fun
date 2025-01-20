@@ -9,6 +9,8 @@ import {routeHeader} from "./Main";
 import {useGoogleRecognition} from "../utils/useGoogleRecongnition";
 import ModalWindow from "../components/modal/ModalMessage";
 import VoiceInput from "../components/voiceInput/VoiceInput";
+import useVoiceRecorder from "../utils/useVioceRecorder";
+import {voiceEngines, VoiceEngineSingleType} from "../utils/constanst";
 
 const ChatBlock = styled.div`
   position: absolute;
@@ -65,8 +67,11 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	const location = useLocation().pathname.slice(1);
 	const [isListening, setIsListening] = useState<boolean>(false);
 	const [autoAsk, setAutoAsk] = useState<boolean>(false);
+	const [voiceInputEngine, setVoiceInputEngine] = useState<VoiceEngineSingleType>(voiceEngines.google);
 
-	useGoogleRecognition(isListening, setIsListening, setText, lang);
+
+	useGoogleRecognition(isListening && voiceInputEngine === voiceEngines.google, setIsListening, setText, lang);
+	useVoiceRecorder(isListening && voiceInputEngine === voiceEngines.gpt, setText);
 
 	const askGpt = useCallback(async () => {
 		if (!text.length) return;
@@ -148,11 +153,23 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 			</ChatBlock>
 			<InputBlock>
 				<div className={'text-props'} style={{display: "flex"}}>
-					<ButtonAsk onClick={() => {
-						setAutoAsk(false);
-						askGpt()
-					}} style={{flex: "5"}} disabled={askInProgress}>Manual Ask</ButtonAsk>
-					<VoiceInput {...{isListening, setIsListening, autoAsk, setAutoAsk, start}}/>
+					<div style={{flex: "5", display: "flex", flexFlow: "column"}}>
+						<div>"Ask" for manual request to GPT.</div>
+						<ButtonAsk onClick={() => {
+							setAutoAsk(false);
+							askGpt()
+						}} style={{flexGrow: "1"}} disabled={askInProgress}>Ask</ButtonAsk>
+					</div>
+
+					<VoiceInput {...{
+						isListening,
+						setIsListening,
+						autoAsk,
+						setAutoAsk,
+						start,
+						voiceInputEngine,
+						setVoiceInputEngine
+					}}/>
 				</div>
 				<Input.TextArea rows={4} className={'text-props'} value={text}
 				                disabled={(autoAsk && isListening) || askInProgress}

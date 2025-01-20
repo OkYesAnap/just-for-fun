@@ -66,4 +66,31 @@ export const requestToGpt = async (message: IGptMessage, params: { model: string
 			contextGPT.update(data.choices[0].message)
 		return messages;
 	})
-}
+};
+
+export const sendAudioToServer = async (audioBlob: Blob) => {
+	let textTranscription: string = '';
+	const formData = new FormData();
+	formData.append('model', 'whisper-1')
+	formData.append('file', audioBlob);
+
+	try {
+		const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+			method: "POST",
+			headers: {
+				"Authorization": "Bearer " + API_KEY,
+			},
+			body: formData,
+		});
+
+		if (!response.ok) {
+			throw new Error('Network response was not ok');
+		}
+		const responseData = await response.json();
+		textTranscription = responseData.text;
+	} catch (error) {
+		console.error('Error uploading audio file:', error);
+	}
+	console.log(textTranscription);
+	return textTranscription;
+};
