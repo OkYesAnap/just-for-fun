@@ -3,7 +3,7 @@ import {Input, Spin} from 'antd';
 import {contextGPT, gptRole, IGptMessage, requestToGpt} from '../api/gptApi';
 import styled from 'styled-components';
 import '../App.css';
-import {ButtonAsk} from '../components/styled'
+import {ButtonAsk, MessageBlock} from '../components/styled'
 import {useLocation} from 'react-router-dom';
 import {routeHeader} from "./Main";
 import {useGoogleRecognition} from "../utils/useGoogleRecongnition";
@@ -11,6 +11,7 @@ import ModalWindow from "../components/modal/ModalMessage";
 import VoiceInput from "../components/voiceInput/VoiceInput";
 import useVoiceRecorder from "../utils/useVioceRecorder";
 import {voiceEngines, VoiceEngineSingleType} from "../utils/constanst";
+import DraftText from "../components/draftText/DraftText";
 
 const ChatBlock = styled.div`
   position: absolute;
@@ -18,32 +19,6 @@ const ChatBlock = styled.div`
   height: 75%;
   overflow: auto;
   scroll-behavior: smooth;
-`
-
-const setBackgroundColor = (role: gptRole) => {
-	if (role === gptRole.user) {
-		return "darkolivegreen";
-	} else if (role === gptRole.error) {
-		return "red";
-	}
-	return 'green'
-}
-
-const MessageBlock = styled.div`
-  margin: ${({role}) => (role === 'user' ? '10px 10vmin 10px 20px' : '10px 20px 10px 10vmin')};
-  text-align: left;
-  background-color: ${({role}) => setBackgroundColor(role as gptRole)};
-  padding: 20px;
-  border-radius: 10px;
-  white-space: pre-wrap;
-  animation: fadeIn ${({role}) => role === 'user' ? '500ms' : '1000ms'} ease-in;
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
 `
 
 const InputBlock = styled.div`
@@ -59,6 +34,7 @@ const InputBlock = styled.div`
 
 function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	const [text, setText] = useState('');
+	const [draftText, setDraftText] = useState('');
 	const [lang, setLang] = useState<string>('')
 	const chatBlockRef = useRef<HTMLDivElement>(null);
 	const [messages, setMessages] = useState<IGptMessage[]>([]);
@@ -69,7 +45,7 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	const [autoAsk, setAutoAsk] = useState<boolean>(false);
 	const [voiceInputEngine, setVoiceInputEngine] = useState<VoiceEngineSingleType>(voiceEngines.google);
 
-	useGoogleRecognition(isListening && voiceInputEngine === voiceEngines.google, setIsListening, setText, lang);
+	useGoogleRecognition(isListening && voiceInputEngine === voiceEngines.google, setIsListening, setText, lang, setDraftText);
 	useVoiceRecorder(isListening && voiceInputEngine === voiceEngines.gpt, setText);
 
 	const askGpt = useCallback(async () => {
@@ -174,6 +150,7 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 				                disabled={(autoAsk && isListening) || askInProgress}
 				                onChange={({target}) => setText(target.value)} onKeyDown={handleEnterPress}/>
 			</InputBlock>
+			{!!draftText.length && <DraftText text={draftText}/>}
 			{<ModalWindow visible={showClearModal}
 			              okCallback={clearChat}
 			              cancelCallback={() => setShowClearModal(false)}

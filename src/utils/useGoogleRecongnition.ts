@@ -1,13 +1,26 @@
-import React, {useEffect} from "react";
+import {Dispatch, SetStateAction, useCallback, useEffect, useMemo} from "react";
 
 const useGoogleRecognition = (isListening: boolean,
-                              setIsListening: React.Dispatch<React.SetStateAction<boolean>>,
-                              setText: React.Dispatch<React.SetStateAction<string>>,
-                              lang: string) => {
-	//@ts-ignore
-	const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                              setIsListening: Dispatch<SetStateAction<boolean>>,
+                              setText: Dispatch<SetStateAction<string>>,
+                              lang: string,
+                              setDraftText: Dispatch<SetStateAction<string>>
+) => {
+	const recognition = useMemo(() => {
+		//@ts-ignore
+		return new (window.SpeechRecognition || window.webkitSpeechRecognition)()
+	}, []);
 	recognition.lang = lang;
 	recognition.onaudioend = () => setIsListening(false);
+
+	const setTextCallBack = useCallback((text: string) => {
+		setText((prev) => prev + ' ' + text);
+	}, [setText]);
+
+	const setDraftTextCallback = useCallback((text: string) => {
+		setDraftText(text)
+	}, [setDraftText])
+
 	useEffect(() => {
 		recognition.continuous = true;
 		recognition.interimResults = true;
@@ -15,19 +28,25 @@ const useGoogleRecognition = (isListening: boolean,
 		//@ts-ignore
 		recognition.onresult = (event: SpeechRecognitionEvent) => {
 			const currentTranscript = event.results[event.resultIndex][0].transcript;
-			console.log(event.results);
+			console.log(event.results[event.resultIndex][0].transcript);
+			setDraftTextCallback(event.results[event.resultIndex][0].transcript);
 			const isFinal = event.results[event.resultIndex].isFinal;
-			if (isFinal) setText((prev) => prev + ' ' + currentTranscript);
+			if (isFinal) {
+				setTextCallBack(currentTranscript);
+				setDraftTextCallback('');
+			}
 		};
 		if (isListening) {
 			recognition.start()
 		} else {
 			recognition.stop();
+			setDraftTextCallback('');
 		}
 		return () => {
 			recognition.stop();
+			setDraftTextCallback('');
 		};
-	}, [isListening]);
+	}, [isListening, setTextCallBack, setDraftTextCallback, recognition]);
 }
 
 export {useGoogleRecognition}

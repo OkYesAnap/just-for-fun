@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {gptRole} from "../api/gptApi";
 
 export const ButtonAsk = styled.button`
   margin: 0.3rem 0.1rem;
@@ -14,4 +15,30 @@ export const ButtonAsk = styled.button`
   &:hover {
     background-color: #1976D2;
   }
+`
+
+const setBackgroundColor = (role: gptRole) => {
+	if (role === gptRole.user) {
+		return "darkolivegreen";
+	} else if (role === gptRole.error) {
+		return "red";
+	}
+	return 'green'
+}
+
+export const MessageBlock = styled.div`
+  margin: ${({role}) => (role === 'user' ? '10px 10vmin 10px 20px' : '10px 20px 10px 10vmin')};
+  text-align: left;
+  background-color: ${({role}) => setBackgroundColor(role as gptRole)};
+  padding: 20px;
+  border-radius: 10px;
+  white-space: pre-wrap;
+  animation: fadeIn ${({role}) => role === 'user' ? '500ms' : '1000ms'} ease-in;
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
 `
