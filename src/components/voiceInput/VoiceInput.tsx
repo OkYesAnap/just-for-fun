@@ -23,14 +23,14 @@ interface IVoiceListeningProps {
 }
 
 const VoiceInput: React.FC<IVoiceListeningProps> = ({
-	                                                    isListening,
-	                                                    setIsListening,
-	                                                    autoAsk,
-	                                                    setAutoAsk,
-	                                                    start,
-	                                                    voiceInputEngine,
-	                                                    setVoiceInputEngine
-                                                    }) => {
+	isListening,
+	setIsListening,
+	autoAsk,
+	setAutoAsk,
+	start,
+	voiceInputEngine,
+	setVoiceInputEngine
+}) => {
 
 	const items = [
 		{
@@ -54,17 +54,20 @@ const VoiceInput: React.FC<IVoiceListeningProps> = ({
 
 	const GPTButtons = () => (<>
 		<ButtonAsk style={{background: "blue", flexGrow: "1"}}
-		           onClick={() => setIsListening((prevState) => !prevState)}>{!isListening ? "Listen" : "Recognize"}</ButtonAsk>
+		           onClick={() => setIsListening((prevState) => !prevState)}>
+			{!isListening ? "Listen" : "Recognize"}
+		</ButtonAsk>
 	</>)
 
 	return <VoiceInputBlock>
-		<Dropdown menu={{items}} placement="top">
+		<Dropdown menu={{items}} disabled={isListening} placement="top">
 			<div>{voiceInputEngine}</div>
 		</Dropdown>
 		<div style={{width: "100%", display: "flex"}}>
 			{voiceInputEngine === voiceEngines.google ? <GoogleButtons/> : <GPTButtons/>}
 			<ButtonAsk disabled={!isListening} style={{background: "red"}}
-			           onClick={() => setIsListening(false)}>stop</ButtonAsk>
+			           onClick={() => {setIsListening(false)
+								 setAutoAsk(false)}}>stop</ButtonAsk>
 		</div>
 	</VoiceInputBlock>
 }

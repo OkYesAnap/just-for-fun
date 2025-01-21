@@ -10,39 +10,43 @@ const useVoiceRecorder = (isListening: boolean, setText: React.Dispatch<React.Se
 		setText(prevState => `${prevState} ${transcription}`);
 	}, [setText]);
 
+	const startRecording = useCallback(async () => {
+		stream.current = await navigator.mediaDevices.getUserMedia({audio: true});
+		mediaRecorderRef.current = new MediaRecorder(stream.current);
+
+		mediaRecorderRef.current.ondataavailable = (event: BlobEvent) => {
+			audioChunksRef.current.push(event.data);
+		};
+
+		mediaRecorderRef.current.onstop = async () => {
+			const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+			audioChunksRef.current = [];
+			const textTranscription = await sendAudioToServer(audioBlob);
+			updateText(textTranscription);
+		};
+
+		mediaRecorderRef.current.start();
+	}, [updateText])
+	const stopRecording = () => {
+		mediaRecorderRef.current?.stop();
+		if (stream.current) {
+			stream.current?.getTracks().forEach(track => track.stop());
+			stream.current = null
+		}
+	};
+
 	useEffect(() => {
-			const startRecording = async () => {
-				stream.current = await navigator.mediaDevices.getUserMedia({audio: true});
-				mediaRecorderRef.current = new MediaRecorder(stream.current);
-
-				mediaRecorderRef.current.ondataavailable = (event: BlobEvent) => {
-					audioChunksRef.current.push(event.data);
-				};
-
-				mediaRecorderRef.current.onstop = async () => {
-					const audioBlob = new Blob(audioChunksRef.current, {type: 'audio/wav'});
-					audioChunksRef.current = [];
-					const textTranscription = await sendAudioToServer(audioBlob);
-					updateText(textTranscription);
-				};
-
-				mediaRecorderRef.current.start();
-			};
-			const stopRecording = () => {
-				mediaRecorderRef.current?.stop();
-				if (stream.current) {
-					stream.current?.getTracks().forEach(track => track.stop());
-					stream.current = null
-				}
-			};
 
 			if (isListening) {
 				startRecording();
 			} else {
 				stopRecording();
 			}
+			return () => {
+				stopRecording()
+			}
 		}
-		, [isListening, updateText])
+		, [isListening, updateText, startRecording])
 
 };
 

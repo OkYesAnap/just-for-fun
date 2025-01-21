@@ -45,7 +45,11 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	const [autoAsk, setAutoAsk] = useState<boolean>(false);
 	const [voiceInputEngine, setVoiceInputEngine] = useState<VoiceEngineSingleType>(voiceEngines.google);
 
-	useGoogleRecognition(isListening && voiceInputEngine === voiceEngines.google, setIsListening, setText, lang, setDraftText);
+	useGoogleRecognition(isListening && voiceInputEngine === voiceEngines.google,
+		setIsListening,
+		setText,
+		lang,
+		setDraftText);
 	useVoiceRecorder(isListening && voiceInputEngine === voiceEngines.gpt, setText);
 
 	const askGpt = useCallback(async () => {
@@ -63,7 +67,7 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 
 	const lastMessage = messages[messages.length - 1]
 	useEffect(() => {
-			if (autoAsk && isListening && !askInProgress) {
+			if (autoAsk && isListening && !askInProgress && text) {
 				askGpt();
 			}
 			if (chatBlockRef?.current) chatBlockRef.current.scrollTop = chatBlockRef.current.scrollHeight;
