@@ -5,6 +5,7 @@ const useVoiceRecorder = (isListening: boolean, setText: React.Dispatch<React.Se
 	let textTranscription: string;
 	const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 	const audioChunksRef = useRef<Blob[]>([]);
+	const stream = useRef<MediaStream | null>(null);
 
 	useEffect(() => {
 			if (isListening) {
@@ -16,8 +17,8 @@ const useVoiceRecorder = (isListening: boolean, setText: React.Dispatch<React.Se
 		, [isListening])
 
 	const startRecording = async () => {
-		const stream = await navigator.mediaDevices.getUserMedia({audio: true});
-		mediaRecorderRef.current = new MediaRecorder(stream);
+		stream.current = await navigator.mediaDevices.getUserMedia({audio: true});
+		mediaRecorderRef.current = new MediaRecorder(stream.current);
 
 		mediaRecorderRef.current.ondataavailable = (event: BlobEvent) => {
 			audioChunksRef.current.push(event.data);
@@ -34,6 +35,10 @@ const useVoiceRecorder = (isListening: boolean, setText: React.Dispatch<React.Se
 	};
 	const stopRecording = () => {
 		mediaRecorderRef.current?.stop();
+		if (stream.current) {
+			stream.current?.getTracks().forEach(track => track.stop());
+			stream.current = null
+		}
 	};
 };
 
