@@ -1,20 +1,41 @@
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo} from "react";
+import {voiceEngines, VoiceEngineSingleType} from "./constanst";
 
-const useGoogleRecognition = (isListening: boolean,
-                              setIsListening: Dispatch<SetStateAction<boolean>>,
-                              setText: Dispatch<SetStateAction<string>>,
-                              lang: string,
-                              setDraftText: Dispatch<SetStateAction<string>>
-) => {
+interface GoogleRecognition {
+	isListening: boolean;
+	setIsListening: Dispatch<SetStateAction<boolean>>;
+	setText: Dispatch<SetStateAction<string>>;
+	lang: string;
+	setDraftText: Dispatch<SetStateAction<string>>;
+	setVoiceInputEngine: Dispatch<SetStateAction<VoiceEngineSingleType>>;
+	setGoogleRecognizerAvailable: Dispatch<SetStateAction<boolean>>;
+}
+
+const useGoogleRecognition = ({
+	                              isListening,
+	                              setIsListening,
+	                              setText,
+	                              lang,
+	                              setDraftText,
+	                              setVoiceInputEngine,
+	                              setGoogleRecognizerAvailable
+                              }: GoogleRecognition) => {
 	const recognition = useMemo(() => {
-		//@ts-ignore
-		return new (window.SpeechRecognition || window.webkitSpeechRecognition)()
+		try {
+			//@ts-ignore
+			return new (window.SpeechRecognition || window.webkitSpeechRecognition)()
+		} catch (e) {
+			console.error(`Google recognition is not supported in this browser. For the best experience, 
+			please use Google Chrome. 
+			Please note that this browser currently only supports the GPT API engine, 
+			and the functionality has now changed to the working schemas.`);
+			return null;
+		}
 	}, []);
-	recognition.lang = lang;
-	recognition.onaudioend = () => setIsListening(false);
+
 
 	const setTextCallBack = useCallback((text: string) => {
-		setText((prev) => prev + ' ' + text);
+		setText((prev) => `${prev} ${text}.\n`);
 	}, [setText]);
 
 	const setDraftTextCallback = useCallback((text: string) => {
@@ -22,6 +43,13 @@ const useGoogleRecognition = (isListening: boolean,
 	}, [setDraftText])
 
 	useEffect(() => {
+		if (recognition === null) {
+			setVoiceInputEngine(voiceEngines.gpt);
+			setGoogleRecognizerAvailable(false);
+			return;
+		};
+		recognition.lang = lang;
+		recognition.onaudioend = () => setIsListening(false);
 		recognition.continuous = true;
 		recognition.interimResults = true;
 
@@ -46,7 +74,7 @@ const useGoogleRecognition = (isListening: boolean,
 			recognition.stop();
 			setDraftTextCallback('');
 		};
-	}, [isListening, setTextCallBack, setDraftTextCallback, recognition]);
+	}, [isListening, setTextCallBack, setDraftTextCallback, recognition, lang, setVoiceInputEngine, setIsListening, setGoogleRecognizerAvailable]);
 }
 
 export {useGoogleRecognition}

@@ -44,12 +44,17 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	const [isListening, setIsListening] = useState<boolean>(false);
 	const [autoAsk, setAutoAsk] = useState<boolean>(false);
 	const [voiceInputEngine, setVoiceInputEngine] = useState<VoiceEngineSingleType>(voiceEngines.google);
+	const [googleRecognizerAvailable, setGoogleRecognizerAvailable] = useState<boolean>(true);
 
-	useGoogleRecognition(isListening && voiceInputEngine === voiceEngines.google,
+	useGoogleRecognition({
+		isListening: isListening && voiceInputEngine === voiceEngines.google,
 		setIsListening,
 		setText,
 		lang,
-		setDraftText);
+		setDraftText,
+		setVoiceInputEngine,
+		setGoogleRecognizerAvailable
+});
 	useVoiceRecorder(isListening && voiceInputEngine === voiceEngines.gpt, setText);
 
 	const askGpt = useCallback(async () => {
@@ -65,14 +70,19 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 		setText('');
 	}, [messages, params, text])
 
-	const lastMessage = messages[messages.length - 1]
+	const lastMessage = messages[messages.length - 1];
+	const hasText = !!text.trim().length;
+
+	useEffect(() =>{
+		if (chatBlockRef?.current) chatBlockRef.current.scrollTop = chatBlockRef.current.scrollHeight;
+	}, [lastMessage])
+
 	useEffect(() => {
-			if (autoAsk && isListening && !askInProgress && text) {
+			if (autoAsk && isListening && !askInProgress && hasText) {
 				askGpt();
 			}
-			if (chatBlockRef?.current) chatBlockRef.current.scrollTop = chatBlockRef.current.scrollHeight;
 		},
-		[lastMessage, text, askInProgress, autoAsk, isListening, askGpt]);
+		[lastMessage, askInProgress, autoAsk, isListening, askGpt, hasText]);
 
 	useEffect(() => {
 		document.title = routeHeader[location];
@@ -147,14 +157,15 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 						setAutoAsk,
 						start,
 						voiceInputEngine,
-						setVoiceInputEngine
+						setVoiceInputEngine,
+						googleRecognizerAvailable
 					}}/>
 				</div>
 				<Input.TextArea rows={4} className={'text-props'} value={text}
 				                disabled={(autoAsk && isListening) || askInProgress}
 				                onChange={({target}) => setText(target.value)} onKeyDown={handleEnterPress}/>
 			</InputBlock>
-			{!!draftText.length && <DraftText text={draftText}/>}
+			<DraftText text={draftText}/>
 			{<ModalWindow visible={showClearModal}
 			              okCallback={clearChat}
 			              cancelCallback={() => setShowClearModal(false)}

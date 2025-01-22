@@ -19,7 +19,8 @@ interface IVoiceListeningProps {
 	setAutoAsk: BoolSetState;
 	start: (lang: string) => void;
 	voiceInputEngine: VoiceEngineSingleType;
-	setVoiceInputEngine: React.Dispatch<React.SetStateAction<VoiceEngineSingleType>>
+	setVoiceInputEngine: React.Dispatch<React.SetStateAction<VoiceEngineSingleType>>;
+	googleRecognizerAvailable: boolean;
 }
 
 const VoiceInput: React.FC<IVoiceListeningProps> = ({
@@ -29,7 +30,8 @@ const VoiceInput: React.FC<IVoiceListeningProps> = ({
 	setAutoAsk,
 	start,
 	voiceInputEngine,
-	setVoiceInputEngine
+	setVoiceInputEngine,
+    googleRecognizerAvailable,
 }) => {
 
 	const items = [
@@ -60,7 +62,7 @@ const VoiceInput: React.FC<IVoiceListeningProps> = ({
 	</>)
 
 	return <VoiceInputBlock>
-		<Dropdown menu={{items}} disabled={isListening} placement="top">
+		<Dropdown menu={{items}} disabled={isListening || !googleRecognizerAvailable} placement="top">
 			<div>{voiceInputEngine}</div>
 		</Dropdown>
 		<div style={{width: "100%", display: "flex"}}>

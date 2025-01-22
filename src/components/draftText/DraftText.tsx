@@ -1,10 +1,14 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import {MessageBlock} from "../styled";
 import {gptRole} from "../../api/gptApi";
 
-const DraftTextComponent = styled.div`
+const FADE_DURATION = 500;
+
+const DraftTextComponent = styled.div<{ $hastext: boolean }>`
   position: absolute;
+  opacity: ${({$hastext}) => ($hastext === true ? "100%" : "0%")};
+  transition: opacity ${FADE_DURATION}ms ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   top: 90%;
   left: 50%;
@@ -12,11 +16,23 @@ const DraftTextComponent = styled.div`
 `
 
 const DraftText: React.FC<{ text: string }> = ({text}) => {
-	return <DraftTextComponent>
+	const [transcript, setTranscript] = useState<string>(text);
+	useEffect(() => {
+		let timeOut: NodeJS.Timeout;
+		if (!text) {
+			timeOut = setTimeout(() => setTranscript(text), FADE_DURATION)
+		} else {
+			setTranscript(text)
+		}
+		return () => {
+			if (timeOut) clearTimeout(timeOut)
+		};
+	}, [text]);
+	return <DraftTextComponent $hastext={!!text}>
 		<MessageBlock
 			style={{margin: '0'}}
 			role={gptRole.user}>
-			{text}
+			{transcript}
 		</MessageBlock>
 	</DraftTextComponent>
 }
