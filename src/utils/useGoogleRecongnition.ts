@@ -35,7 +35,9 @@ const useGoogleRecognition = ({
 
 
 	const setTextCallBack = useCallback((text: string) => {
-		setText((prev) => `${prev} ${text}.\n`);
+		if(text.trim().length) {
+			setText((prev) => `${prev} ${text}.\n`);
+		}
 	}, [setText]);
 
 	const setDraftTextCallback = useCallback((text: string) => {
