@@ -6,7 +6,9 @@ const MODEL = "gpt-4o-mini"
 const gpt35 = {
 	sysMessage: [{
 		role: gptRole.system,
-		content: `you are software professional with 5 years of experience. expert React, Ant Design and AWS. 
+		content: `you are software professional with 5 years of experience. expert Next.js 15+ 
+		applications structure, src/app/page.tsx
+		Material UI and AWS. 
 		English language consultant.
 		my first name is "Andrii", Last name "Panaseiko", you can use my name if needed.
 		`
