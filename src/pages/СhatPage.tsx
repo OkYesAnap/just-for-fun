@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect, useCallback} from 'react';
+import React, {useState, useRef, useEffect, useCallback, useLayoutEffect} from 'react';
 import {Input, Spin} from 'antd';
 import {contextGPT, gptRole, IGptMessage, requestToGpt} from '../api/gptApi';
 import styled from 'styled-components';
@@ -12,6 +12,7 @@ import VoiceInput from "../components/voiceInput/VoiceInput";
 import useVoiceRecorder from "../utils/useVioceRecorder";
 import {voiceEngines, VoiceEngineSingleType} from "../utils/constanst";
 import DraftText from "../components/draftText/DraftText";
+import {TextAreaRef} from "antd/es/input/TextArea";
 
 const ChatBlock = styled.div`
   position: absolute;
@@ -27,12 +28,24 @@ const InputBlock = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 25%;
+  height: auto;
+  max-height: 90%;
   bottom: 0;
   width: 80%;
+  background-color: #282c34;
+  padding-bottom: 2%;
 `
 
 function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
+	const location = useLocation().pathname.slice(1);
+	useEffect(() => {
+		document.title = routeHeader[location];
+		return () => {
+			document.title = "React app"
+			contextGPT.clear();
+		}
+	}, [location])
+
 	const [text, setText] = useState('');
 	const [draftText, setDraftText] = useState('');
 	const [lang, setLang] = useState<string>('')
@@ -40,11 +53,12 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	const [messages, setMessages] = useState<IGptMessage[]>([]);
 	const [askInProgress, setAskInProgress] = useState(false);
 	const [showClearModal, setShowClearModal] = useState(false);
-	const location = useLocation().pathname.slice(1);
 	const [isListening, setIsListening] = useState<boolean>(false);
 	const [autoAsk, setAutoAsk] = useState<boolean>(false);
 	const [voiceInputEngine, setVoiceInputEngine] = useState<VoiceEngineSingleType>(voiceEngines.google);
 	const [googleRecognizerAvailable, setGoogleRecognizerAvailable] = useState<boolean>(true);
+	const textAreaRef = useRef<TextAreaRef>(null);
+	const timerDebounce = useRef<NodeJS.Timeout | null>(null);
 
 	useGoogleRecognition({
 		isListening: isListening && voiceInputEngine === voiceEngines.google,
@@ -54,7 +68,7 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 		setDraftText,
 		setVoiceInputEngine,
 		setGoogleRecognizerAvailable
-});
+	});
 	useVoiceRecorder(isListening && voiceInputEngine === voiceEngines.gpt, setText);
 
 	const askGpt = useCallback(async () => {
@@ -73,7 +87,16 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	const lastMessage = messages[messages.length - 1];
 	const hasText = !!text.trim().length;
 
-	useEffect(() =>{
+	useLayoutEffect(() => {
+		if (textAreaRef.current?.resizableTextArea) {
+			const lineHeight = parseInt(getComputedStyle(textAreaRef.current.resizableTextArea.textArea).lineHeight, 10);
+			textAreaRef.current.resizableTextArea.textArea.style.height = `${lineHeight * 4 + 24}px`;
+			const {scrollHeight} = textAreaRef.current.resizableTextArea.textArea;
+			textAreaRef.current.resizableTextArea.textArea.style.height = `${scrollHeight + 4}px`;
+		};
+	}, [text, textAreaRef?.current?.resizableTextArea?.textArea.scrollHeight]);
+
+	useEffect(() => {
 		if (chatBlockRef?.current) chatBlockRef.current.scrollTop = chatBlockRef.current.scrollHeight;
 	}, [lastMessage])
 
@@ -83,14 +106,6 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 			}
 		},
 		[lastMessage, askInProgress, autoAsk, isListening, askGpt, hasText]);
-
-	useEffect(() => {
-		document.title = routeHeader[location];
-		return () => {
-			document.title = "React app"
-			contextGPT.clear();
-		}
-	}, [location])
 
 	const handleDeleteMessage = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, messageNumber: number) => {
 		if (e.ctrlKey || e.metaKey) {
@@ -120,6 +135,10 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	const start = (lang: string) => {
 		setLang(lang)
 		setIsListening(true);
+	}
+
+	const onChangeTextAria = (e: any) => {
+		setText(e.target.value);
 	}
 
 	return (
@@ -161,9 +180,9 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 						googleRecognizerAvailable
 					}}/>
 				</div>
-				<Input.TextArea rows={4} className={'text-props'} value={text}
+				<Input.TextArea className={'text-props'} value={text} ref={textAreaRef}
 				                disabled={(autoAsk && isListening) || askInProgress}
-				                onChange={({target}) => setText(target.value)} onKeyDown={handleEnterPress}/>
+				                onChange={onChangeTextAria} onKeyDown={handleEnterPress}/>
 			</InputBlock>
 			<DraftText text={draftText}/>
 			{<ModalWindow visible={showClearModal}
