@@ -33,7 +33,6 @@ const InputBlock = styled.div`
   bottom: 0;
   width: 80%;
   background-color: #282c34;
-  padding-bottom: 2%;
 `
 
 function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
@@ -93,7 +92,7 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	useLayoutEffect(() => {
 		if (textAreaRef.current?.resizableTextArea) {
 			const lineHeight = parseInt(getComputedStyle(textAreaRef.current.resizableTextArea.textArea).lineHeight, 10);
-			textAreaRef.current.resizableTextArea.textArea.style.height = `${lineHeight * 4 + 24}px`;
+			textAreaRef.current.resizableTextArea.textArea.style.height = `${lineHeight * 2 + 24}px`;
 			const {scrollHeight} = textAreaRef.current.resizableTextArea.textArea;
 			textAreaRef.current.resizableTextArea.textArea.style.height = `${scrollHeight + 4}px`;
 		};
