@@ -6,7 +6,7 @@ import {gptRole} from "../../api/gptApi";
 const FADE_DURATION = 500;
 
 const DraftTextComponent = styled.div<{ $hastext: boolean }>`
-  position: absolute;
+  position: fixed;
   opacity: ${({$hastext}) => ($hastext === true ? "100%" : "0%")};
   transition: opacity ${FADE_DURATION}ms ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);

@@ -58,7 +58,6 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	const [voiceInputEngine, setVoiceInputEngine] = useState<VoiceEngineSingleType>(voiceEngines.google);
 	const [googleRecognizerAvailable, setGoogleRecognizerAvailable] = useState<boolean>(true);
 	const textAreaRef = useRef<TextAreaRef>(null);
-	const timerDebounce = useRef<NodeJS.Timeout | null>(null);
 
 	useGoogleRecognition({
 		isListening: isListening && voiceInputEngine === voiceEngines.google,
@@ -72,6 +71,10 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	useVoiceRecorder(isListening && voiceInputEngine === voiceEngines.gpt, setText);
 
 	const askGpt = useCallback(async () => {
+		if (textAreaRef.current?.resizableTextArea) {
+			const lineHeight = parseInt(getComputedStyle(textAreaRef.current.resizableTextArea.textArea).lineHeight, 10);
+			textAreaRef.current.resizableTextArea.textArea.style.height = `${lineHeight * 4 + 24}px`;
+		}
 		if (!text.length) return;
 		setAskInProgress(true);
 		setMessages([...messages, {content: text, role: gptRole.user}, {
@@ -94,7 +97,7 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 			const {scrollHeight} = textAreaRef.current.resizableTextArea.textArea;
 			textAreaRef.current.resizableTextArea.textArea.style.height = `${scrollHeight + 4}px`;
 		};
-	}, [text, textAreaRef?.current?.resizableTextArea?.textArea.scrollHeight]);
+	}, [text]);
 
 	useEffect(() => {
 		if (chatBlockRef?.current) chatBlockRef.current.scrollTop = chatBlockRef.current.scrollHeight;
