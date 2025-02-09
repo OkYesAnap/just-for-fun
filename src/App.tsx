@@ -1,7 +1,7 @@
 import React from 'react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import './App.css';
-import HatPage from './pages/СhatPage';
+import HatPage from './pages/ChatPage';
 import Main from './pages/Main';
 import Error404 from './pages/Error404';
 import MazeGame from "./pages/MazeGame";
