@@ -1,6 +1,5 @@
 import engine from './engines.json';
-
-const currentEngine = engine.gpt;
+import {Engines} from "../utils/constanst";
 
 export enum gptRole {
 	assistant = "assistant",
@@ -12,7 +11,8 @@ export enum gptRole {
 
 export interface IGptMessage {
 	content: string,
-	role: gptRole
+	role: gptRole,
+	engine?: Engines
 }
 
 class ContextGpt {
@@ -40,10 +40,12 @@ class ContextGpt {
 
 export const contextGPT = new ContextGpt();
 
-export const requestToGpt = async (message: IGptMessage, params: { model: string, sysMessage: IGptMessage[] }) => {
+export const requestToGpt = async (message: IGptMessage, params: { sysMessage: IGptMessage[] }) => {
+
+	const currentEngine = engine[message?.engine || "gpt"];
 
 	const apiRequestBody = {
-		"model": params.model, //gpt-4-1106-preview
+		"model": currentEngine.model, //gpt-4-1106-preview
 		"messages": [
 			...params.sysMessage,
 			...contextGPT.update(message),

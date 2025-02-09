@@ -10,9 +10,10 @@ import {useGoogleRecognition} from "../utils/useGoogleRecongnition";
 import ModalWindow from "../components/modal/ModalMessage";
 import VoiceInput from "../components/voiceInput/VoiceInput";
 import useVoiceRecorder from "../utils/useVioceRecorder";
-import {voiceEngines, VoiceEngineSingleType} from "../utils/constanst";
+import {Engines, voiceEngines, VoiceEngineSingleType} from "../utils/constanst";
 import DraftText from "../components/draftText/DraftText";
 import {TextAreaRef} from "antd/es/input/TextArea";
+import EngineChanger from "../components/engineChanger/EngineChanger";
 
 const ChatBlock = styled.div`
   position: absolute;
@@ -58,6 +59,7 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	const [autoAsk, setAutoAsk] = useState<boolean>(false);
 	const [voiceInputEngine, setVoiceInputEngine] = useState<VoiceEngineSingleType>(voiceEngines.google);
 	const [googleRecognizerAvailable, setGoogleRecognizerAvailable] = useState<boolean>(true);
+	const [engine, setEngine] = useState<Engines>('deepSeek');
 	const textAreaRef = useRef<TextAreaRef>(null);
 
 	useGoogleRecognition({
@@ -82,7 +84,7 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 			content: "I am thinking",
 			role: gptRole.inprogress
 		}]);
-		const messagesFromGpt = await requestToGpt({content: text, role: gptRole.user}, params);
+		const messagesFromGpt = await requestToGpt({content: text, role: gptRole.user, engine}, params);
 		setMessages(messagesFromGpt);
 		setAskInProgress(false);
 		setText('');
@@ -166,7 +168,7 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 			<InputBlock>
 				<div className={'text-props'} style={{display: "flex"}}>
 					<div style={{flex: "5", display: "flex", flexFlow: "column"}}>
-						<div>"Ask" for manual request to GPT.</div>
+						<EngineChanger {...{engine, setEngine}}/>
 						<ButtonAsk onClick={() => {
 							setAutoAsk(false);
 							askGpt()

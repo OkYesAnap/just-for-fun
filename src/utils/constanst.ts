@@ -1,4 +1,4 @@
-export type engineType = "gpt" | "deepSeek"
+export type Engines = "gpt" | "deepSeek"
 
 export const voiceEngines = {
 	google: "Google Voice Input",
