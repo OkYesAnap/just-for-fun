@@ -1,6 +1,6 @@
-import key from './key.json';
+import engine from './engines.json';
 
-const {API_KEY} = key
+const currentEngine = engine.gpt;
 
 export enum gptRole {
 	assistant = "assistant",
@@ -50,11 +50,11 @@ export const requestToGpt = async (message: IGptMessage, params: { model: string
 		]
 	}
 
-	return await fetch("https://api.openai.com/v1/chat/completions",
+	return await fetch(currentEngine.chatUrl,
 		{
 			method: "POST",
 			headers: {
-				"Authorization": "Bearer " + API_KEY,
+				"Authorization": "Bearer " + currentEngine.API_KEY,
 				"Content-Type": "application/json"
 			},
 			body: JSON.stringify(apiRequestBody)
@@ -75,10 +75,10 @@ export const sendAudioToServer = async (audioBlob: Blob) => {
 	formData.append('file', audioBlob);
 
 	try {
-		const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+		const response = await fetch(engine.gpt.audioUrl, {
 			method: "POST",
 			headers: {
-				"Authorization": "Bearer " + API_KEY,
+				"Authorization": "Bearer " + engine.gpt.API_KEY,
 			},
 			body: formData,
 		});

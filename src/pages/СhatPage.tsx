@@ -35,6 +35,8 @@ const InputBlock = styled.div`
   background-color: #282c34;
 `
 
+const defaultTextInputSize = 2;
+
 function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	const location = useLocation().pathname.slice(1);
 	useEffect(() => {
@@ -72,7 +74,7 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	const askGpt = useCallback(async () => {
 		if (textAreaRef.current?.resizableTextArea) {
 			const lineHeight = parseInt(getComputedStyle(textAreaRef.current.resizableTextArea.textArea).lineHeight, 10);
-			textAreaRef.current.resizableTextArea.textArea.style.height = `${lineHeight * 4 + 24}px`;
+			textAreaRef.current.resizableTextArea.textArea.style.height = `${lineHeight * defaultTextInputSize + 24}px`;
 		}
 		if (!text.length) return;
 		setAskInProgress(true);
@@ -92,7 +94,7 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	useLayoutEffect(() => {
 		if (textAreaRef.current?.resizableTextArea) {
 			const lineHeight = parseInt(getComputedStyle(textAreaRef.current.resizableTextArea.textArea).lineHeight, 10);
-			textAreaRef.current.resizableTextArea.textArea.style.height = `${lineHeight * 2 + 24}px`;
+			textAreaRef.current.resizableTextArea.textArea.style.height = `${lineHeight * defaultTextInputSize + 24}px`;
 			const {scrollHeight} = textAreaRef.current.resizableTextArea.textArea;
 			textAreaRef.current.resizableTextArea.textArea.style.height = `${scrollHeight + 4}px`;
 		};
