@@ -9,6 +9,8 @@ export enum engineRole {
 	inprogress = "inprogress"
 }
 
+const validEngineRoles = new Set(['system', 'assistant', 'user', 'function', 'tool', 'developer'])
+
 export interface IEngineMessage {
 	content: string,
 	role: engineRole,
@@ -45,12 +47,14 @@ export const requestToEngine = async (message: IEngineMessage, params: { sysMess
 	const currentEngine = engine[message?.engine || "gpt"];
 
 	const apiRequestBody = {
-		"model": currentEngine.model, //gpt-4-1106-preview
+		"model": currentEngine.model,
 		"messages": [
 			...params.sysMessage,
-			...contextEngine.update(message),
+			...contextEngine.update(message).filter((item: IEngineMessage) => validEngineRoles.has(item.role)),
 		]
 	}
+
+	console.log(apiRequestBody.messages);
 
 	return await fetch(currentEngine.chatUrl,
 		{
