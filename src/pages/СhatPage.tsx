@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect, useCallback, useLayoutEffect} from 'react';
 import {Input, Spin} from 'antd';
-import {contextGPT, gptRole, IGptMessage, requestToGpt} from '../api/gptApi';
+import {contextEngine, engineRole, IEngineMessage, requestToEngine} from '../api/gptApi';
 import styled from 'styled-components';
 import '../App.css';
 import {ButtonAsk, MessageBlock} from '../components/styled'
@@ -38,13 +38,13 @@ const InputBlock = styled.div`
 
 const defaultTextInputSize = 2;
 
-function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
+function HatPage(params: { model: string, sysMessage: IEngineMessage[] }) {
 	const location = useLocation().pathname.slice(1);
 	useEffect(() => {
 		document.title = routeHeader[location];
 		return () => {
 			document.title = "React app"
-			contextGPT.clear();
+			contextEngine.clear();
 		}
 	}, [location])
 
@@ -52,7 +52,7 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	const [draftText, setDraftText] = useState('');
 	const [lang, setLang] = useState<string>('')
 	const chatBlockRef = useRef<HTMLDivElement>(null);
-	const [messages, setMessages] = useState<IGptMessage[]>([]);
+	const [messages, setMessages] = useState<IEngineMessage[]>([]);
 	const [askInProgress, setAskInProgress] = useState(false);
 	const [showClearModal, setShowClearModal] = useState(false);
 	const [isListening, setIsListening] = useState<boolean>(false);
@@ -80,11 +80,11 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 		}
 		if (!text.length) return;
 		setAskInProgress(true);
-		setMessages([...messages, {content: text, role: gptRole.user}, {
+		setMessages([...messages, {content: text, role: engineRole.user}, {
 			content: "I am thinking",
-			role: gptRole.inprogress
+			role: engineRole.inprogress
 		}]);
-		const messagesFromGpt = await requestToGpt({content: text, role: gptRole.user, engine}, params);
+		const messagesFromGpt = await requestToEngine({content: text, role: engineRole.user, engine}, params);
 		setMessages(messagesFromGpt);
 		setAskInProgress(false);
 		setText('');
@@ -115,7 +115,7 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 
 	const handleDeleteMessage = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, messageNumber: number) => {
 		if (e.ctrlKey || e.metaKey) {
-			const messages = contextGPT.deleteMessage(messageNumber);
+			const messages = contextEngine.deleteMessage(messageNumber);
 			setMessages([...messages]);
 		}
 	}
@@ -134,7 +134,7 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 	}
 
 	const clearChat = () => {
-		setMessages(contextGPT.clear());
+		setMessages(contextEngine.clear());
 		setShowClearModal(false);
 	}
 
@@ -152,7 +152,7 @@ function HatPage(params: { model: string, sysMessage: IGptMessage[] }) {
 			<ChatBlock ref={chatBlockRef}>
 				<div>{routeHeader[location]}</div>
 				<>
-					{messages.map((message: IGptMessage | Error, i) => {
+					{messages.map((message: IEngineMessage | Error, i) => {
 						if (message instanceof Error) return <div>{message.message}</div>
 						return (
 							<MessageBlock

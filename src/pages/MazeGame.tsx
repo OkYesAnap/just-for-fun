@@ -1,12 +1,12 @@
 import React, {useState, useCallback, memo} from 'react';
-import {contextGPT, gptRole, IGptMessage, requestToGpt} from '../api/gptApi';
+import {contextEngine, engineRole, IEngineMessage, requestToEngine} from '../api/gptApi';
 import {ButtonAsk} from '../components/styled';
 import styled from "styled-components";
 
 const messagesFromGpt = async (params: any) => {
-	const result = await requestToGpt({
+	const result = await requestToEngine({
 		content: '',
-		role: gptRole.user
+		role: engineRole.user
 	}, params);
 	return result;
 };
@@ -23,11 +23,11 @@ const askGpt = async ({
 	                      setAskInProgress,
 	                      setMaze
                       }: {
-	params: { model: string, sysMessage: IGptMessage[] },
+	params: { model: string, sysMessage: IEngineMessage[] },
 	setAskInProgress: React.Dispatch<React.SetStateAction<boolean>>,
 	setMaze: React.Dispatch<React.SetStateAction<Array<Array<number>>>>
 }): Promise<void> => {
-	contextGPT.clear();
+	contextEngine.clear();
 	setAskInProgress(true);
 	const message = await messagesFromGpt(params);
 	setMaze(strToMazeArray(message[1].content));
@@ -78,7 +78,7 @@ const Maze = ({maze}: { maze: Array<Array<number>> }) => {
 	}</GridContainerStyled>)
 }
 
-const MazeGame = (params: { model: string, sysMessage: IGptMessage[] }) => {
+const MazeGame = (params: { model: string, sysMessage: IEngineMessage[] }) => {
 	const [maze, setMaze] = useState<Array<Array<number>>>([]);
 	const [askInProgress, setAskInProgress] = useState<boolean>(false);
 	const getGeneratedData = useCallback(() => {

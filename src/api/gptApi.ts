@@ -1,7 +1,7 @@
 import engine from './engines.json';
 import {Engines} from "../utils/constanst";
 
-export enum gptRole {
+export enum engineRole {
 	assistant = "assistant",
 	user = "user",
 	system = "system",
@@ -9,20 +9,20 @@ export enum gptRole {
 	inprogress = "inprogress"
 }
 
-export interface IGptMessage {
+export interface IEngineMessage {
 	content: string,
-	role: gptRole,
+	role: engineRole,
 	engine?: Engines
 }
 
-class ContextGpt {
-	private context: IGptMessage[];
+class ContextEngine {
+	private context: IEngineMessage[];
 
 	constructor() {
 		this.context = [];
 	}
 
-	update(message: IGptMessage) {
+	update(message: IEngineMessage) {
 		this.context.push(message);
 		return this.context;
 	}
@@ -38,9 +38,9 @@ class ContextGpt {
 	}
 }
 
-export const contextGPT = new ContextGpt();
+export const contextEngine = new ContextEngine();
 
-export const requestToGpt = async (message: IGptMessage, params: { sysMessage: IGptMessage[] }) => {
+export const requestToEngine = async (message: IEngineMessage, params: { sysMessage: IEngineMessage[] }) => {
 
 	const currentEngine = engine[message?.engine || "gpt"];
 
@@ -48,7 +48,7 @@ export const requestToGpt = async (message: IGptMessage, params: { sysMessage: I
 		"model": currentEngine.model, //gpt-4-1106-preview
 		"messages": [
 			...params.sysMessage,
-			...contextGPT.update(message),
+			...contextEngine.update(message),
 		]
 	}
 
@@ -64,8 +64,8 @@ export const requestToGpt = async (message: IGptMessage, params: { sysMessage: I
 		return data.json();
 	}).then((data) => {
 		const messages = data?.error ?
-			contextGPT.update({content: data.error.message, role: gptRole.error}) :
-			contextGPT.update(data.choices[0].message)
+			contextEngine.update({content: data.error.message, role: engineRole.error}) :
+			contextEngine.update(data.choices[0].message)
 		return messages;
 	})
 };

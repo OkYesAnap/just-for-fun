@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import {MessageBlock} from "../styled";
-import {gptRole} from "../../api/gptApi";
+import {engineRole} from "../../api/gptApi";
 
 const FADE_DURATION = 500;
 
@@ -31,7 +31,7 @@ const DraftText: React.FC<{ text: string }> = ({text}) => {
 	return <DraftTextComponent $hastext={!!text}>
 		<MessageBlock
 			style={{margin: '0'}}
-			role={gptRole.user}>
+			role={engineRole.user}>
 			{transcript}
 		</MessageBlock>
 	</DraftTextComponent>
