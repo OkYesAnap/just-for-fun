@@ -13,11 +13,11 @@ const EngineChanger: React.FC<{
 	const items = [
 		{
 			key: "1",
-			label: (<div onClick={() => setEngine('deepSeek')}>{labelTemplate} DEEPSEEK</div>)
+			label: (<div onClick={() => setEngine(Engines.DEEP_SEEK)}>{labelTemplate} DEEPSEEK</div>)
 		},
 		{
 			key: "2",
-			label: (<div onClick={() => setEngine('gpt')}>{labelTemplate} GPT</div>)
+			label: (<div onClick={() => setEngine(Engines.GPT)}>{labelTemplate} GPT</div>)
 		}
 	]
 

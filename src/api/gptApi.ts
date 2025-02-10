@@ -24,6 +24,10 @@ class ContextEngine {
 		this.context = [];
 	}
 
+	get() {
+		return this.context;
+	}
+
 	update(message: IEngineMessage) {
 		this.context.push(message);
 		return this.context;
@@ -46,15 +50,16 @@ export const requestToEngine = async (message: IEngineMessage, params: { sysMess
 
 	const currentEngine = engine[message?.engine || "gpt"];
 
+	contextEngine.update(message);
+	const messageWithoutCustomRoles = contextEngine.get().filter((item: IEngineMessage) => validEngineRoles.has(item.role));
+	console.log(contextEngine.get());
 	const apiRequestBody = {
 		"model": currentEngine.model,
 		"messages": [
 			...params.sysMessage,
-			...contextEngine.update(message).filter((item: IEngineMessage) => validEngineRoles.has(item.role)),
+			...messageWithoutCustomRoles,
 		]
 	}
-
-	console.log(apiRequestBody.messages);
 
 	return await fetch(currentEngine.chatUrl,
 		{
@@ -67,10 +72,15 @@ export const requestToEngine = async (message: IEngineMessage, params: { sysMess
 		}).then((data) => {
 		return data.json();
 	}).then((data) => {
-		const messages = data?.error ?
-			contextEngine.update({content: data.error.message, role: engineRole.error}) :
-			contextEngine.update(data.choices[0].message)
-		return messages;
+		if (data?.error) {
+			return contextEngine.update({
+				content: data.error.message,
+				role: engineRole.error,
+				engine: message.engine
+			})
+		}
+		return contextEngine.update({...data.choices[0].message, engine: message.engine})
+
 	})
 };
 

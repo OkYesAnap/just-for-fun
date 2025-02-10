@@ -1,4 +1,7 @@
-export type Engines = "gpt" | "deepSeek"
+export enum Engines {
+	GPT = "gpt",
+	DEEP_SEEK = "deepSeek"
+}
 
 export const voiceEngines = {
 	google: "Google Voice Input",

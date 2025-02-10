@@ -1,9 +1,9 @@
-import React, {useState, useRef, useEffect, useCallback, useLayoutEffect} from 'react';
-import {Input, Spin} from 'antd';
+import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
+import {Input} from 'antd';
 import {contextEngine, engineRole, IEngineMessage, requestToEngine} from '../api/gptApi';
 import styled from 'styled-components';
 import '../App.css';
-import {ButtonAsk, MessageBlock} from '../components/styled'
+import {ButtonAsk} from '../components/styled'
 import {useLocation} from 'react-router-dom';
 import {routeHeader} from "./Main";
 import {useGoogleRecognition} from "../utils/useGoogleRecongnition";
@@ -14,6 +14,7 @@ import {Engines, voiceEngines, VoiceEngineSingleType} from "../utils/constanst";
 import DraftText from "../components/draftText/DraftText";
 import {TextAreaRef} from "antd/es/input/TextArea";
 import EngineChanger from "../components/engineChanger/EngineChanger";
+import Message from "../components/message/Message";
 
 const ChatBlock = styled.div`
   position: absolute;
@@ -59,7 +60,7 @@ function HatPage(params: { model: string, sysMessage: IEngineMessage[] }) {
 	const [autoAsk, setAutoAsk] = useState<boolean>(false);
 	const [voiceInputEngine, setVoiceInputEngine] = useState<VoiceEngineSingleType>(voiceEngines.google);
 	const [googleRecognizerAvailable, setGoogleRecognizerAvailable] = useState<boolean>(true);
-	const [engine, setEngine] = useState<Engines>('deepSeek');
+	const [engine, setEngine] = useState<Engines>(Engines.GPT);
 	const textAreaRef = useRef<TextAreaRef>(null);
 
 	useGoogleRecognition({
@@ -88,7 +89,7 @@ function HatPage(params: { model: string, sysMessage: IEngineMessage[] }) {
 		setMessages(messagesFromGpt);
 		setAskInProgress(false);
 		setText('');
-	}, [messages, params, text])
+	}, [messages, params, text, engine])
 
 	const lastMessage = messages[messages.length - 1];
 	const hasText = !!text.trim().length;
@@ -99,7 +100,7 @@ function HatPage(params: { model: string, sysMessage: IEngineMessage[] }) {
 			textAreaRef.current.resizableTextArea.textArea.style.height = `${lineHeight * defaultTextInputSize + 24}px`;
 			const {scrollHeight} = textAreaRef.current.resizableTextArea.textArea;
 			textAreaRef.current.resizableTextArea.textArea.style.height = `${scrollHeight + 4}px`;
-		};
+		}
 	}, [text]);
 
 	useEffect(() => {
@@ -110,15 +111,11 @@ function HatPage(params: { model: string, sysMessage: IEngineMessage[] }) {
 			if (autoAsk && isListening && !askInProgress && hasText) {
 				askGpt();
 			}
+			if (!text) {
+				textAreaRef?.current?.focus();
+			}
 		},
-		[lastMessage, askInProgress, autoAsk, isListening, askGpt, hasText]);
-
-	const handleDeleteMessage = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, messageNumber: number) => {
-		if (e.ctrlKey || e.metaKey) {
-			const messages = contextEngine.deleteMessage(messageNumber);
-			setMessages([...messages]);
-		}
-	}
+		[lastMessage, askInProgress, autoAsk, isListening, askGpt, hasText, text]);
 
 	const handleEnterPress: React.KeyboardEventHandler<HTMLTextAreaElement> = (event) => {
 		if (event.ctrlKey && event.key === 'Enter' && !askInProgress) {
@@ -128,10 +125,6 @@ function HatPage(params: { model: string, sysMessage: IEngineMessage[] }) {
 			setShowClearModal(true);
 		}
 	};
-
-	const LoaderAnimation = () => {
-		return <Spin size="large"/>
-	}
 
 	const clearChat = () => {
 		setMessages(contextEngine.clear());
@@ -152,16 +145,8 @@ function HatPage(params: { model: string, sysMessage: IEngineMessage[] }) {
 			<ChatBlock ref={chatBlockRef}>
 				<div>{routeHeader[location]}</div>
 				<>
-					{messages.map((message: IEngineMessage | Error, i) => {
-						if (message instanceof Error) return <div>{message.message}</div>
-						return (
-							<MessageBlock
-								role={message.role}
-								onClick={(e) => handleDeleteMessage(e, i)}
-								key={i}>
-								{message.content} {message.role === 'inprogress' && <LoaderAnimation/>}
-							</MessageBlock>
-						)
+					{messages.map((message: IEngineMessage, i) => {
+						return <Message {...{i, message, setMessages}}/>
 					})}
 				</>
 			</ChatBlock>

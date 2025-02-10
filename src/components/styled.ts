@@ -26,7 +26,12 @@ const setBackgroundColor = (role: engineRole) => {
 	return 'green'
 }
 
-export const MessageBlock = styled.div`
+interface MessageBlockProps {
+	role: string;
+	engine?: string;
+}
+
+export const MessageBlock = styled.div<MessageBlockProps>`
   margin: ${({role}) => (role === 'user' ? '10px 10vmin 10px 20px' : '10px 20px 10px 10vmin')};
   text-align: left;
   background-color: ${({role}) => setBackgroundColor(role as engineRole)};
@@ -34,6 +39,7 @@ export const MessageBlock = styled.div`
   border-radius: 10px;
   white-space: pre-wrap;
   animation: fadeIn ${({role}) => role === 'user' ? '500ms' : '1000ms'} ease-in;
+
   @keyframes fadeIn {
     0% {
       opacity: 0;
