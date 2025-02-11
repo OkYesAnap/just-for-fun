@@ -1,4 +1,4 @@
-import {contextEngine, engineRole, IEngineMessage} from "../../api/gptApi";
+import {contextEngine, EngineRole, IEngineMessage} from "../../api/gptApi";
 import {MessageBlock} from "../styled";
 import React, {Dispatch, SetStateAction} from "react";
 import EnginePrefix from './EnginePrefix';
@@ -16,17 +16,14 @@ const Message: React.FC<MessageProps> = ({i, message, setMessages}) => {
 			setMessages([...messages]);
 		}
 	};
-	const isInProgress = message.role === engineRole.inprogress;
-	const isValidRole = !(message.role === engineRole.user)
+	const isInProgress = message.role === EngineRole.inprogress;
+	const isValidRole = !(message.role === EngineRole.user)
 	return (<MessageBlock
 		role={message.role}
-		engine={message.engine}
-		onClick={(e) => handleDeleteMessage(e, i)}
-		key={i}>
-		<>
-			{(isValidRole || isInProgress) && <EnginePrefix {...{message}}/>}
-			<div>{message.content}</div>
-		</>
+		$engine={message.engine}
+		onClick={(e) => handleDeleteMessage(e, i)}>
+		{(isValidRole || isInProgress) && <EnginePrefix {...{message}}/>}
+		<div>{message.content}</div>
 	</MessageBlock>)
 }
 

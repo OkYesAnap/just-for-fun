@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {Input} from 'antd';
-import {contextEngine, engineRole, IEngineMessage, requestToEngine} from '../api/gptApi';
+import {contextEngine, EngineRole, IEngineMessage, requestToEngine} from '../api/gptApi';
 import styled from 'styled-components';
 import '../App.css';
 import {ButtonAsk} from '../components/styled'
@@ -144,7 +144,7 @@ function HatPage(params: HatPageProps) {
 				<div>{routeHeader[location]}</div>
 				<>
 					{messages.map((message: IEngineMessage, i) => {
-						return <Message {...{i, message, setMessages}}/>
+						return <Message key={i} {...{i, message, setMessages}}/>
 					})}
 				</>
 			</ChatBlock>

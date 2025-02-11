@@ -3,14 +3,12 @@ const jsTest = () =>{
 		const set1 = new Set(arr1);
 		const set2 = new Set(arr2);
 		// @ts-ignore
-		console.log(...arguments);
 		const intersect = [...arr1, ...arr2].filter(val => set1.has(val) && set2.has(val));
 		return Array.from(new Set(intersect));
 	}
 
 	const array1 = [1, 2, 3, 4, 5];
 	const array2 = [4, 5, 6, 7, 8];
-	console.log(intersectArrays(array1, array2))
 }
 
 export {jsTest}

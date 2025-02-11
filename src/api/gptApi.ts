@@ -1,7 +1,7 @@
 import engine from './engines.json';
 import {Engines} from "../utils/constanst";
 
-export enum engineRole {
+export enum EngineRole {
 	assistant = "assistant",
 	user = "user",
 	system = "system",
@@ -13,7 +13,7 @@ const validEngineRoles = new Set(['system', 'assistant', 'user', 'function', 'to
 
 export interface IEngineMessage {
 	content: string,
-	role: engineRole,
+	role: EngineRole,
 	engine?: Engines
 }
 
@@ -52,7 +52,6 @@ export const requestToEngine = async (message: IEngineMessage, params: { sysMess
 
 	contextEngine.update(message);
 	const messageWithoutCustomRoles = contextEngine.get().filter((item: IEngineMessage) => validEngineRoles.has(item.role));
-	console.log(contextEngine.get());
 	const apiRequestBody = {
 		"model": currentEngine.model,
 		"messages": [
@@ -75,7 +74,7 @@ export const requestToEngine = async (message: IEngineMessage, params: { sysMess
 		if (data?.error) {
 			return contextEngine.update({
 				content: data.error.message,
-				role: engineRole.error,
+				role: EngineRole.error,
 				engine: message.engine
 			})
 		}

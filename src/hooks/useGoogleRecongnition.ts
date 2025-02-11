@@ -58,7 +58,6 @@ const useGoogleRecognition = ({
 		//@ts-ignore
 		recognition.onresult = (event: SpeechRecognitionEvent) => {
 			const currentTranscript = event.results[event.resultIndex][0].transcript;
-			console.log(event.results[event.resultIndex][0].transcript);
 			setDraftTextCallback(event.results[event.resultIndex][0].transcript);
 			const isFinal = event.results[event.resultIndex].isFinal;
 			if (isFinal) {

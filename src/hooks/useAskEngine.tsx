@@ -1,5 +1,5 @@
 import {RefObject, Dispatch, SetStateAction, useCallback} from "react";
-import {engineRole, IEngineMessage, requestToEngine} from "../api/gptApi";
+import {EngineRole, IEngineMessage, requestToEngine} from "../api/gptApi";
 import {defaultTextInputSize, Engines} from "../utils/constanst";
 import {TextAreaRef} from "antd/es/input/TextArea";
 import {HatPageProps} from "../pages/ChatPage";
@@ -32,12 +32,12 @@ const useAskEngine = ({
 		}
 		if (!text.length) return;
 		setAskInProgress(true);
-		setMessages([...messages, {content: text, role: engineRole.user}, {
+		setMessages([...messages, {content: text, role: EngineRole.user}, {
 			content: "I am thinking",
 			engine,
-			role: engineRole.inprogress
+			role: EngineRole.inprogress
 		}]);
-		const messagesFromGpt = await requestToEngine({content: text, role: engineRole.user, engine}, params);
+		const messagesFromGpt = await requestToEngine({content: text, role: EngineRole.user, engine}, params);
 		setMessages(messagesFromGpt);
 		setAskInProgress(false);
 		setText('');

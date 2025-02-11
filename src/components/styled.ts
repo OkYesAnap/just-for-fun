@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {engineRole} from "../api/gptApi";
+import {EngineRole} from "../api/gptApi";
 
 export const ButtonAsk = styled.button`
   margin: 0.3rem 0.1rem;
@@ -17,10 +17,10 @@ export const ButtonAsk = styled.button`
   }
 `
 
-const setBackgroundColor = (role: engineRole) => {
-	if (role === engineRole.user) {
+const setBackgroundColor = (role: EngineRole) => {
+	if (role === EngineRole.user) {
 		return "darkolivegreen";
-	} else if (role === engineRole.error) {
+	} else if (role === EngineRole.error) {
 		return "red";
 	}
 	return 'green'
@@ -28,13 +28,13 @@ const setBackgroundColor = (role: engineRole) => {
 
 interface MessageBlockProps {
 	role: string;
-	engine?: string;
+	$engine?: string;
 }
 
 export const MessageBlock = styled.div<MessageBlockProps>`
   margin: ${({role}) => (role === 'user' ? '10px 10vmin 10px 20px' : '10px 20px 10px 10vmin')};
   text-align: left;
-  background-color: ${({role}) => setBackgroundColor(role as engineRole)};
+  background-color: ${({role}) => setBackgroundColor(role as EngineRole)};
   padding: 20px;
   border-radius: 10px;
   white-space: pre-wrap;

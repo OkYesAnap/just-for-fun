@@ -1,12 +1,12 @@
 import React, {useState, useCallback, memo} from 'react';
-import {contextEngine, engineRole, IEngineMessage, requestToEngine} from '../api/gptApi';
+import {contextEngine, EngineRole, IEngineMessage, requestToEngine} from '../api/gptApi';
 import {ButtonAsk} from '../components/styled';
 import styled from "styled-components";
 
 const messagesFromGpt = async (params: any) => {
 	const result = await requestToEngine({
 		content: '',
-		role: engineRole.user
+		role: EngineRole.user
 	}, params);
 	return result;
 };
