@@ -3,6 +3,8 @@ export enum Engines {
 	DEEP_SEEK = "deepSeek"
 }
 
+export const defaultTextInputSize = 2;
+
 export const voiceEngines = {
 	google: "Google Voice Input",
 	gpt: "GPT Api Voice Input",

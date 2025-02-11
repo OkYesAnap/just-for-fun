@@ -6,15 +6,16 @@ import '../App.css';
 import {ButtonAsk} from '../components/styled'
 import {useLocation} from 'react-router-dom';
 import {routeHeader} from "./Main";
-import {useGoogleRecognition} from "../utils/useGoogleRecongnition";
+import {useGoogleRecognition} from "../hooks/useGoogleRecongnition";
 import ModalWindow from "../components/modal/ModalMessage";
 import VoiceInput from "../components/voiceInput/VoiceInput";
-import useVoiceRecorder from "../utils/useVioceRecorder";
-import {Engines, voiceEngines, VoiceEngineSingleType} from "../utils/constanst";
+import useVoiceRecorder from "../hooks/useVioceRecorder";
+import {defaultTextInputSize, Engines, voiceEngines, VoiceEngineSingleType} from "../utils/constanst";
 import DraftText from "../components/draftText/DraftText";
 import {TextAreaRef} from "antd/es/input/TextArea";
 import EngineChanger from "../components/engineChanger/EngineChanger";
 import Message from "../components/message/Message";
+import {useAskEngine} from "../hooks/useAskEngine";
 
 const ChatBlock = styled.div`
   position: absolute;
@@ -37,9 +38,12 @@ const InputBlock = styled.div`
   background-color: #282c34;
 `
 
-const defaultTextInputSize = 2;
+export interface HatPageProps {
+	model: string,
+	sysMessage: IEngineMessage[]
+}
 
-function HatPage(params: { model: string, sysMessage: IEngineMessage[] }) {
+function HatPage(params: HatPageProps) {
 	const location = useLocation().pathname.slice(1);
 	useEffect(() => {
 		document.title = routeHeader[location];
@@ -74,22 +78,16 @@ function HatPage(params: { model: string, sysMessage: IEngineMessage[] }) {
 	});
 	useVoiceRecorder(isListening && voiceInputEngine === voiceEngines.gpt, setText);
 
-	const askGpt = useCallback(async () => {
-		if (textAreaRef.current?.resizableTextArea) {
-			const lineHeight = parseInt(getComputedStyle(textAreaRef.current.resizableTextArea.textArea).lineHeight, 10);
-			textAreaRef.current.resizableTextArea.textArea.style.height = `${lineHeight * defaultTextInputSize + 24}px`;
-		}
-		if (!text.length) return;
-		setAskInProgress(true);
-		setMessages([...messages, {content: text, role: engineRole.user}, {
-			content: "I am thinking",
-			role: engineRole.inprogress
-		}]);
-		const messagesFromGpt = await requestToEngine({content: text, role: engineRole.user, engine}, params);
-		setMessages(messagesFromGpt);
-		setAskInProgress(false);
-		setText('');
-	}, [messages, params, text, engine])
+	const askEngine = useAskEngine({
+		textAreaRef,
+		setAskInProgress,
+		setText,
+		text,
+		params,
+		engine,
+		setMessages,
+		messages
+	});
 
 	const lastMessage = messages[messages.length - 1];
 	const hasText = !!text.trim().length;
@@ -109,17 +107,17 @@ function HatPage(params: { model: string, sysMessage: IEngineMessage[] }) {
 
 	useEffect(() => {
 			if (autoAsk && isListening && !askInProgress && hasText) {
-				askGpt();
+				askEngine();
 			}
 			if (!text) {
 				textAreaRef?.current?.focus();
 			}
 		},
-		[lastMessage, askInProgress, autoAsk, isListening, askGpt, hasText, text]);
+		[lastMessage, askInProgress, autoAsk, isListening, askEngine, hasText, text]);
 
 	const handleEnterPress: React.KeyboardEventHandler<HTMLTextAreaElement> = (event) => {
 		if (event.ctrlKey && event.key === 'Enter' && !askInProgress) {
-			askGpt();
+			askEngine();
 		}
 		if (event.key === 'Escape' && !askInProgress) {
 			setShowClearModal(true);
@@ -156,7 +154,7 @@ function HatPage(params: { model: string, sysMessage: IEngineMessage[] }) {
 						<EngineChanger {...{engine, setEngine}}/>
 						<ButtonAsk onClick={() => {
 							setAutoAsk(false);
-							askGpt()
+							askEngine()
 						}} style={{flexGrow: "1"}} disabled={askInProgress}>Ask</ButtonAsk>
 					</div>
 

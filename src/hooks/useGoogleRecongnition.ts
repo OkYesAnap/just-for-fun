@@ -1,5 +1,5 @@
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo} from "react";
-import {voiceEngines, VoiceEngineSingleType} from "./constanst";
+import {voiceEngines, VoiceEngineSingleType} from "../utils/constanst";
 
 interface GoogleRecognition {
 	isListening: boolean;
