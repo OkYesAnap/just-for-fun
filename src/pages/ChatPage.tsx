@@ -1,6 +1,6 @@
-import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {Input} from 'antd';
-import {contextEngine, EngineRole, IEngineMessage, requestToEngine} from '../api/gptApi';
+import {contextEngine, IEngineMessage} from '../api/gptApi';
 import styled from 'styled-components';
 import '../App.css';
 import {ButtonAsk} from '../components/styled'
@@ -19,10 +19,14 @@ import {useAskEngine} from "../hooks/useAskEngine";
 
 const ChatBlock = styled.div`
   position: absolute;
+	margin-top: 3vmin;
   width: 100%;
   height: 75%;
   overflow: auto;
   scroll-behavior: smooth;
+	display: flex;
+	flex-direction: column;
+	align-items: end;
 `
 
 const InputBlock = styled.div`
@@ -140,8 +144,8 @@ function HatPage(params: HatPageProps) {
 
 	return (
 		<>
+			<div>{routeHeader[location]}</div>
 			<ChatBlock ref={chatBlockRef}>
-				<div>{routeHeader[location]}</div>
 				<>
 					{messages.map((message: IEngineMessage, i) => {
 						return <Message key={i} {...{i, message, setMessages}}/>

@@ -20,11 +20,11 @@ export const ButtonAsk = styled.button`
 
 const setBackgroundColor = ($role: EngineRole) => {
 	if ($role === EngineRole.user) {
-		return "darkolivegreen";
+		return "#414158";
 	} else if ($role === EngineRole.error) {
 		return "red";
 	}
-	return 'green'
+	return 'rgba(0, 0, 0, 0)'
 }
 
 interface MessageBlockProps {
@@ -33,8 +33,9 @@ interface MessageBlockProps {
 }
 
 export const MessageBlock = styled.div<MessageBlockProps>`
-  margin: ${({$role}) => ($role === 'user' ? '10px 10vmin 10px 20px' : '10px 20px 10px 10vmin')};
+  margin: ${({$role}) => ($role === 'user' ? '10px 10vmin 10px 20px' : '10px auto 10px 10vmin')};
   text-align: left;
+	width: fit-content;
   background-color: ${({$role}) => setBackgroundColor($role)};
   padding: 20px;
   border-radius: 10px;
