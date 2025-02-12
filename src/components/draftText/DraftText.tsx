@@ -31,7 +31,7 @@ const DraftText: React.FC<{ text: string }> = ({text}) => {
 	return <DraftTextComponent $hastext={!!text}>
 		<MessageBlock
 			style={{margin: '0'}}
-			role={EngineRole.user}>
+			$role={EngineRole.user}>
 			{transcript}
 		</MessageBlock>
 	</DraftTextComponent>

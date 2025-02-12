@@ -17,28 +17,28 @@ export const ButtonAsk = styled.button`
   }
 `
 
-const setBackgroundColor = (role: EngineRole) => {
-	if (role === EngineRole.user) {
+const setBackgroundColor = ($role: EngineRole) => {
+	if ($role === EngineRole.user) {
 		return "darkolivegreen";
-	} else if (role === EngineRole.error) {
+	} else if ($role === EngineRole.error) {
 		return "red";
 	}
 	return 'green'
 }
 
 interface MessageBlockProps {
-	role: string;
+	$role: EngineRole;
 	$engine?: string;
 }
 
 export const MessageBlock = styled.div<MessageBlockProps>`
-  margin: ${({role}) => (role === 'user' ? '10px 10vmin 10px 20px' : '10px 20px 10px 10vmin')};
+  margin: ${({$role}) => ($role === 'user' ? '10px 10vmin 10px 20px' : '10px 20px 10px 10vmin')};
   text-align: left;
-  background-color: ${({role}) => setBackgroundColor(role as EngineRole)};
+  background-color: ${({$role}) => setBackgroundColor($role)};
   padding: 20px;
   border-radius: 10px;
   white-space: pre-wrap;
-  animation: fadeIn ${({role}) => role === 'user' ? '500ms' : '1000ms'} ease-in;
+  animation: fadeIn ${({$role}) => $role === EngineRole.user ? '500ms' : '1000ms'} ease-in;
 
   @keyframes fadeIn {
     0% {

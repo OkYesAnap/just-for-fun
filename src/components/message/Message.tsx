@@ -19,7 +19,7 @@ const Message: React.FC<MessageProps> = ({i, message, setMessages}) => {
 	const isInProgress = message.role === EngineRole.inprogress;
 	const isValidRole = !(message.role === EngineRole.user)
 	return (<MessageBlock
-		role={message.role}
+		$role={message.role}
 		$engine={message.engine}
 		onClick={(e) => handleDeleteMessage(e, i)}>
 		{(isValidRole || isInProgress) && <EnginePrefix {...{message}}/>}
