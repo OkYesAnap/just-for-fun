@@ -32,10 +32,10 @@ const InputBlock = styled.div`
   align-items: center;
   justify-content: center;
   height: auto;
-  max-height: 90%;
+  max-height: 95%;
   bottom: 0;
+  padding-top: 10px;
   width: 80%;
-  background-color: #282c34;
 `
 
 export interface HatPageProps {
@@ -95,7 +95,7 @@ function HatPage(params: HatPageProps) {
 	useLayoutEffect(() => {
 		if (textAreaRef.current?.resizableTextArea) {
 			const lineHeight = parseInt(getComputedStyle(textAreaRef.current.resizableTextArea.textArea).lineHeight, 10);
-			textAreaRef.current.resizableTextArea.textArea.style.height = `${lineHeight * defaultTextInputSize + 24}px`;
+			textAreaRef.current.resizableTextArea.textArea.style.height = `${lineHeight * defaultTextInputSize + 20}px`;
 			const {scrollHeight} = textAreaRef.current.resizableTextArea.textArea;
 			textAreaRef.current.resizableTextArea.textArea.style.height = `${scrollHeight + 4}px`;
 		}
@@ -149,7 +149,7 @@ function HatPage(params: HatPageProps) {
 				</>
 			</ChatBlock>
 			<InputBlock>
-				<div className={'text-props'} style={{display: "flex"}}>
+				<div className={'text-props'} style={{display: "flex", backgroundColor: "#282c34"}}>
 					<div style={{flex: "5", display: "flex", flexFlow: "column"}}>
 						<EngineChanger {...{engine, setEngine}}/>
 						<ButtonAsk onClick={() => {

@@ -8,7 +8,7 @@ const EngineChanger: React.FC<{
 	setEngine: Dispatch<SetStateAction<Engines>>
 }> = ({engine, setEngine}) => {
 
-	const labelTemplate = '"Ask" for manual request to';
+	const labelTemplate = '"Ask" for request to';
 
 	const items = [
 		{

@@ -3,10 +3,11 @@ import {EngineRole} from "../api/gptApi";
 
 export const ButtonAsk = styled.button`
   margin: 0.3rem 0.1rem;
-  padding: 1rem 0.75rem;
+  padding: 0.2rem 0.75rem;
   background-color: #2196F3;
+  min-height: 50px;
   color: white;
-  font-size: 1.3rem;
+  font-size: clamp(6px, 2.5vw, 20px);
   border: 1px solid white;
   border-radius: 0.25rem;
   cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
@@ -37,6 +38,7 @@ export const MessageBlock = styled.div<MessageBlockProps>`
   background-color: ${({$role}) => setBackgroundColor($role)};
   padding: 20px;
   border-radius: 10px;
+  font-size: clamp(10px, 2.5vh, 20px);
   white-space: pre-wrap;
   animation: fadeIn ${({$role}) => $role === EngineRole.user ? '500ms' : '1000ms'} ease-in;
 

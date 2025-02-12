@@ -22,36 +22,32 @@
 .text-props {
   border-radius: 8px;
   width: 70%;
-  font-size: 20px;
+  font-size: clamp(6px, 2.5vw, 20px);
   transition: height 0.2s ease-in-out;
 }
 
 .text-props:disabled {
-  color: white; /* Цвет текста */
+  color: white;
 }
 
-/* Скрыть стандартный скролл */
 ::-webkit-scrollbar {
   width: 4px;
   background-color: #F5F5F5;
 }
 
-/* Кастомное оформление подложки скролла */
 ::-webkit-scrollbar-track {
   border-radius: 6px;
 }
-/* Кастомное оформление ползунка скролла */
+
 ::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 6px;
 }
 
-/* Изменение цвета активного ползунка */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
 
-/* Изменение цвета активного ползунка при наведении на ползунок */
 ::-webkit-scrollbar-thumb:active {
   background-color: #444;
 }

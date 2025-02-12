@@ -51,7 +51,7 @@ const VoiceInput: React.FC<IVoiceListeningProps> = ({
 		<ButtonAsk disabled={isListening} style={{background: "blue", flexGrow: "1"}}
 		           onClick={() => start("ru-RU")}>RU</ButtonAsk>
 		<ButtonAsk disabled={!isListening || autoAsk} style={{background: "purple"}}
-		           onClick={() => setAutoAsk((prev) => !prev)}>Auto Ask</ButtonAsk>
+		           onClick={() => setAutoAsk((prev) => !prev)}>Auto</ButtonAsk>
 	</div>);
 
 	const GPTButtons = () => (<>

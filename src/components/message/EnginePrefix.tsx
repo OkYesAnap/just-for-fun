@@ -29,10 +29,10 @@ const EnginePrefix: React.FC<{ message: IEngineMessage }> = ({message}) => {
 	}, [message.role]);
 
 	if (message.engine === Engines.DEEP_SEEK) {
-		return (<DeepSeek ref={deepSeekRef} style={{height: '2.4vw'}}/>)
+		return (<DeepSeek ref={deepSeekRef} style={{height: '2.4vw', maxHeight: '30px'}}/>)
 	}
 	if (message.engine === Engines.GPT) {
-		return (<OpenAI ref={openAIRef} style={{height: '2.4vw'}}/>)
+		return (<OpenAI ref={openAIRef} style={{height: '2.4vw', maxHeight: '30px'}}/>)
 	}
 	return null
 }
