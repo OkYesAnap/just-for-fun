@@ -6,7 +6,7 @@ import {ChatContext} from "../../context/ChatContext";
 
 const MessagesBlockStyled = styled.div`
   position: absolute;
-  margin-top: 3vmin;
+  margin-top: 4vmin;
   width: 100%;
   height: 75%;
   overflow: auto;
