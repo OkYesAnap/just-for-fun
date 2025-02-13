@@ -1,25 +1,20 @@
-import {Dispatch, SetStateAction, useCallback, useEffect, useMemo} from "react";
-import {voiceEngines, VoiceEngineSingleType} from "../utils/constanst";
+import {useCallback, useContext, useEffect, useMemo} from "react";
+import {voiceEngines} from "../utils/constanst";
+import {ChatContext} from "../context/ChatContext";
 
-interface GoogleRecognition {
-	isListening: boolean;
-	setIsListening: Dispatch<SetStateAction<boolean>>;
-	setText: Dispatch<SetStateAction<string>>;
-	lang: string;
-	setDraftText: Dispatch<SetStateAction<string>>;
-	setVoiceInputEngine: Dispatch<SetStateAction<VoiceEngineSingleType>>;
-	setGoogleRecognizerAvailable: Dispatch<SetStateAction<boolean>>;
-}
+const useGoogleRecognition = () => {
 
-const useGoogleRecognition = ({
-	                              isListening,
-	                              setIsListening,
-	                              setText,
-	                              lang,
-	                              setDraftText,
-	                              setVoiceInputEngine,
-	                              setGoogleRecognizerAvailable
-                              }: GoogleRecognition) => {
+	const {
+		setText,
+		setDraftText,
+		lang,
+		isListening,
+		setIsListening,
+		voiceInputEngine,
+		setVoiceInputEngine,
+		setGoogleRecognizerAvailable
+	} = useContext(ChatContext);
+
 	const recognition = useMemo(() => {
 		try {
 			//@ts-ignore
@@ -35,7 +30,7 @@ const useGoogleRecognition = ({
 
 
 	const setTextCallBack = useCallback((text: string) => {
-		if(text.trim().length) {
+		if (text.trim().length) {
 			setText((prev) => `${prev} ${text}.\n`);
 		}
 	}, [setText]);
@@ -49,7 +44,7 @@ const useGoogleRecognition = ({
 			setVoiceInputEngine(voiceEngines.gpt);
 			setGoogleRecognizerAvailable(false);
 			return;
-		};
+		}
 		recognition.lang = lang;
 		recognition.onaudioend = () => setIsListening(false);
 		recognition.continuous = true;
@@ -65,7 +60,7 @@ const useGoogleRecognition = ({
 				setDraftTextCallback('');
 			}
 		};
-		if (isListening) {
+		if (isListening && voiceInputEngine === voiceEngines.google) {
 			recognition.start()
 		} else {
 			recognition.stop();
@@ -75,7 +70,15 @@ const useGoogleRecognition = ({
 			recognition.stop();
 			setDraftTextCallback('');
 		};
-	}, [isListening, setTextCallBack, setDraftTextCallback, recognition, lang, setVoiceInputEngine, setIsListening, setGoogleRecognizerAvailable]);
+	}, [isListening,
+		setTextCallBack,
+		setDraftTextCallback,
+		recognition,
+		lang,
+		setVoiceInputEngine,
+		setIsListening,
+		setGoogleRecognizerAvailable,
+		voiceInputEngine]);
 }
 
 export {useGoogleRecognition}

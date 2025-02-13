@@ -1,38 +1,27 @@
-import React from "react";
-import {Dispatch, SetStateAction} from 'react';
+import React, {useContext} from "react";
 import {ButtonAsk} from "../styled";
 import styled from "styled-components";
 import {Dropdown} from "antd";
-import {voiceEngines, VoiceEngineSingleType} from "../../utils/constanst";
+import {voiceEngines} from "../../utils/constanst";
+import {ChatContext} from "../../context/ChatContext";
 
 const VoiceInputBlock = styled.div`
   flex-direction: column;
   flex: 3;
 `
 
-type BoolSetState = Dispatch<SetStateAction<boolean>>;
+const VoiceInput: React.FC = () => {
 
-interface IVoiceListeningProps {
-	isListening: boolean;
-	setIsListening: BoolSetState;
-	autoAsk: boolean;
-	setAutoAsk: BoolSetState;
-	start: (lang: string) => void;
-	voiceInputEngine: VoiceEngineSingleType;
-	setVoiceInputEngine: React.Dispatch<React.SetStateAction<VoiceEngineSingleType>>;
-	googleRecognizerAvailable: boolean;
-}
-
-const VoiceInput: React.FC<IVoiceListeningProps> = ({
-	isListening,
-	setIsListening,
-	autoAsk,
-	setAutoAsk,
-	start,
-	voiceInputEngine,
-	setVoiceInputEngine,
-    googleRecognizerAvailable,
-}) => {
+	const {
+		isListening,
+		setIsListening,
+		autoAsk,
+		setAutoAsk,
+		voiceInputEngine,
+		setVoiceInputEngine,
+		googleRecognizerAvailable,
+		startListenVoice
+	} = useContext(ChatContext);
 
 	const items = [
 		{
@@ -47,9 +36,9 @@ const VoiceInput: React.FC<IVoiceListeningProps> = ({
 
 	const GoogleButtons = () => (<div style={{flexGrow: "1", display: "flex"}}>
 		<ButtonAsk disabled={isListening} style={{background: "blue", flexGrow: "1"}}
-		           onClick={() => start("en-EN")}>EN</ButtonAsk>
+		           onClick={() => startListenVoice("en-EN")}>EN</ButtonAsk>
 		<ButtonAsk disabled={isListening} style={{background: "blue", flexGrow: "1"}}
-		           onClick={() => start("ru-RU")}>RU</ButtonAsk>
+		           onClick={() => startListenVoice("ru-RU")}>RU</ButtonAsk>
 		<ButtonAsk disabled={!isListening || autoAsk} style={{background: "purple"}}
 		           onClick={() => setAutoAsk((prev) => !prev)}>Auto</ButtonAsk>
 	</div>);

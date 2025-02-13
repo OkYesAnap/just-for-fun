@@ -1,7 +1,15 @@
-import React, {useRef, useEffect, useCallback} from 'react';
+import {useRef, useEffect, useCallback, useContext} from 'react';
 import {sendAudioToServer} from "../api/gptApi";
+import {ChatContext} from "../context/ChatContext";
+import {voiceEngines} from "../utils/constanst";
 
-const useVoiceRecorder = (isListening: boolean, setText: React.Dispatch<React.SetStateAction<string>>) => {
+const useVoiceRecorder = () => {
+	const {
+		setText,
+		isListening,
+		voiceInputEngine
+	} = useContext(ChatContext);
+
 	const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 	const audioChunksRef = useRef<Blob[]>([]);
 	const stream = useRef<MediaStream | null>(null);
@@ -37,7 +45,7 @@ const useVoiceRecorder = (isListening: boolean, setText: React.Dispatch<React.Se
 
 	useEffect(() => {
 
-			if (isListening) {
+			if (isListening && voiceInputEngine === voiceEngines.gpt ) {
 				startRecording();
 			} else {
 				stopRecording();
@@ -46,7 +54,7 @@ const useVoiceRecorder = (isListening: boolean, setText: React.Dispatch<React.Se
 				stopRecording()
 			}
 		}
-		, [isListening, updateText, startRecording])
+		, [isListening, updateText, startRecording, voiceInputEngine])
 
 };
 
