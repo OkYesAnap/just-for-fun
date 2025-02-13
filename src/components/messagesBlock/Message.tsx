@@ -17,7 +17,7 @@ const Message: React.FC<MessageProps> = ({i, message, setMessages}) => {
 		}
 	};
 	const isInProgress = message.role === EngineRole.inprogress;
-	const isValidRole = !(message.role === EngineRole.user)
+	const isValidRole = !(message.role === EngineRole.user);
 	return (<MessageBlock
 		$role={message.role}
 		$engine={message.engine}

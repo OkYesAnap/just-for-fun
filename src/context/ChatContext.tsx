@@ -46,9 +46,9 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
 
 
 	const startListenVoice = (lang: string) => {
-		setLang(lang)
+		setLang(lang);
 		setIsListening(true);
-	}
+	};
 
 	return (
 		<ChatContext.Provider value={{
@@ -68,6 +68,6 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
 			{children}
 		</ChatContext.Provider>
 	)
-}
+};
 
 export {ChatContextProvider}

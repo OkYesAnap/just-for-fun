@@ -14,15 +14,17 @@ const MessagesBlockStyled = styled.div`
   display: flex;
   flex-direction: column;
   align-items: end;
-`
+`;
 
 const MessagesBlock: React.FC = () => {
 	const chatBlockRef = useRef<HTMLDivElement>(null);
 	const {messages, setMessages} = useContext(ChatContext);
 
 	useEffect(() => {
-		if (chatBlockRef?.current) chatBlockRef.current.scrollTop = chatBlockRef.current.scrollHeight;
-	}, [messages])
+		if (chatBlockRef?.current) {
+			chatBlockRef.current.scrollTop = chatBlockRef.current.scrollHeight;
+		}
+	}, [messages]);
 
 	return (<MessagesBlockStyled ref={chatBlockRef}>
 		<>
@@ -31,6 +33,6 @@ const MessagesBlock: React.FC = () => {
 			})}
 		</>
 	</MessagesBlockStyled>)
-}
+};
 
 export default MessagesBlock;
