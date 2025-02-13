@@ -1,8 +1,8 @@
 import React, {useContext, useEffect, useState} from "react";
 import styled from "styled-components";
-import {MessageBlock} from "../styled";
 import {EngineRole} from "../../api/gptApi";
 import {ChatContext} from "../../context/ChatContext";
+import {MessageBlock} from '../messagesBlock/Message';
 
 const FADE_DURATION = 500;
 
