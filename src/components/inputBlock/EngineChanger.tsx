@@ -1,6 +1,7 @@
 import React, {Dispatch, SetStateAction} from "react";
 import {Dropdown} from "antd";
 import {Engines} from "../../utils/constanst";
+import InputLabel from "./InputLabel";
 
 
 const EngineChanger: React.FC<{
@@ -23,7 +24,7 @@ const EngineChanger: React.FC<{
 
 	return (<Dropdown menu={{items}}
 	                  placement="top">
-		<div>{labelTemplate} {engine.toUpperCase()}</div>
+		<div><InputLabel>{labelTemplate} {engine.toUpperCase()}</InputLabel></div>
 	</Dropdown>)
 }
 

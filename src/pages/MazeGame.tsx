@@ -1,6 +1,6 @@
 import React, {useState, useCallback, memo} from 'react';
 import {contextEngine, EngineRole, IEngineMessage, requestToEngine} from '../api/gptApi';
-import {UnputButton} from '../components/inputBlock/InputButton';
+import InputButton from '../components/inputBlock/InputButton';
 import styled from "styled-components";
 
 const messagesFromGpt = async (params: any) => {
@@ -46,7 +46,7 @@ const MazeCellStyled = styled.div<IMazeCellStyled>`
 
 const Cells = ({line, y}: { line: Array<number>, y: number }) => {
 	return (<>{line.map((cell: number, x: number) => {
-			const cellId = `Cell=${y}x${x}`
+			const cellId = `Cell=${y}x${x}`;
 			return <MazeCellStyled type={cell} key={cellId}/>
 		})}
 		</>
@@ -87,9 +87,9 @@ const MazeGame = (params: { model: string, sysMessage: IEngineMessage[] }) => {
 
 	return (<>
 		Hello {askInProgress ? 'Generating' : ''}
-		<UnputButton onClick={getGeneratedData} disabled={askInProgress} className={'text-props'}>
+		<InputButton onClick={getGeneratedData} disabled={askInProgress}>
 			Start generating
-		</UnputButton>
+		</InputButton>
 		<Maze {...{maze}}/>
 	</>);
 };

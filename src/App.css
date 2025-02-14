@@ -19,17 +19,6 @@
   background-color: white !important;
 }
 
-.text-props {
-  border-radius: 8px;
-  width: 70%;
-  font-size: clamp(6px, 2.5vw, 20px);
-  transition: height 0.2s ease-in-out;
-}
-
-.text-props:disabled {
-  color: white;
-}
-
 ::-webkit-scrollbar {
   width: 4px;
   background-color: #F5F5F5;
@@ -37,15 +26,6 @@
 
 ::-webkit-scrollbar-track {
   border-radius: 6px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 6px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
 }
 
 ::-webkit-scrollbar-thumb:active {

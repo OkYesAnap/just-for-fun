@@ -1,5 +1,5 @@
-import EngineChanger from "../engineChanger/EngineChanger";
-import {UnputButton} from "./InputButton";
+import EngineChanger from "./EngineChanger";
+import InputButton from "./InputButton";
 import VoiceInput from "./VoiceInput";
 import {Input} from "antd";
 import React, {useContext, useEffect, useLayoutEffect, useRef} from "react";
@@ -21,7 +21,20 @@ const InputBlockStyled = styled.div`
   bottom: 0;
   padding-top: 10px;
   width: 80%;
-`
+`;
+
+const TextAreaStyled = styled(Input.TextArea)`
+  border-radius: 8px;
+  width: inherit;
+  font-size: clamp(6px, 2.5vw, 20px);
+  transition: height 0.2s ease-in-out;
+  background-color: #bebebe;
+`;
+
+const InfoAreaStyled = styled.div`
+  display: flex;
+  width: inherit;
+`;
 
 const InputBlock: React.FC<ChatPageProps> = (params) => {
 
@@ -67,21 +80,21 @@ const InputBlock: React.FC<ChatPageProps> = (params) => {
 		setText(e.target.value);
 	};
 
-	const onAskClick = () => {
+	const onClick = () => {
 		setAutoAsk(false);
 		askEngine();
 	}
 
 	return (
 		<InputBlockStyled>
-			<div className={'text-props'} style={{display: "flex", backgroundColor: "#282c34"}}>
+			<InfoAreaStyled>
 				<div style={{flex: "5", display: "flex", flexFlow: "column"}}>
 					<EngineChanger {...{engine, setEngine}}/>
-					<UnputButton onClick={onAskClick} style={{flexGrow: "1"}} disabled={askInProgress}>Ask</UnputButton>
+					<InputButton {...{onClick, disabled: askInProgress}}>Ask</InputButton>
 				</div>
 				<VoiceInput/>
-			</div>
-			<Input.TextArea className={'text-props'} value={text} ref={textAreaRef}
+			</InfoAreaStyled>
+			<TextAreaStyled value={text} ref={textAreaRef}
 			                disabled={(autoAsk && isListening) || askInProgress}
 			                onChange={onChangeTextAria} onKeyDown={handleEnterPress}/>
 		</InputBlockStyled>)

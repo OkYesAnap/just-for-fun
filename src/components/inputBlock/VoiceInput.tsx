@@ -1,9 +1,10 @@
 import React, {useContext} from "react";
-import {UnputButton} from "./InputButton";
+import InputButton from "./InputButton";
 import styled from "styled-components";
 import {Dropdown} from "antd";
 import {voiceEngines} from "../../utils/constanst";
 import {ChatContext} from "../../context/ChatContext";
+import InputLabel from "./InputLabel";
 
 const VoiceInputBlock = styled.div`
   flex-direction: column;
@@ -35,30 +36,32 @@ const VoiceInput: React.FC = () => {
 	]
 
 	const GoogleButtons = () => (<div style={{flexGrow: "1", display: "flex"}}>
-		<UnputButton disabled={isListening} style={{background: "blue", flexGrow: "1"}}
-		             onClick={() => startListenVoice("en-EN")}>EN</UnputButton>
-		<UnputButton disabled={isListening} style={{background: "blue", flexGrow: "1"}}
-		             onClick={() => startListenVoice("ru-RU")}>RU</UnputButton>
-		<UnputButton disabled={!isListening || autoAsk} style={{background: "purple"}}
-		             onClick={() => setAutoAsk((prev) => !prev)}>Auto</UnputButton>
+		<InputButton disabled={isListening} style={{flexGrow: "1"}}
+		             onClick={() => startListenVoice("en-EN")}>EN</InputButton>
+		<InputButton disabled={isListening} style={{flexGrow: "1"}}
+		             onClick={() => startListenVoice("ru-RU")}>RU</InputButton>
+		<InputButton disabled={!isListening || autoAsk}
+		             onClick={() => setAutoAsk((prev) => !prev)}>Auto</InputButton>
 	</div>);
 
 	const GPTButtons = () => (<>
-		<UnputButton style={{background: "blue", flexGrow: "1"}}
+		<InputButton style={{flexGrow: "1"}}
 		             onClick={() => setIsListening((prevState) => !prevState)}>
 			{!isListening ? "Listen" : "Recognize"}
-		</UnputButton>
+		</InputButton>
 	</>)
 
 	return <VoiceInputBlock>
 		<Dropdown menu={{items}} disabled={isListening || !googleRecognizerAvailable} placement="top">
-			<div>{voiceInputEngine}</div>
+			<div><InputLabel>{voiceInputEngine}</InputLabel></div>
 		</Dropdown>
 		<div style={{width: "100%", display: "flex"}}>
 			{voiceInputEngine === voiceEngines.google ? <GoogleButtons/> : <GPTButtons/>}
-			<UnputButton disabled={!isListening} style={{background: "red"}}
-			             onClick={() => {setIsListening(false)
-								 setAutoAsk(false)}}>stop</UnputButton>
+			<InputButton disabled={!isListening}
+			             onClick={() => {
+				             setIsListening(false)
+				             setAutoAsk(false)
+			             }}>stop</InputButton>
 		</div>
 	</VoiceInputBlock>
 }
