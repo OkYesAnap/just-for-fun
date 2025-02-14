@@ -7,7 +7,7 @@ const LabelStyled = styled.div`
   background-color: #282c34;
   border: #F5F5F5 1px solid;
   border-radius: 1vh;
-  padding: 0.3vmin;
+  padding: 0.5vw;
   margin: auto;
   width: fit-content;
   color: #F5F5F5;

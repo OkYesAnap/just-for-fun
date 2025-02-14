@@ -5,6 +5,8 @@ import {Dropdown} from "antd";
 import {voiceEngines} from "../../utils/constanst";
 import {ChatContext} from "../../context/ChatContext";
 import InputLabel from "./InputLabel";
+import DropdownMenu from "./DropdownMenu";
+import {MenuItems} from "./interfaces";
 
 const VoiceInputBlock = styled.div`
   flex-direction: column;
@@ -24,14 +26,16 @@ const VoiceInput: React.FC = () => {
 		startListenVoice
 	} = useContext(ChatContext);
 
-	const items = [
+	const items: MenuItems = [
 		{
 			key: "1",
-			label: (<div onClick={() => setVoiceInputEngine(voiceEngines.google)}>{voiceEngines.google}</div>)
+			onClick: () => setVoiceInputEngine(voiceEngines.google),
+			label: voiceEngines.google
 		},
 		{
 			key: "2",
-			label: (<div onClick={() => setVoiceInputEngine(voiceEngines.gpt)}>{voiceEngines.gpt}</div>)
+			onClick: () => setVoiceInputEngine(voiceEngines.gpt),
+			label: voiceEngines.gpt
 		}
 	]
 
@@ -52,7 +56,7 @@ const VoiceInput: React.FC = () => {
 	</>)
 
 	return <VoiceInputBlock>
-		<Dropdown menu={{items}} disabled={isListening || !googleRecognizerAvailable} placement="top">
+		<Dropdown overlay={<DropdownMenu {...{items}}/>} disabled={isListening || !googleRecognizerAvailable} placement="top">
 			<div><InputLabel>{voiceInputEngine}</InputLabel></div>
 		</Dropdown>
 		<div style={{width: "100%", display: "flex"}}>
