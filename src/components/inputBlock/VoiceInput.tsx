@@ -1,5 +1,5 @@
 import React, {useContext} from "react";
-import {ButtonAsk} from "../styled";
+import {UnputButton} from "./InputButton";
 import styled from "styled-components";
 import {Dropdown} from "antd";
 import {voiceEngines} from "../../utils/constanst";
@@ -35,19 +35,19 @@ const VoiceInput: React.FC = () => {
 	]
 
 	const GoogleButtons = () => (<div style={{flexGrow: "1", display: "flex"}}>
-		<ButtonAsk disabled={isListening} style={{background: "blue", flexGrow: "1"}}
-		           onClick={() => startListenVoice("en-EN")}>EN</ButtonAsk>
-		<ButtonAsk disabled={isListening} style={{background: "blue", flexGrow: "1"}}
-		           onClick={() => startListenVoice("ru-RU")}>RU</ButtonAsk>
-		<ButtonAsk disabled={!isListening || autoAsk} style={{background: "purple"}}
-		           onClick={() => setAutoAsk((prev) => !prev)}>Auto</ButtonAsk>
+		<UnputButton disabled={isListening} style={{background: "blue", flexGrow: "1"}}
+		             onClick={() => startListenVoice("en-EN")}>EN</UnputButton>
+		<UnputButton disabled={isListening} style={{background: "blue", flexGrow: "1"}}
+		             onClick={() => startListenVoice("ru-RU")}>RU</UnputButton>
+		<UnputButton disabled={!isListening || autoAsk} style={{background: "purple"}}
+		             onClick={() => setAutoAsk((prev) => !prev)}>Auto</UnputButton>
 	</div>);
 
 	const GPTButtons = () => (<>
-		<ButtonAsk style={{background: "blue", flexGrow: "1"}}
-		           onClick={() => setIsListening((prevState) => !prevState)}>
+		<UnputButton style={{background: "blue", flexGrow: "1"}}
+		             onClick={() => setIsListening((prevState) => !prevState)}>
 			{!isListening ? "Listen" : "Recognize"}
-		</ButtonAsk>
+		</UnputButton>
 	</>)
 
 	return <VoiceInputBlock>
@@ -56,9 +56,9 @@ const VoiceInput: React.FC = () => {
 		</Dropdown>
 		<div style={{width: "100%", display: "flex"}}>
 			{voiceInputEngine === voiceEngines.google ? <GoogleButtons/> : <GPTButtons/>}
-			<ButtonAsk disabled={!isListening} style={{background: "red"}}
-			           onClick={() => {setIsListening(false)
-								 setAutoAsk(false)}}>stop</ButtonAsk>
+			<UnputButton disabled={!isListening} style={{background: "red"}}
+			             onClick={() => {setIsListening(false)
+								 setAutoAsk(false)}}>stop</UnputButton>
 		</div>
 	</VoiceInputBlock>
 }

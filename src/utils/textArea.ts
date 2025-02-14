@@ -2,7 +2,7 @@ import {RefObject} from "react";
 import {TextAreaRef} from "antd/es/input/TextArea";
 import {defaultTextInputSize} from "./constanst";
 
-const defaultLines = 2;
+const defaultLines = 1;
 
 const setTextAreaActualHeight = (textAreaRef: RefObject<TextAreaRef>, resetWindow: boolean = false) => {
 	if (textAreaRef.current?.resizableTextArea) {

@@ -1,6 +1,6 @@
 import EngineChanger from "../engineChanger/EngineChanger";
-import {ButtonAsk} from "../styled";
-import VoiceInput from "../voiceInput/VoiceInput";
+import {UnputButton} from "./InputButton";
+import VoiceInput from "./VoiceInput";
 import {Input} from "antd";
 import React, {useContext, useEffect, useLayoutEffect, useRef} from "react";
 import styled from "styled-components";
@@ -67,17 +67,18 @@ const InputBlock: React.FC<ChatPageProps> = (params) => {
 		setText(e.target.value);
 	};
 
+	const onAskClick = () => {
+		setAutoAsk(false);
+		askEngine();
+	}
+
 	return (
 		<InputBlockStyled>
 			<div className={'text-props'} style={{display: "flex", backgroundColor: "#282c34"}}>
 				<div style={{flex: "5", display: "flex", flexFlow: "column"}}>
 					<EngineChanger {...{engine, setEngine}}/>
-					<ButtonAsk onClick={() => {
-						setAutoAsk(false);
-						askEngine()
-					}} style={{flexGrow: "1"}} disabled={askInProgress}>Ask</ButtonAsk>
+					<UnputButton onClick={onAskClick} style={{flexGrow: "1"}} disabled={askInProgress}>Ask</UnputButton>
 				</div>
-
 				<VoiceInput/>
 			</div>
 			<Input.TextArea className={'text-props'} value={text} ref={textAreaRef}

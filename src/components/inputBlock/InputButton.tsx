@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const ButtonAsk = styled.button`
+export const UnputButton = styled.button`
   margin: 0.3rem 0.1rem;
   padding: 0.2rem 0.75rem;
   background-color: #2196F3;
