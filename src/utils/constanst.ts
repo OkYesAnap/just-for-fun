@@ -31,7 +31,12 @@ export enum Engines {
 
 export const defaultTextInputSize = 2;
 
-export const voiceEngines = {
+export interface IVoiceEngines {
+	google: string;
+	gpt: string
+}
+
+export const voiceEngines: IVoiceEngines = {
 	google: "Google Voice Input",
 	gpt: "GPT Api Voice Input",
 }

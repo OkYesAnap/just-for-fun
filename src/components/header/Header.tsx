@@ -17,11 +17,11 @@ const Header: React.FC = () => {
 			setMessages(contextEngine.clear());
 		}
 	}, [location]);
-	return (<div style={{display: "flex", flexDirection: "row", marginTop:"0.5vh"}}>
+	return (<div style={{display: "flex", flexDirection: "row", marginTop: "0.5vh"}}>
 		{links.map(routeParam => {
 			return (
-				<InputLabel noBorder={!(routeParam.title === title)}>
-					<Link key={routeParam.route} className="App-link" to={`/${routeParam.route}`}>
+				<InputLabel key={routeParam.route} noBorder={!(routeParam.title === title)}>
+					<Link className="App-link" to={`/${routeParam.route}`}>
 						{routeParam.title}
 					</Link>
 				</InputLabel>

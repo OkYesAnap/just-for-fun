@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction} from "react";
-import {Dropdown, Menu} from "antd";
+import {Dropdown, Menu, Popover} from "antd";
 import {Engines} from "../../utils/constanst";
 import InputLabel from "./InputLabel";
 import {MenuItems} from "./interfaces";
@@ -13,21 +13,21 @@ const EngineChanger: React.FC<{
 	const labelTemplate = '"Ask" for request to ';
 	const items: MenuItems = [
 		{
-			key: "1",
+			key: Engines.DEEP_SEEK,
 			onClick: () => setEngine(Engines.DEEP_SEEK),
 			label: labelTemplate + Engines.DEEP_SEEK.toUpperCase()
 		},
 		{
-			key: "2",
+			key: Engines.GPT,
 			onClick: () => setEngine(Engines.GPT),
 			label: labelTemplate + Engines.GPT.toUpperCase()
 		}
 	];
 
-	return (<Dropdown overlay={<DropdownMenu {...{items}}/>}
-	                  placement="top">
+	return (<Popover content={<DropdownMenu {...{items, activeItem: engine}}/>}
+	                 placement="top">
 		<div><InputLabel>{labelTemplate} {engine.toUpperCase()}</InputLabel></div>
-	</Dropdown>)
+	</Popover>)
 }
 
 export default EngineChanger

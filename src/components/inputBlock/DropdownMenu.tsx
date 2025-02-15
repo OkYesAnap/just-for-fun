@@ -1,26 +1,27 @@
 import {Menu} from "antd";
 import React from "react";
-import {MenuItems, IMenuItem} from "./interfaces";
+import {MenuItems} from "./interfaces";
+import {Engines, VoiceEngineSingleType} from "../../utils/constanst";
 
 const menuStyle: React.CSSProperties = {
-	backgroundColor: "transparent",
+	backgroundColor: "#282c34",
 	color: "white",
 	textAlign: "center",
 	width: "fit-content",
 	margin: "auto",
-	border: "#F5F5F5 1px solid"
+	border: "#F5F5F5 1px solid",
+	borderRadius: "10px"
 };
 
-const menuItemStyle: React.CSSProperties = {
-	color: "white"
-};
+interface DropdownMenuProps {
+	items: MenuItems,
+	activeItem?: Engines | VoiceEngineSingleType
+}
 
-const DropdownMenu: React.FC<{ items: MenuItems }> = ({items}) => (
-	<Menu style={menuStyle}>
-		{items.map((item: IMenuItem) => (
-			<Menu.Item style={menuItemStyle} {...{...item}}>
-				{item.label}
-			</Menu.Item>))}
-	</Menu>);
+const DropdownMenu: React.FC<DropdownMenuProps> = ({items, activeItem}) => {
+	const selected = items.find(item => item.key === activeItem)?.key;
+	return (
+		<Menu style={menuStyle} selectedKeys={[selected || '']} items={items}/>);
+}
 
 export default DropdownMenu;

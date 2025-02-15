@@ -1,7 +1,7 @@
 import React, {useContext} from "react";
 import InputButton from "./InputButton";
 import styled from "styled-components";
-import {Dropdown} from "antd";
+import {Dropdown, Popover} from "antd";
 import {voiceEngines} from "../../utils/constanst";
 import {ChatContext} from "../../context/ChatContext";
 import InputLabel from "./InputLabel";
@@ -28,16 +28,18 @@ const VoiceInput: React.FC = () => {
 
 	const items: MenuItems = [
 		{
-			key: "1",
+			key: voiceEngines.google,
 			onClick: () => setVoiceInputEngine(voiceEngines.google),
 			label: voiceEngines.google
 		},
 		{
-			key: "2",
+			key: voiceEngines.gpt,
 			onClick: () => setVoiceInputEngine(voiceEngines.gpt),
 			label: voiceEngines.gpt
 		}
 	]
+
+	// disabled={isListening || !googleRecognizerAvailable}
 
 	const GoogleButtons = () => (<div style={{flexGrow: "1", display: "flex"}}>
 		<InputButton disabled={isListening} style={{flexGrow: "1"}}
@@ -54,11 +56,10 @@ const VoiceInput: React.FC = () => {
 			{!isListening ? "Listen" : "Recognize"}
 		</InputButton>
 	</>)
-
 	return <VoiceInputBlock>
-		<Dropdown overlay={<DropdownMenu {...{items}}/>} disabled={isListening || !googleRecognizerAvailable} placement="top">
+		<Popover content={<DropdownMenu {...{items, activeItem: voiceInputEngine}}/>} placement="top">
 			<div><InputLabel>{voiceInputEngine}</InputLabel></div>
-		</Dropdown>
+		</Popover>
 		<div style={{width: "100%", display: "flex"}}>
 			{voiceInputEngine === voiceEngines.google ? <GoogleButtons/> : <GPTButtons/>}
 			<InputButton disabled={!isListening}
