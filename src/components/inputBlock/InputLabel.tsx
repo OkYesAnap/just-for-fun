@@ -1,11 +1,10 @@
 import React, {ReactNode} from "react";
 import styled from "styled-components";
-import {Input} from "antd";
 
-const LabelStyled = styled.div`
+const LabelStyled = styled.div<{ $noBorder?: boolean }>`
   font-size: clamp(6px, 2.5vw, 20px);
   background-color: #282c34;
-  border: #F5F5F5 1px solid;
+  ${({ $noBorder }) => ($noBorder ? '' : 'border: #F5F5F5 1px solid;')}
   border-radius: 1vh;
   padding: 0.5vw;
   margin: auto;
@@ -15,11 +14,12 @@ const LabelStyled = styled.div`
 
 interface InputLabelProps {
 	children: ReactNode,
-	callback?: () => void
+	callback?: () => void,
+	noBorder?: boolean
 }
 
-const InputLabel: React.FC<InputLabelProps> = ({children, callback}) => {
-	return <LabelStyled onClick={callback}>{children}</LabelStyled>
+const InputLabel: React.FC<InputLabelProps> = ({children, noBorder,callback}) => {
+	return <LabelStyled onClick={callback} $noBorder={noBorder}>{children}</LabelStyled>
 };
 
 export default InputLabel

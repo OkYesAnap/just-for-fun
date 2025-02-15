@@ -47,6 +47,6 @@ const translator = {
 	model: MODEL
 }
 
-const params = {gpt35, mazeGame, translator}
+const params = {chatEngine: gpt35, mazeGame, translator}
 
 export default params

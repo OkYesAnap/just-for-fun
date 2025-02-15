@@ -1,16 +1,6 @@
 import React from 'react';
 import {Link} from "react-router-dom";
-
-interface RouteHeader {
-	[key: string]: string;
-}
-
-export const routeHeader: RouteHeader = {
-	"gpt-chat-3-5": "React specialist",
-	"maze-game": "Maze Game",
-	"translator": "Translator",
-	"testPage": "TestPage"
-}
+import {routeHeader} from "../utils/constanst";
 
 function Main() {
 	return (
@@ -18,10 +8,10 @@ function Main() {
 			<header className="App-header">
 				Choose option
 			</header>
-			{Object.keys(routeHeader).map(key=>{
-				return (<div key={key}>
-					<Link className="App-link" to={`/${key}`}>
-						{routeHeader[key]}
+			{routeHeader.map(routeParam => {
+				return (<div key={routeParam.route}>
+					<Link className="App-link" to={`/${routeParam.route}`}>
+						{routeParam.route}
 					</Link>
 				</div>)
 			})}

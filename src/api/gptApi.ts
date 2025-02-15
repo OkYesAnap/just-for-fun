@@ -106,6 +106,5 @@ export const sendAudioToServer = async (audioBlob: Blob) => {
 	} catch (error) {
 		console.error('Error uploading audio file:', error);
 	}
-	console.log(textTranscription);
 	return textTranscription;
 };

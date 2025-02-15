@@ -12,7 +12,8 @@
 }
 
 .App-link {
-  color: #61dafb;
+  color: white;
+  text-decoration: none;
 }
 
 .ant-spin-dot-item {
