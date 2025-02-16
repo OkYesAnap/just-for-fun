@@ -1,7 +1,6 @@
-import React, {useEffect} from 'react';
-import {contextEngine, IEngineMessage} from '../api/gptApi';
+import React from 'react';
+import {IEngineMessage} from '../api/gptApi';
 import '../App.css';
-import {Link, useLocation} from 'react-router-dom';
 import {useGoogleRecognition} from "../hooks/useGoogleRecongnition";
 import ModalWindow from "../components/modal/ModalMessage";
 import useVoiceRecorder from "../hooks/useVioceRecorder";
