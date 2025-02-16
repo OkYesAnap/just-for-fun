@@ -26,7 +26,7 @@ const VoiceInput: React.FC = () => {
 		startListenVoice
 	} = useContext(ChatContext);
 
-	const items: MenuItems = [
+	let items: MenuItems = [
 		{
 			key: voiceEngines.google,
 			onClick: () => setVoiceInputEngine(voiceEngines.google),
@@ -39,7 +39,9 @@ const VoiceInput: React.FC = () => {
 		}
 	]
 
-	// disabled={isListening || !googleRecognizerAvailable}
+	if (!googleRecognizerAvailable) {
+		items = items.filter(item => item.key !== voiceEngines.google)
+	}
 
 	const GoogleButtons = () => (<div style={{flexGrow: "1", display: "flex"}}>
 		<InputButton disabled={isListening} style={{flexGrow: "1"}}
