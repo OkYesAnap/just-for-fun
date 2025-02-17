@@ -7,6 +7,7 @@ import {ChatContext} from "../../context/ChatContext";
 import InputLabel from "./InputLabel";
 import DropdownMenu from "./DropdownMenu";
 import {MenuItems} from "./interfaces";
+import {getMenuItems} from "../../utils/menuItems";
 
 const VoiceInputBlock = styled.div`
   flex-direction: column;
@@ -26,18 +27,12 @@ const VoiceInput: React.FC = () => {
 		startListenVoice
 	} = useContext(ChatContext);
 
-	let items: MenuItems = [
-		{
-			key: voiceEngines.google,
-			onClick: () => setVoiceInputEngine(voiceEngines.google),
-			label: voiceEngines.google
-		},
-		{
-			key: voiceEngines.gpt,
-			onClick: () => setVoiceInputEngine(voiceEngines.gpt),
-			label: voiceEngines.gpt
+	let items: MenuItems = getMenuItems({
+			items: voiceEngines,
+			onClickCallback: setVoiceInputEngine
 		}
-	]
+	);
+
 
 	if (!googleRecognizerAvailable) {
 		items = items.filter(item => item.key !== voiceEngines.google)
@@ -58,19 +53,20 @@ const VoiceInput: React.FC = () => {
 			{!isListening ? "Listen" : "Recognize"}
 		</InputButton>
 	</>)
-	return <VoiceInputBlock>
-		<Popover content={<DropdownMenu {...{items, activeItem: voiceInputEngine}}/>} placement="top">
-			<div><InputLabel>{voiceInputEngine}</InputLabel></div>
-		</Popover>
-		<div style={{width: "100%", display: "flex"}}>
-			{voiceInputEngine === voiceEngines.google ? <GoogleButtons/> : <GPTButtons/>}
-			<InputButton disabled={!isListening}
-			             onClick={() => {
-				             setIsListening(false)
-				             setAutoAsk(false)
-			             }}>stop</InputButton>
-		</div>
-	</VoiceInputBlock>
+	return (
+		<VoiceInputBlock>
+			<Popover content={<DropdownMenu {...{items, activeItem: voiceInputEngine}}/>} placement="top">
+				<div><InputLabel>{voiceInputEngine}</InputLabel></div>
+			</Popover>
+			<div style={{width: "100%", display: "flex"}}>
+				{voiceInputEngine === voiceEngines.google ? <GoogleButtons/> : <GPTButtons/>}
+				<InputButton disabled={!isListening}
+				             onClick={() => {
+					             setIsListening(false)
+					             setAutoAsk(false)
+				             }}>stop</InputButton>
+			</div>
+		</VoiceInputBlock>)
 }
 
 export default VoiceInput;

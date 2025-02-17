@@ -1,5 +1,5 @@
 import engine from './engines.json';
-import {Engines} from "../utils/constanst";
+import {Engines, ModelTypes} from "../utils/constanst";
 
 export enum EngineRole {
 	assistant = "assistant",
@@ -14,7 +14,8 @@ const validEngineRoles = new Set(['system', 'assistant', 'user', 'function', 'to
 export interface IEngineMessage {
 	content: string,
 	role: EngineRole,
-	engine?: Engines
+	engine?: Engines,
+	model?: ModelTypes
 }
 
 class ContextEngine {
@@ -49,11 +50,10 @@ export const contextEngine = new ContextEngine();
 export const requestToEngine = async (message: IEngineMessage, params: { sysMessage: IEngineMessage[] }) => {
 
 	const currentEngine = engine[message?.engine || "gpt"];
-
 	contextEngine.update(message);
 	const messageWithoutCustomRoles = contextEngine.get().filter((item: IEngineMessage) => validEngineRoles.has(item.role));
 	const apiRequestBody = {
-		"model": currentEngine.model,
+		"model": message.model,
 		"messages": [
 			...params.sysMessage,
 			...messageWithoutCustomRoles,

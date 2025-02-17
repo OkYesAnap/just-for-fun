@@ -12,8 +12,7 @@ interface AskEngineProps {
 
 const useAskEngine = ({textAreaRef, params}: AskEngineProps) => {
 
-	const {text, setText, setAskInProgress, setMessages, messages, engine} = useContext(ChatContext);
-
+	const {text, setText, setAskInProgress, setMessages, messages, engine, model} = useContext(ChatContext);
 	const askEngine = useCallback(async () => {
 		setTextAreaActualHeight(textAreaRef, true);
 		if (!text.length) return;
@@ -21,9 +20,10 @@ const useAskEngine = ({textAreaRef, params}: AskEngineProps) => {
 		setMessages([...messages, {content: text, role: EngineRole.user}, {
 			content: "I am thinking",
 			engine,
+			model,
 			role: EngineRole.inprogress
 		}]);
-		const messagesFromGpt = await requestToEngine({content: text, role: EngineRole.user, engine}, params);
+		const messagesFromGpt = await requestToEngine({content: text, role: EngineRole.user, engine, model}, params);
 		setMessages(messagesFromGpt);
 		setAskInProgress(false);
 		setText('');

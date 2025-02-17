@@ -1,5 +1,5 @@
 import React, {ReactNode, useState, createContext, Dispatch, SetStateAction} from "react";
-import {Engines, voiceEngines, VoiceEngineSingleType} from "../utils/constanst";
+import {Engines, Models, ModelTypes, voiceEngines, VoiceEngineSingleType} from "../utils/constanst";
 import {IEngineMessage} from "../api/gptApi";
 
 
@@ -27,6 +27,8 @@ interface ChatContextType {
 	setShowClearModal: Dispatch<SetStateAction<boolean>>;
 	engine: Engines;
 	setEngine: Dispatch<SetStateAction<Engines>>;
+	model: ModelTypes;
+	setModel: Dispatch<SetStateAction<ModelTypes>>;
 }
 
 export const ChatContext = createContext<ChatContextType>(null!);
@@ -43,6 +45,7 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
 	const [askInProgress, setAskInProgress] = useState(false);
 	const [showClearModal, setShowClearModal] = useState(false);
 	const [engine, setEngine] = useState<Engines>(Engines.GPT);
+	const [model, setModel] = useState<ModelTypes>("");
 
 
 	const startListenVoice = (lang: string) => {
@@ -63,7 +66,8 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
 			lang, setLang,
 			askInProgress, setAskInProgress,
 			showClearModal, setShowClearModal,
-			engine, setEngine
+			engine, setEngine,
+			model, setModel
 		}}>
 			{children}
 		</ChatContext.Provider>

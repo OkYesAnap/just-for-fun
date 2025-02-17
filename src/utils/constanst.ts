@@ -29,6 +29,17 @@ export enum Engines {
 	DEEP_SEEK = "deepSeek"
 }
 
+export type ModelTypes = "gpt-4o-mini" | "gpt-4o" | "deepseek-chat" | "deepseek-reasoner" | ""
+
+type EngineModelsType = {
+	[key in Engines]: ModelTypes[];
+}
+
+export const Models: EngineModelsType = {
+	[Engines.GPT]: ["gpt-4o-mini", "gpt-4o"],
+	[Engines.DEEP_SEEK]: ["deepseek-chat", "deepseek-reasoner"]
+}
+
 export const defaultTextInputSize = 2;
 
 export interface IVoiceEngines {

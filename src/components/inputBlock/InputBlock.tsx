@@ -9,6 +9,7 @@ import {TextAreaRef} from "antd/es/input/TextArea";
 import {useAskEngine} from "../../hooks/useAskEngine";
 import {setTextAreaActualHeight} from "../../utils/textArea";
 import {ChatPageProps} from "../../pages/ChatPage";
+import ModelChanger from "./ModelChanger";
 
 const InputBlockStyled = styled.div`
   position: fixed;
@@ -88,8 +89,15 @@ const InputBlock: React.FC<ChatPageProps> = (params) => {
 	return (
 		<InputBlockStyled>
 			<InfoAreaStyled>
-				<div style={{flex: "5", display: "flex", flexFlow: "column"}}>
-					<EngineChanger {...{engine, setEngine}}/>
+				<div style={{flex: 5, display: "flex", flexFlow: "column"}}>
+					<div style={{display: "flex", justifyContent: "space-around", alignItems: "center"}}>
+						<div style={{flex: 1}}>
+							<EngineChanger/>
+						</div>
+						<div style={{flex: 1}}>
+							<ModelChanger/>
+						</div>
+					</div>
 					<InputButton {...{onClick, disabled: askInProgress}}>Ask</InputButton>
 				</div>
 				<VoiceInput/>
