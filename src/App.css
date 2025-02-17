@@ -20,13 +20,19 @@
   background-color: white !important;
 }
 
+.ant-menu-title-content:hover, .ant-menu-item-active:hover {
+  color: white !important;
+}
+
 .ant-popover-inner {
   padding: 0;
   background-color: transparent !important;
 }
 
 .ant-menu-item-selected{
-  color: black !important;
+  color: #fff !important;
+  background-color: #282c34 !important;
+  border: white 1px solid;
 }
 ::-webkit-scrollbar {
   width: 4px;

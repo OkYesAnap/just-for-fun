@@ -25,7 +25,7 @@ const ModelChanger: React.FC = () => {
 		}
 	);
 
-	return (<Popover content={<DropdownMenu {...{items, activeItem: engine}}/>}
+	return (<Popover content={<DropdownMenu {...{items, activeItem: model}}/>}
 	                 placement="top">
 		<div><InputLabel>{labelTemplate} {model.toUpperCase()}</InputLabel></div>
 	</Popover>)
