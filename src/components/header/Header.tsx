@@ -4,6 +4,18 @@ import {Link, useLocation} from "react-router-dom";
 import {contextEngine} from "../../api/gptApi";
 import InputLabel from "../inputBlock/InputLabel";
 import {ChatContext} from "../../context/ChatContext";
+import styled from "styled-components";
+
+const HeaderStyled = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-top: 0.5vh;
+  padding: 5px;
+  background-color: #282c34;
+  border: white 1px solid;
+  border-radius: 10px;
+  z-index: 1
+`;
 
 const Header: React.FC = () => {
 	const location = useLocation().pathname.slice(1);
@@ -17,7 +29,7 @@ const Header: React.FC = () => {
 			setMessages(contextEngine.clear());
 		}
 	}, [location]);
-	return (<div style={{display: "flex", flexDirection: "row", marginTop: "0.5vh"}}>
+	return (<HeaderStyled>
 		{links.map(routeParam => {
 			return (
 				<InputLabel key={routeParam.route} noBorder={!(routeParam.title === title)}>
@@ -27,7 +39,7 @@ const Header: React.FC = () => {
 				</InputLabel>
 			)
 		})}
-	</div>)
+	</HeaderStyled>)
 };
 
 export default Header;

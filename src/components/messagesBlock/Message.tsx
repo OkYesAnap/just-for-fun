@@ -20,7 +20,8 @@ interface MessageBlockProps {
 export const MessageBlock = styled.div<MessageBlockProps>`
   margin: ${({$role}) => ($role === 'user' ? '10px 10vmin 10px 20px' : '10px auto 10px 10vmin')};
   text-align: left;
-	width: fit-content;
+  align-self: flex-end;
+  width: fit-content;
   background-color: ${({$role}) => setBackgroundColor($role)};
   padding: 20px;
   border-radius: 10px;

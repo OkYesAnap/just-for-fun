@@ -59,28 +59,42 @@ export const requestToEngine = async (message: IEngineMessage, params: { sysMess
 			...messageWithoutCustomRoles,
 		]
 	}
-
-	return await fetch(currentEngine.chatUrl,
-		{
-			method: "POST",
-			headers: {
-				"Authorization": "Bearer " + currentEngine.API_KEY,
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify(apiRequestBody)
+	try {
+		return await fetch(currentEngine.chatUrl,
+			{
+				method: "POST",
+				headers: {
+					"Authorization": "Bearer " + currentEngine.API_KEY,
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify(apiRequestBody)
+			}).then((data) => {
+			return data.json();
 		}).then((data) => {
-		return data.json();
-	}).then((data) => {
-		if (data?.error) {
-			return contextEngine.update({
-				content: data.error.message,
-				role: EngineRole.error,
-				engine: message.engine
-			})
-		}
-		return contextEngine.update({...data.choices[0].message, engine: message.engine})
+			if (data?.error) {
+				return contextEngine.update({
+					content: data.error.message,
+					role: EngineRole.error,
+					engine: message.engine
+				})
+			}
+			return contextEngine.update({...data.choices[0].message, engine: message.engine})
 
-	})
+		})
+
+	} catch (error) {
+		let errorMessage: string;
+		if (error instanceof Error) {
+			errorMessage = error.message;
+		} else {
+			errorMessage = "Unknown error!"
+		}
+		return contextEngine.update({
+			content: errorMessage,
+			role: EngineRole.error,
+			engine: message.engine
+		})
+	}
 };
 
 export const sendAudioToServer = async (audioBlob: Blob) => {

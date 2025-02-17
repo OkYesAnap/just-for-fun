@@ -6,15 +6,18 @@ import {ChatContext} from "../../context/ChatContext";
 
 const MessagesBlockStyled = styled.div`
   position: absolute;
-  margin-top: 5vh;
   width: 100%;
-  height: 75%;
+  height: 100%;
   overflow: auto;
   scroll-behavior: smooth;
-  display: flex;
-  flex-direction: column;
   align-items: end;
 `;
+
+const MessagesMargins = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 5% 0 20%;
+`
 
 const MessagesBlock: React.FC = () => {
 	const chatBlockRef = useRef<HTMLDivElement>(null);
@@ -27,11 +30,11 @@ const MessagesBlock: React.FC = () => {
 	}, [messages]);
 
 	return (<MessagesBlockStyled ref={chatBlockRef}>
-		<>
+		<MessagesMargins>
 			{messages.map((message: IEngineMessage, i) => {
 				return <Message key={i} {...{i, message, setMessages}}/>
 			})}
-		</>
+		</MessagesMargins>
 	</MessagesBlockStyled>)
 };
 
