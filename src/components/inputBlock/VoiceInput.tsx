@@ -43,8 +43,6 @@ const VoiceInput: React.FC = () => {
 		             onClick={() => startListenVoice("en-EN")}>EN</InputButton>
 		<InputButton disabled={isListening} style={{flexGrow: "1"}}
 		             onClick={() => startListenVoice("ru-RU")}>RU</InputButton>
-		<InputButton disabled={!isListening || autoAsk}
-		             onClick={() => setAutoAsk((prev) => !prev)}>Auto</InputButton>
 	</div>);
 
 	const GPTButtons = () => (<>
@@ -60,6 +58,8 @@ const VoiceInput: React.FC = () => {
 			</Popover>
 			<div style={{width: "100%", display: "flex"}}>
 				{voiceInputEngine === voiceEngines.google ? <GoogleButtons/> : <GPTButtons/>}
+				<InputButton disabled={!isListening || autoAsk}
+				             onClick={() => setAutoAsk((prev) => !prev)}>Auto</InputButton>
 				<InputButton disabled={!isListening}
 				             onClick={() => {
 					             setIsListening(false)
