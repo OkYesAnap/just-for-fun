@@ -31,9 +31,10 @@ const Header: React.FC = () => {
 	}, [location, setMessages, title]);
 	return (<HeaderStyled>
 		{links.map(routeParam => {
+			const active = routeParam.title === title;
 			return (
-				<InputLabel key={routeParam.route} noBorder={!(routeParam.title === title)}>
-					<Link className="App-link" to={`/${routeParam.route}`}>
+				<InputLabel key={routeParam.route} noBorder={!(active)}>
+					<Link className={`App-link ${active && 'active'}`} to={`/${routeParam.route}`}>
 						{routeParam.title}
 					</Link>
 				</InputLabel>

@@ -12,8 +12,13 @@
 }
 
 .App-link {
-  color: white;
+  color: darkgrey;
   text-decoration: none;
+}
+
+.App-link:hover,
+.App-link.active{
+    color: white;
 }
 
 .ant-spin-dot-item {
@@ -27,6 +32,10 @@
 .ant-popover-inner {
   padding: 0;
   background-color: transparent !important;
+}
+
+.ant-menu-item{
+  color: darkgray !important;
 }
 
 .ant-menu-item-selected{
