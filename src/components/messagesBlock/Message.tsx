@@ -1,7 +1,8 @@
 import {contextEngine, EngineRole, IEngineMessage} from "../../api/gptApi";
-import React, {Dispatch, SetStateAction} from "react";
+import React, {useContext} from "react";
 import EnginePrefix from './EnginePrefix';
 import styled from 'styled-components';
+import {ChatContext} from "../../context/ChatContext";
 
 const setBackgroundColor = ($role: EngineRole) => {
 	if ($role === EngineRole.user) {
@@ -40,10 +41,12 @@ export const MessageBlock = styled.div<MessageBlockProps>`
 interface MessageProps {
 	i: number,
 	message: IEngineMessage,
-	setMessages: Dispatch<SetStateAction<IEngineMessage[]>>
 }
 
-const Message: React.FC<MessageProps> = ({i, message, setMessages}) => {
+const Message: React.FC<MessageProps> = ({i, message}) => {
+
+	const {setMessages} = useContext(ChatContext);
+
 	const handleDeleteMessage = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, messageNumber: number) => {
 		if (e.ctrlKey || e.metaKey) {
 			const messages = contextEngine.deleteMessage(messageNumber);

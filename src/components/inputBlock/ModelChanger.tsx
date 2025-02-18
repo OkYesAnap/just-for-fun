@@ -1,6 +1,6 @@
-import React, {Dispatch, SetStateAction, useContext, useEffect, useState} from "react";
-import {Dropdown, Menu, Popover} from "antd";
-import {Engines, Models} from "../../utils/constanst";
+import React, {useContext, useEffect, useState} from "react";
+import {Popover} from "antd";
+import {Models} from "../../utils/constanst";
 import InputLabel from "./InputLabel";
 import {MenuItems} from "./interfaces";
 import DropdownMenu from "./DropdownMenu";
@@ -16,7 +16,7 @@ const ModelChanger: React.FC = () => {
 	useEffect(() => {
 		setCurrentModelsList(Models[engine])
 		setModel(Models[engine][0])
-	}, [engine]);
+	}, [engine, setModel]);
 
 	const items: MenuItems = getMenuItems({
 			items: currentModelsList,

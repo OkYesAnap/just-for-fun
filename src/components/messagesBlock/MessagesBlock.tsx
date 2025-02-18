@@ -32,7 +32,7 @@ const MessagesBlock: React.FC = () => {
 	return (<MessagesBlockStyled ref={chatBlockRef}>
 		<MessagesMargins>
 			{messages.map((message: IEngineMessage, i) => {
-				return <Message key={i} {...{i, message, setMessages}}/>
+				return <Message key={i} {...{i, message}}/>
 			})}
 		</MessagesMargins>
 	</MessagesBlockStyled>)

@@ -28,7 +28,7 @@ const Header: React.FC = () => {
 			document.title = "React app";
 			setMessages(contextEngine.clear());
 		}
-	}, [location]);
+	}, [location, setMessages, title]);
 	return (<HeaderStyled>
 		{links.map(routeParam => {
 			return (

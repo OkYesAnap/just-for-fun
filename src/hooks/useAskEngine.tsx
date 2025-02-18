@@ -27,7 +27,7 @@ const useAskEngine = ({textAreaRef, params}: AskEngineProps) => {
 		setMessages(messagesFromGpt);
 		setAskInProgress(false);
 		setText('');
-	}, [messages, params, text, engine, setAskInProgress, setMessages, setText, textAreaRef]);
+	}, [messages, params, text, engine, setAskInProgress, setMessages, setText, textAreaRef, model]);
 	return askEngine
 }
 export {useAskEngine};

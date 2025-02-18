@@ -43,8 +43,6 @@ const InputBlock: React.FC<ChatPageProps> = (params) => {
 	const askEngine = useAskEngine({textAreaRef, params});
 	const {
 		setAutoAsk,
-		engine,
-		setEngine,
 		askInProgress,
 		autoAsk,
 		isListening,
