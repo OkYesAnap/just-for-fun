@@ -20,12 +20,12 @@ const CodeHeaderStyled = styled.div`
 `;
 
 const CodeContentStyled = styled.div`
-  padding: 10px 5px 20px;
+  padding: 10px 15px 20px;
 `;
 
 const MarkdownCode: React.FC<{ mdItem: MarkdownItemProps }> = ({mdItem}) => {
 	return <MarkdownCodeStyled>
-		<CodeHeaderStyled>{mdItem.title!.toUpperCase()}</CodeHeaderStyled>
+		<CodeHeaderStyled>{mdItem.title!.slice(3).toUpperCase()}</CodeHeaderStyled>
 		<CodeContentStyled>{mdItem.content?.slice(0, -3)}</CodeContentStyled>
 	</MarkdownCodeStyled>
 };

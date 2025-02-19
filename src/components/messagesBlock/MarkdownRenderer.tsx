@@ -9,8 +9,25 @@ const MarkdownRenderer: React.FC<{ text: string }> = ({text}) => {
 	useEffect(() => {
 		const code = getMdContentIndexes(text, '```');
 		const bold = getMdContentIndexes(text, '**');
-		const sorted = [...code, ...bold].sort((a, b) => a.begin! - b.begin!)
-		setCodePartIndexes(sorted);
+		const thirdHeading = getMdContentIndexes(text, '###');
+		const sorted = [
+			...code,
+			...bold,
+			...thirdHeading
+		].sort((a, b) => a.begin! - b.begin!);
+
+		const clearedInterceptions = sorted.reduce((accum: any, item) => {
+			if (accum.length < 1) {
+				accum.push(item)
+				return accum
+			}
+			if (item.begin! >= accum[accum.length - 1]?.end) {
+				accum.push(item);
+			}
+			return accum;
+		}, [])
+
+		setCodePartIndexes(clearedInterceptions);
 	}, [text]);
 
 	return (
