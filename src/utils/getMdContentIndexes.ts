@@ -12,13 +12,15 @@ const getMdContentIndexes = (text: string, markupTag: string) => {
 			indexes.push({...defaultMdItem});
 			currTag = indexes[indexes.length - 1];
 			currTag.begin = index;
-			eolIndex = text.indexOf('\n', index);
-			currTag.title = text.slice(currTag.begin + markupTag.length, eolIndex)
+			if(markupTag === '```') {
+				eolIndex = text.indexOf('\n', index);
+				currTag.title = text.slice(currTag.begin, eolIndex);
+			}
 			currTag.tag = markupTag;
 		} else {
 			if (currTag) {
-				currTag.end = index + markupTag.length;
-				currTag.content = text.slice(eolIndex + 1, currTag.end - markupTag.length)
+				currTag.end = index;
+				currTag.content = text.slice(eolIndex + 1, currTag.end)
 			}
 		}
 		indexCounter++;
