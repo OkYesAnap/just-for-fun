@@ -1,8 +1,9 @@
 import {contextEngine, EngineRole, IEngineMessage} from "../../api/gptApi";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext} from "react";
 import EnginePrefix from './EnginePrefix';
 import styled from 'styled-components';
 import {ChatContext} from "../../context/ChatContext";
+import MarkdownRenderer from "./MarkdownRenderer";
 
 const setBackgroundColor = ($role: EngineRole) => {
 	if ($role === EngineRole.user) {
@@ -44,82 +45,6 @@ interface MessageProps {
 	message: IEngineMessage,
 }
 
-interface CodeMarkdownProps {
-	tag: string,
-	begin: number | null,
-	end: number | null,
-	title?: string,
-	content?: string
-}
-
-const defaultItem = {begin: null, end: null, tag: ''};
-
-
-const getCodeIndexes = (text: string, markupTag: string) => {
-	const indexes: CodeMarkdownProps[] = [];
-	let index = text.indexOf(markupTag);
-	let indexCounter = 0;
-	let eolIndex = 0;
-	let currTag;
-
-	while (index !== -1) {
-		if (!(indexCounter % 2)) {
-			indexes.push({...defaultItem});
-			currTag = indexes[indexes.length - 1];
-			currTag.begin = index;
-			eolIndex = text.indexOf('\n', index);
-			currTag.title = text.slice(currTag.begin + markupTag.length, eolIndex)
-			currTag.tag = markupTag;
-		} else {
-			if (currTag) {
-				currTag.end = index + markupTag.length;
-				currTag.content = text.slice(eolIndex + 1, currTag.end - markupTag.length)
-			}
-		}
-		indexCounter++;
-		index = text.indexOf(markupTag, index + 1);
-	}
-	return indexes
-};
-
-const BuildContent: React.FC<{ text: string, parsedArray: CodeMarkdownProps[] }> = ({text, parsedArray}) => {
-	const lastIndex = parsedArray.length - 1;
-	if (!parsedArray.length) return <>{text}</>;
-
-	return (
-		<>
-			{parsedArray.map((tag, i) => {
-				const content: JSX.Element[] = [];
-				if (i === 0) {
-					content.push(<div>{text.slice(0, tag.begin!)}</div>);
-				} else {
-					content.push(<div>{text.slice(parsedArray[i - 1].end!, tag.begin!)}</div>)
-				}
-				content.push(<div
-					style={{fontSize: "16px", backgroundColor: "black", padding: '20px', borderRadius: "20px"}}>{tag.title!.toUpperCase()} {tag.content}</div>);
-				if (i === lastIndex) {
-					content.push(<div>{text.slice(tag.end!, text.length)}</div>);
-				}
-				return content;
-			})
-			}</>
-	)
-};
-
-const ParseMarkdown: React.FC<{ text: string }> = ({text}) => {
-	const [codePartIndexes, setCodePartIndexes] = useState<CodeMarkdownProps[]>([]);
-
-	useEffect(() => {
-		setCodePartIndexes(getCodeIndexes(text, '```'));
-	}, [text]);
-
-	return (
-		<div>
-			<BuildContent text={text} parsedArray={codePartIndexes}/>
-		</div>
-	)
-}
-
 const Message: React.FC<MessageProps> = ({i, message}) => {
 
 	const {setMessages} = useContext(ChatContext);
@@ -138,8 +63,8 @@ const Message: React.FC<MessageProps> = ({i, message}) => {
 		onClick={(e) => handleDeleteMessage(e, i)}>
 		{(isValidRole || isInProgress) && <EnginePrefix {...{message}}/>}
 		<div>
-			<ParseMarkdown text={message.content}/>
-			{/*{message.content}*/}
+			<MarkdownRenderer text={message.content}/>
+			{message.content}
 		</div>
 	</MessageBlock>)
 }
