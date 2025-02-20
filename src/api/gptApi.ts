@@ -1,6 +1,10 @@
 import engine from './engines.json';
 import {Engines, ModelTypes} from "../utils/constanst";
 
+const keys = {
+	gpt: process.env.REACT_APP_GPT_API_KEY,
+	deepSeek: process.env.REACT_APP_DEEP_SEEK_API_KEY
+}
 export enum EngineRole {
 	assistant = "assistant",
 	user = "user",
@@ -59,12 +63,13 @@ export const requestToEngine = async (message: IEngineMessage, params: { sysMess
 			...messageWithoutCustomRoles,
 		]
 	}
+	console.log(keys);
 	try {
 		return await fetch(currentEngine.chatUrl,
 			{
 				method: "POST",
 				headers: {
-					"Authorization": "Bearer " + currentEngine.API_KEY,
+					"Authorization": "Bearer " + keys[message?.engine || "gpt"],
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify(apiRequestBody)
@@ -107,7 +112,7 @@ export const sendAudioToServer = async (audioBlob: Blob) => {
 		const response = await fetch(engine.gpt.audioUrl, {
 			method: "POST",
 			headers: {
-				"Authorization": "Bearer " + engine.gpt.API_KEY,
+				"Authorization": "Bearer " + keys.gpt,
 			},
 			body: formData,
 		});

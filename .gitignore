@@ -2,7 +2,6 @@
 
 # dependencies
 /node_modules
-/src/api/engines.json
 /src/api/params4.ts
 /.pnp
 .pnp.js

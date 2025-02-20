@@ -64,7 +64,7 @@ const Message: React.FC<MessageProps> = ({i, message}) => {
 		{(isValidRole || isInProgress) && <EnginePrefix {...{message}}/>}
 		<div>
 			<MarkdownRenderer text={message.content}/>
-			{message.content}
+			{/*{message.content}*/}
 		</div>
 	</MessageBlock>)
 }
