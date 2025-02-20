@@ -1,0 +1,9 @@
+{
+  "gpt": {
+    "chatUrl": "https://api.openai.com/v1/chat/completions",
+    "audioUrl": "https://api.openai.com/v1/audio/transcriptions"
+  },
+  "deepSeek": {
+    "chatUrl": "https://api.deepseek.com/chat/completions"
+  }
+}
