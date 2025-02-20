@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
 import './App.css';
 import ChatPage from './pages/ChatPage';
 import Main from './pages/Main';
@@ -18,7 +18,8 @@ function App() {
 			<ChatContextProvider>
 				<BrowserRouter>
 					<Routes>
-						<Route path="/" element={<Main/>}/>
+						<Route path="/" element={<Navigate to="/chat-engine" />} />
+						<Route path="/main" element={<Main/>}/>
 						<Route path="/chat-engine" element={<ChatPage {...chatEngine}/>}/>
 						{/*<Route path="/gpt-chat-4" element={<ChatPage {...gpt4}/>}/>*/}
 						<Route path="/maze-game" element={<MazeGame {...mazeGame}/>}/>
