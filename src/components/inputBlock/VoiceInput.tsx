@@ -5,7 +5,7 @@ import {Popover} from "antd";
 import {voiceEngines} from "../../utils/constants";
 import {ChatContext} from "../../context/ChatContext";
 import InputLabel from "./InputLabel";
-import OptionsMenu from "./OptionsMenu";
+import DropdownMenu from "./OptionsMenu";
 import {MenuItems} from "./interfaces";
 import {getMenuItems} from "../../utils/menuItems";
 
@@ -55,7 +55,7 @@ const VoiceInput: React.FC = () => {
 	</>)
 	return (
 		<VoiceInputBlock>
-			<Popover content={<OptionsMenu {...{items, activeItem: voiceInputEngine}}/>} placement="top">
+			<Popover content={<DropdownMenu {...{items, activeItem: voiceInputEngine}}/>} placement="top">
 				<div><InputLabel>{voiceInputEngine}</InputLabel></div>
 			</Popover>
 			<div style={{width: "100%", display: "flex"}}>

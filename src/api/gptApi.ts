@@ -77,7 +77,7 @@ export const requestToEngine = async (message: IEngineMessage, params: { sysMess
 
 		const data = await response.json();
 
-		let content = data.error.message;
+		let content = data.error?.message;
 
 		if (response.status === 401) {
 			content += ApiKeyInstructions;
@@ -90,6 +90,7 @@ export const requestToEngine = async (message: IEngineMessage, params: { sysMess
 				engine: message.engine
 			})
 		}
+
 		return contextEngine.update({...data.choices[0].message, engine: message.engine})
 
 	} catch (error) {
