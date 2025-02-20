@@ -1,5 +1,5 @@
 import {MenuItems} from "../components/inputBlock/interfaces";
-import {Engines, IVoiceEngines, ModelTypes, VoiceEngineSingleType} from "./constanst";
+import {Engines, IVoiceEngines, ModelTypes, VoiceEngineSingleType} from "./constants";
 import {Dispatch, SetStateAction} from "react";
 
 type ItemType = typeof Engines | IVoiceEngines | ModelTypes[]

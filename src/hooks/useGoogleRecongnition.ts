@@ -1,5 +1,5 @@
 import {useCallback, useContext, useEffect, useMemo} from "react";
-import {voiceEngines} from "../utils/constanst";
+import {voiceEngines} from "../utils/constants";
 import {ChatContext} from "../context/ChatContext";
 
 const useGoogleRecognition = () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from "react-router-dom";
-import {routeHeader} from "../utils/constanst";
+import {routeHeader} from "../utils/constants";
 
 function Main() {
 	return (

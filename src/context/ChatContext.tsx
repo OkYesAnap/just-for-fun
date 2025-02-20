@@ -1,5 +1,5 @@
 import React, {ReactNode, useState, createContext, Dispatch, SetStateAction} from "react";
-import {Engines, ModelTypes, voiceEngines, VoiceEngineSingleType} from "../utils/constanst";
+import {Engines, ModelTypes, voiceEngines, VoiceEngineSingleType} from "../utils/constants";
 import {IEngineMessage} from "../api/gptApi";
 
 

@@ -1,6 +1,6 @@
 import {RefObject} from "react";
 import {TextAreaRef} from "antd/es/input/TextArea";
-import {defaultTextInputSize} from "./constanst";
+import {defaultTextInputSize} from "./constants";
 
 const defaultLines = 0;
 

@@ -1,5 +1,5 @@
 import React, {useContext, useEffect} from "react";
-import {headerLinks, routeHeader} from "../../utils/constanst";
+import {headerLinks, routeHeader} from "../../utils/constants";
 import {Link, useLocation} from "react-router-dom";
 import {contextEngine} from "../../api/gptApi";
 import InputLabel from "../inputBlock/InputLabel";

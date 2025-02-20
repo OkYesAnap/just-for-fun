@@ -1,9 +1,9 @@
 import React, {useContext} from "react";
 import {Popover} from "antd";
-import {Engines} from "../../utils/constanst";
+import {Engines} from "../../utils/constants";
 import InputLabel from "./InputLabel";
 import {MenuItems} from "./interfaces";
-import DropdownMenu from "./DropdownMenu";
+import OptionsMenu from "./OptionsMenu";
 import {getMenuItems} from "../../utils/menuItems";
 import {ChatContext} from "../../context/ChatContext";
 
@@ -19,7 +19,7 @@ const EngineChanger: React.FC = () => {
 		}
 	);
 
-	return (<Popover content={<DropdownMenu {...{items, activeItem: engine}}/>}
+	return (<Popover content={<OptionsMenu {...{items, activeItem: engine}}/>}
 	                 placement="top">
 		<div><InputLabel>{labelTemplate} {engine.toUpperCase()}</InputLabel></div>
 	</Popover>)

@@ -1,5 +1,5 @@
 import {EngineRole, IEngineMessage} from '../../api/gptApi';
-import {Engines} from '../../utils/constanst';
+import {Engines} from '../../utils/constants';
 import {ReactComponent as DeepSeek} from '../../icons/DeepSeek_logo.svg';
 import {ReactComponent as OpenAI} from '../../icons/OpenAI_Logo.svg';
 import React, {RefObject, useEffect, useRef} from 'react';

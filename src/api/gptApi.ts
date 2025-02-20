@@ -1,10 +1,11 @@
 import engine from './engines.json';
-import {Engines, ModelTypes} from "../utils/constanst";
+import {ApiKeyInstructions, Engines, ModelTypes} from "../utils/constants";
 
 const keys = {
 	gpt: process.env.REACT_APP_GPT_API_KEY,
 	deepSeek: process.env.REACT_APP_DEEP_SEEK_API_KEY
 }
+
 export enum EngineRole {
 	assistant = "assistant",
 	user = "user",
@@ -62,10 +63,9 @@ export const requestToEngine = async (message: IEngineMessage, params: { sysMess
 			...params.sysMessage,
 			...messageWithoutCustomRoles,
 		]
-	}
-	console.log(keys);
+	};
 	try {
-		return await fetch(currentEngine.chatUrl,
+		const response = await fetch(currentEngine.chatUrl,
 			{
 				method: "POST",
 				headers: {
@@ -73,19 +73,24 @@ export const requestToEngine = async (message: IEngineMessage, params: { sysMess
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify(apiRequestBody)
-			}).then((data) => {
-			return data.json();
-		}).then((data) => {
-			if (data?.error) {
-				return contextEngine.update({
-					content: data.error.message,
-					role: EngineRole.error,
-					engine: message.engine
-				})
-			}
-			return contextEngine.update({...data.choices[0].message, engine: message.engine})
+			});
 
-		})
+		const data = await response.json();
+
+		let content = data.error.message;
+
+		if (response.status === 401) {
+			content += ApiKeyInstructions;
+		}
+
+		if (data?.error) {
+			return contextEngine.update({
+				content,
+				role: EngineRole.error,
+				engine: message.engine
+			})
+		}
+		return contextEngine.update({...data.choices[0].message, engine: message.engine})
 
 	} catch (error) {
 		let errorMessage: string;

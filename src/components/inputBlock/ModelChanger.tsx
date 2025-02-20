@@ -1,9 +1,9 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Popover} from "antd";
-import {Models} from "../../utils/constanst";
+import {Models} from "../../utils/constants";
 import InputLabel from "./InputLabel";
 import {MenuItems} from "./interfaces";
-import DropdownMenu from "./DropdownMenu";
+import OptionsMenu from "./OptionsMenu";
 import {getMenuItems} from "../../utils/menuItems";
 import {ChatContext} from "../../context/ChatContext";
 
@@ -25,7 +25,7 @@ const ModelChanger: React.FC = () => {
 		}
 	);
 
-	return (<Popover content={<DropdownMenu {...{items, activeItem: model}}/>}
+	return (<Popover content={<OptionsMenu {...{items, activeItem: model}}/>}
 	                 placement="top">
 		<div><InputLabel>{labelTemplate} {model.toUpperCase()}</InputLabel></div>
 	</Popover>)

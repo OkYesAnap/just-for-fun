@@ -1,7 +1,7 @@
 import {useRef, useEffect, useCallback, useContext} from 'react';
 import {sendAudioToServer} from "../api/gptApi";
 import {ChatContext} from "../context/ChatContext";
-import {voiceEngines} from "../utils/constanst";
+import {voiceEngines} from "../utils/constants";
 
 const useVoiceRecorder = () => {
 	const {
