@@ -20,7 +20,8 @@ export interface IEngineMessage {
 	content: string,
 	role: EngineRole,
 	engine?: Engines,
-	model?: ModelTypes
+	model?: ModelTypes,
+	reasoning_content?: string
 }
 
 class ContextEngine {
@@ -90,8 +91,9 @@ export const requestToEngine = async (message: IEngineMessage, params: { sysMess
 				engine: message.engine
 			})
 		}
-
-		return contextEngine.update({...data.choices[0].message, engine: message.engine})
+		const newMessage = data.choices[0].message
+		delete newMessage.reasoning_content
+		return contextEngine.update({...newMessage, engine: message.engine})
 
 	} catch (error) {
 		let errorMessage: string;
