@@ -27,9 +27,12 @@ const getMdContentIndexes = (text: string, markupTag: string) => {
             if (markupTag === tag.code) {
                 currTag.content = text.slice(eolIndex + 1, currTag.end)
             } else if (markupTag === tag.italic) {
-                if (text.indexOf('"') === -1) {
-                    currTag.content = text.slice(currTag.begin!, currTag.end)
-                } else currTag.content = text.slice(currTag.begin! - 1, currTag.end + 1)
+                const peaceOfText = text.slice(currTag.begin!, currTag.end);
+                if (peaceOfText.indexOf('"') > -1) {
+                    currTag.content = peaceOfText.slice(2, -2);
+                } else {
+                    currTag.content = peaceOfText.slice(1, -1)
+                }
             } else {
                 currTag.content = text.slice(currTag.begin!, currTag.end)
             }

@@ -7,7 +7,7 @@ const MarkdownSemiBoldStyled = styled.span`
 `;
 
 const MarkdownItalic: React.FC<{ mdItem: MarkdownItemProps }> = ({mdItem}) => {
-    return <MarkdownSemiBoldStyled>{mdItem.content?.slice(2, -2)}</MarkdownSemiBoldStyled>
+    return <MarkdownSemiBoldStyled>{mdItem.content}</MarkdownSemiBoldStyled>
 };
 
 export default MarkdownItalic
