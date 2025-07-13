@@ -22,17 +22,18 @@ const getMdContentIndexes = (text: string, markupTag: string) => {
                 }
             }
             currTag.tag = markupTag;
-        } else {
-            if (currTag) {
-                currTag.end = index + markupTag.length;
-                if (markupTag === tag.code) {
-                    currTag.content = text.slice(eolIndex + 1, currTag.end)
-                } else if (markupTag === tag.italic) {
-                    currTag.content = text.slice(currTag.begin! - 1, currTag.end + 1)
-                } else {
+        } else if (currTag) {
+            currTag.end = index + markupTag.length;
+            if (markupTag === tag.code) {
+                currTag.content = text.slice(eolIndex + 1, currTag.end)
+            } else if (markupTag === tag.italic) {
+                if (text.indexOf('"') === -1) {
                     currTag.content = text.slice(currTag.begin!, currTag.end)
-                }
+                } else currTag.content = text.slice(currTag.begin! - 1, currTag.end + 1)
+            } else {
+                currTag.content = text.slice(currTag.begin!, currTag.end)
             }
+
         }
         indexCounter++;
         index = text.indexOf(markupTag, index + markupTag.length);
