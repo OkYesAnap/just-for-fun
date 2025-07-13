@@ -7,7 +7,7 @@ const MarkdownBoldStyled = styled.span`
 `;
 
 const MarkdownBold: React.FC<{ mdItem: MarkdownItemProps }> = ({mdItem}) => {
-    return <MarkdownBoldStyled>{mdItem.content?.slice(2, -2)}</MarkdownBoldStyled>
+    return <MarkdownBoldStyled>{mdItem.content}</MarkdownBoldStyled>
 };
 
 export default MarkdownBold

@@ -26,15 +26,11 @@ const getMdContentIndexes = (text: string, markupTag: string) => {
             currTag.end = index + markupTag.length;
             if (markupTag === tag.code) {
                 currTag.content = text.slice(eolIndex + 1, currTag.end)
-            } else if (markupTag === tag.italic) {
-                const peaceOfText = text.slice(currTag.begin!, currTag.end);
-                if (peaceOfText.indexOf('"') > -1) {
-                    currTag.content = peaceOfText.slice(2, -2);
-                } else {
-                    currTag.content = peaceOfText.slice(1, -1)
-                }
             } else {
-                currTag.content = text.slice(currTag.begin!, currTag.end)
+                currTag.content = text.slice(currTag.begin! + markupTag.length, currTag.end - markupTag.length);
+                if (currTag.content.indexOf('"') > -1) {
+                    currTag.content = currTag.content.replace(/"/g, '');
+                }
             }
 
         }
