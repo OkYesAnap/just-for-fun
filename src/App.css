@@ -1,57 +1,57 @@
 .App {
-  text-align: center;
-  background-color: #282c34;
-  min-height: 100vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 3vmin;
-  color: white;
-  width: 100%;
+    text-align: center;
+    background-color: #282c34;
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    width: 100%;
 }
 
 .App-link {
-  color: darkgrey;
-  text-decoration: none;
+    color: darkgrey;
+    text-decoration: none;
 }
 
 .App-link:hover,
-.App-link.active{
+.App-link.active {
     color: white;
 }
 
 .ant-spin-dot-item {
-  background-color: white !important;
+    background-color: white !important;
 }
 
 .ant-menu-title-content:hover, .ant-menu-item-active:hover {
-  color: white !important;
+    color: white !important;
 }
 
 .ant-popover-inner {
-  padding: 0;
-  background-color: transparent !important;
+    padding: 0;
+    background-color: transparent !important;
 }
 
-.ant-menu-item{
-  color: darkgray !important;
+.ant-menu-item {
+    color: darkgray !important;
 }
 
-.ant-menu-item-selected{
-  color: #fff !important;
-  background-color: #282c34 !important;
-  border: white 1px solid;
+.ant-menu-item-selected {
+    color: #fff !important;
+    background-color: #282c34 !important;
+    border: white 1px solid;
 }
+
 ::-webkit-scrollbar {
-  width: 4px;
-  background-color: #444;
+    width: 4px;
+    background-color: #444;
 }
 
 ::-webkit-scrollbar-track {
-  border-radius: 6px;
+    border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:active {
-  background-color: #444;
+    background-color: #444;
 }

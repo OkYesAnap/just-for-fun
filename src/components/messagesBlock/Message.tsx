@@ -51,6 +51,8 @@ const Message: React.FC<MessageProps> = ({i, message}) => {
 
     const {setMessages} = useContext(ChatContext);
     const messageRef = useRef<HTMLDivElement>(null);
+    const copyIconRef = useRef<SVGSVGElement>(null);
+
     const isInProgress = message.role === EngineRole.inprogress;
     const isValidRole = !(message.role === EngineRole.user);
 
@@ -63,7 +65,13 @@ const Message: React.FC<MessageProps> = ({i, message}) => {
     };
 
     const handleCopy = () => {
-        if (messageRef.current?.textContent) navigator.clipboard.writeText(messageRef.current.textContent);
+        if (messageRef.current?.textContent) {
+            navigator.clipboard.writeText(messageRef.current.textContent);
+            const animateClick = copyIconRef?.current?.getElementsByTagName('animateTransform')[0];
+            if (animateClick) {
+                animateClick.beginElement();
+            }
+        }
     }
 
     return (<MessageBlock
@@ -72,8 +80,8 @@ const Message: React.FC<MessageProps> = ({i, message}) => {
         $engine={message.engine}
         onClick={(e) => handleDeleteMessage(e, i)}>
         {(isValidRole || isInProgress) && <EnginePrefix {...{message}}/>}
+        {!isInProgress && <CopyIcon ref={copyIconRef} cursor="pointer" onClick={handleCopy}/>}
         <div>
-            {!isInProgress && <CopyIcon cursor="pointer" onClick={handleCopy}/>}
             <MarkdownRenderer text={message.content}/>
             {/*{message.content}*/}
         </div>
