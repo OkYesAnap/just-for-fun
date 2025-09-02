@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {IEngineMessage} from '../api/gptApi';
 import '../App.css';
 import {useGoogleRecognition} from "../hooks/useGoogleRecongnition";
@@ -8,25 +8,32 @@ import DraftText from "../components/draftText/DraftText";
 import MessagesBlock from "../components/messagesBlock/MessagesBlock";
 import InputBlock from "../components/inputBlock/InputBlock";
 import EngineHeader from "../components/header/Header";
+import {ChatContext} from "../context/ChatContext";
 
 
 export interface ChatPageProps {
-	model: string,
-	sysMessage: IEngineMessage[]
+    model: string,
+    sysMessage: IEngineMessage[]
 }
 
-function ChatPage(params: ChatPageProps) {
-	useGoogleRecognition();
-	useVoiceRecorder();
-	return (
-		<>
-			<EngineHeader/>
-			<MessagesBlock/>
-			<InputBlock {...params}/>
-			<DraftText/>
-			<ModalWindow/>
-		</>
-	);
+const ChatPage: React.FC<ChatPageProps> = (params: ChatPageProps) => {
+    const {setParams} = React.useContext(ChatContext);
+    useGoogleRecognition();
+    useVoiceRecorder();
+
+    useEffect(() => {
+        setParams(params);
+    }, [setParams, params]);
+
+    return (
+        <>
+            <EngineHeader/>
+            <MessagesBlock/>
+            <InputBlock/>
+            <DraftText/>
+            <ModalWindow/>
+        </>
+    );
 }
 
 export default ChatPage;

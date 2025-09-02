@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from "react";
 import styled from "styled-components";
 import {EngineRole} from "../../api/gptApi";
 import {ChatContext} from "../../context/ChatContext";
-import {MessageBlock} from '../messagesBlock/Message';
+import {MessageBlockStyled} from '../messagesBlock/Message';
 
 const FADE_DURATION = 500;
 
@@ -16,29 +16,29 @@ const DraftTextComponent = styled.div<{ $hastext: boolean }>`
   transform: translate(-50%, -50%);
 `
 
-const DraftText: React.FC= () => {
+const DraftText: React.FC = () => {
 
-	const {draftText} = useContext(ChatContext);
-	const [transcript, setTranscript] = useState<string>(draftText);
-	useEffect(() => {
-		let timeOut: NodeJS.Timeout;
-		if (!draftText) {
-			timeOut = setTimeout(() => setTranscript(draftText), FADE_DURATION)
-		} else {
-			setTranscript(draftText)
-		}
-		return () => {
-			if (timeOut) clearTimeout(timeOut)
-		};
-	}, [draftText]);
+    const {draftText} = useContext(ChatContext);
+    const [transcript, setTranscript] = useState<string>(draftText);
+    useEffect(() => {
+        let timeOut: NodeJS.Timeout;
+        if (!draftText) {
+            timeOut = setTimeout(() => setTranscript(draftText), FADE_DURATION)
+        } else {
+            setTranscript(draftText)
+        }
+        return () => {
+            if (timeOut) clearTimeout(timeOut)
+        };
+    }, [draftText]);
 
-	return <DraftTextComponent $hastext={!!draftText}>
-		<MessageBlock
-			style={{margin: '0'}}
-			$role={EngineRole.user}>
-			{transcript}
-		</MessageBlock>
-	</DraftTextComponent>
+    return <DraftTextComponent $hastext={!!draftText}>
+        <MessageBlockStyled
+            style={{margin: '0'}}
+            $role={EngineRole.user}>
+            {transcript}
+        </MessageBlockStyled>
+    </DraftTextComponent>
 }
 
 export default DraftText;

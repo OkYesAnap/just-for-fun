@@ -41,7 +41,7 @@ class ContextEngine {
     }
 
     clear() {
-        this.context = []
+        this.context = [];
         return this.context;
     }
 
@@ -53,13 +53,14 @@ class ContextEngine {
 
 export const contextEngine = new ContextEngine();
 
-export const requestToEngine = async (message: IEngineMessage, params: { sysMessage: IEngineMessage[] }) => {
+export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) => {
 
-    const currentEngine = engine[message?.engine || "gpt"];
-    contextEngine.update(message);
+    const messages = contextEngine.get();
+    const lastMessage = messages[messages.length - 1];
+    const currentEngine = engine[lastMessage?.engine || "gpt"];
     const messageWithoutCustomRoles = contextEngine.get().filter((item: IEngineMessage) => validEngineRoles.has(item.role));
     const apiRequestBody = {
-        "model": message.model,
+        "model": lastMessage.model,
         "messages": [
             ...params.sysMessage,
             ...messageWithoutCustomRoles,
@@ -70,7 +71,7 @@ export const requestToEngine = async (message: IEngineMessage, params: { sysMess
             {
                 method: "POST",
                 headers: {
-                    "Authorization": "Bearer " + keys[message?.engine || "gpt"],
+                    "Authorization": "Bearer " + keys[lastMessage?.engine || "gpt"],
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(apiRequestBody)
@@ -88,12 +89,12 @@ export const requestToEngine = async (message: IEngineMessage, params: { sysMess
             return contextEngine.update({
                 content,
                 role: EngineRole.error,
-                engine: message.engine
+                engine: lastMessage.engine
             })
         }
-        const newMessage = data.choices[0].message
-        delete newMessage.reasoning_content
-        return contextEngine.update({...newMessage, engine: message.engine})
+        const newMessage = data.choices[0].message;
+        delete newMessage.reasoning_content;
+        return contextEngine.update({...newMessage, engine: lastMessage.engine});
 
     } catch (error) {
         let errorMessage: string;
@@ -105,7 +106,7 @@ export const requestToEngine = async (message: IEngineMessage, params: { sysMess
         return contextEngine.update({
             content: errorMessage,
             role: EngineRole.error,
-            engine: message.engine
+            engine: lastMessage.engine
         })
     }
 };

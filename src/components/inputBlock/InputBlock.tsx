@@ -6,10 +6,10 @@ import React, {useContext, useEffect, useLayoutEffect, useRef} from "react";
 import styled from "styled-components";
 import {ChatContext} from "../../context/ChatContext";
 import {TextAreaRef} from "antd/es/input/TextArea";
-import {useAskEngine} from "../../hooks/useAskEngine";
 import {setTextAreaActualHeight} from "../../utils/textArea";
-import {ChatPageProps} from "../../pages/ChatPage";
 import ModelChanger from "./ModelChanger";
+import {contextEngine, EngineRole} from "../../api/gptApi";
+import {useAskEngine} from "../../hooks/useAskEngine";
 
 const InputBlockStyled = styled.div`
     position: fixed;
@@ -37,10 +37,10 @@ const InfoAreaStyled = styled.div`
     width: inherit;
 `;
 
-const InputBlock: React.FC<ChatPageProps> = (params) => {
-
+const InputBlock: React.FC = () => {
     const textAreaRef = useRef<TextAreaRef>(null);
-    const askEngine = useAskEngine({textAreaRef, params});
+    const {engine, model, params} = useContext(ChatContext);
+    const askEngine = useAskEngine(params);
     const {
         setAutoAsk,
         askInProgress,
@@ -65,19 +65,29 @@ const InputBlock: React.FC<ChatPageProps> = (params) => {
         }
     };
 
+    const updateAndAskEngine = () => {
+        contextEngine.update({content: text, role: EngineRole.user, engine, model});
+        askEngine()
+    };
+
+    const onClick = () => {
+        setAutoAsk(false);
+        updateAndAskEngine();
+    };
+
     useEffect(() => {
             if (autoAsk && isListening && !askInProgress && hasText) {
-                askEngine();
+                updateAndAskEngine();
             }
             if (!text) {
                 textAreaRef?.current?.focus();
             }
         },
-        [askInProgress, autoAsk, isListening, askEngine, hasText, text]);
+        [askInProgress, autoAsk, isListening, askEngine, hasText, text, updateAndAskEngine]);
 
     const handleEnterPress: React.KeyboardEventHandler<HTMLTextAreaElement> = (event) => {
         if (event.ctrlKey && event.key === 'Enter' && !askInProgress) {
-            askEngine();
+            updateAndAskEngine()
         }
         if (event.key === 'Escape' && !askInProgress) {
             setShowClearModal(true);
@@ -87,11 +97,6 @@ const InputBlock: React.FC<ChatPageProps> = (params) => {
     const onChangeTextAria = (e: any) => {
         setText(e.target.value);
     };
-
-    const onClick = () => {
-        setAutoAsk(false);
-        askEngine();
-    }
 
     return (
         <InputBlockStyled>

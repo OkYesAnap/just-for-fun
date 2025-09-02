@@ -1,10 +1,9 @@
-import {contextEngine, EngineRole, IEngineMessage} from "../../api/gptApi";
-import React, {useContext, useRef} from "react";
-import EnginePrefix from './EnginePrefix';
+import {EngineRole} from "../../api/gptApi";
+import React, {useRef} from "react";
 import styled from 'styled-components';
-import {ChatContext} from "../../context/ChatContext";
 import MarkdownRenderer from "./MarkdownRenderer";
-import {ReactComponent as CopyIcon} from '../../icons/Copy.svg';
+import {MessageProps} from "./models";
+import MessageHeader from "./MessageHeader";
 
 
 const setBackgroundColor = ($role: EngineRole) => {
@@ -16,12 +15,12 @@ const setBackgroundColor = ($role: EngineRole) => {
     return 'rgba(0, 0, 0, 0)'
 }
 
-interface MessageBlockProps {
+interface MessageBlockStyledProps {
     $role: EngineRole;
     $engine?: string;
 }
 
-export const MessageBlock = styled.div<MessageBlockProps>`
+export const MessageBlockStyled = styled.div<MessageBlockStyledProps>`
     margin: ${({$role}) => ($role === 'user' ? '10px 10vmin 10px 20px' : '10px auto 10px 10vmin')};
     text-align: left;
     align-self: flex-end;
@@ -40,52 +39,20 @@ export const MessageBlock = styled.div<MessageBlockProps>`
         100% {
             opacity: 1;
         }
-`
-
-interface MessageProps {
-    i: number,
-    message: IEngineMessage,
-}
+`;
 
 const Message: React.FC<MessageProps> = ({i, message}) => {
 
-    const {setMessages} = useContext(ChatContext);
     const messageRef = useRef<HTMLDivElement>(null);
-    const copyIconRef = useRef<SVGSVGElement>(null);
 
-    const isInProgress = message.role === EngineRole.inprogress;
-    const isValidRole = !(message.role === EngineRole.user);
-
-    const handleDeleteMessage = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, messageNumber: number) => {
-        if (e.ctrlKey || e.metaKey) {
-            const messages = contextEngine.deleteMessage(messageNumber);
-            setMessages([...messages]);
-        }
-
-    };
-
-    const handleCopy = () => {
-        if (messageRef.current?.textContent) {
-            navigator.clipboard.writeText(messageRef.current.textContent);
-            const animateClick = copyIconRef?.current?.getElementsByTagName('animateTransform')[0];
-            if (animateClick) {
-                animateClick.beginElement();
-            }
-        }
-    }
-
-    return (<MessageBlock
+    return (<MessageBlockStyled
         ref={messageRef}
         $role={message.role}
-        $engine={message.engine}
-        onClick={(e) => handleDeleteMessage(e, i)}>
-        {(isValidRole || isInProgress) && <EnginePrefix {...{message}}/>}
-        {!isInProgress && <CopyIcon ref={copyIconRef} cursor="pointer" onClick={handleCopy}/>}
-        <div>
-            <MarkdownRenderer text={message.content}/>
-            {/*{message.content}*/}
-        </div>
-    </MessageBlock>)
+        $engine={message.engine}>
+        <MessageHeader {...{i, message, messageRef}}/>
+        <MarkdownRenderer text={message.content}/>
+        {/*{message.content}*/}
+    </MessageBlockStyled>)
 }
 
 export default Message;

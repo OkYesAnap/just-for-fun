@@ -33,11 +33,7 @@ const MarkdownRenderer: React.FC<{ text: string }> = ({text}) => {
         setCodePartIndexes(clearedInterceptions);
     }, [text]);
 
-    return (
-        <div>
-            <BuildMdContent text={text} parsedArray={codePartIndexes}/>
-        </div>
-    )
+    return <BuildMdContent text={text} parsedArray={codePartIndexes}/>
 };
 
 export default MarkdownRenderer
