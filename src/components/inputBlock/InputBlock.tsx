@@ -48,7 +48,8 @@ const InputBlock: React.FC = () => {
         isListening,
         text,
         setShowClearModal,
-        setText
+        setText,
+        setMessages
     } = useContext(ChatContext);
     const hasText = !!text.trim().length;
 
@@ -66,8 +67,8 @@ const InputBlock: React.FC = () => {
     };
 
     const updateAndAskEngine = () => {
-        contextEngine.update({content: text, role: EngineRole.user, engine, model});
-        askEngine()
+        setMessages(contextEngine.update({content: text, role: EngineRole.user, engine, model}));
+        askEngine();
     };
 
     const onClick = () => {

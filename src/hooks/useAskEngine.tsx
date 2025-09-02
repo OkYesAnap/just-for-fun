@@ -7,7 +7,6 @@ const useAskEngine = (params: ChatPageProps) => {
 
     const {text, setText, setAskInProgress, setMessages, messages, engine, model} = useContext(ChatContext);
     return useCallback(async () => {
-        // if (!text.length) return;
         setAskInProgress(true);
         setMessages([...messages, {
             content: "I am thinking",
