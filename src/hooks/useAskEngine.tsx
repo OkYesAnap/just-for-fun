@@ -5,7 +5,7 @@ import {ChatContext} from "../context/ChatContext";
 
 const useAskEngine = (params: ChatPageProps) => {
 
-    const {text, setText, setAskInProgress, setMessages, messages, engine, model} = useContext(ChatContext);
+    const {setText, setAskInProgress, setMessages, messages, engine, model} = useContext(ChatContext);
     return useCallback(async () => {
         setAskInProgress(true);
         setMessages([...messages, {
@@ -18,6 +18,6 @@ const useAskEngine = (params: ChatPageProps) => {
         setMessages(messagesFromGpt);
         setAskInProgress(false);
         setText('');
-    }, [messages, params, text, engine, setAskInProgress, setMessages, setText, model]);
+    }, [messages, params, engine, setAskInProgress, setMessages, setText, model]);
 };
 export {useAskEngine};

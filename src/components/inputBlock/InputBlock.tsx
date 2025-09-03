@@ -2,7 +2,7 @@ import EngineChanger from "./EngineChanger";
 import InputButton from "./InputButton";
 import VoiceInput from "./VoiceInput";
 import {Input} from "antd";
-import React, {useContext, useEffect, useLayoutEffect, useRef} from "react";
+import React, {useCallback, useContext, useEffect, useLayoutEffect, useRef} from "react";
 import styled from "styled-components";
 import {ChatContext} from "../../context/ChatContext";
 import {TextAreaRef} from "antd/es/input/TextArea";
@@ -66,10 +66,10 @@ const InputBlock: React.FC = () => {
         }
     };
 
-    const updateAndAskEngine = () => {
+    const updateAndAskEngine = useCallback(() => {
         setMessages(contextEngine.update({content: text, role: EngineRole.user, engine, model}));
         askEngine();
-    };
+    }, [setMessages, text, engine, model, askEngine]);
 
     const onClick = () => {
         setAutoAsk(false);
