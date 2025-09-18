@@ -1,6 +1,5 @@
 import React from "react";
 import {MarkdownItemProps} from "./interfaces";
-import MarkdownCode from "./MarkdownCode";
 import MarkdownBold from "./MarkdownBold";
 import MarkdownThirdHeading from "./MarkdownThirdHeading";
 import {tag} from "../../constants/textTags";
@@ -21,7 +20,7 @@ const BuildMdContent: React.FC<{ text: string, parsedArray: MarkdownItemProps[] 
                 }
                 switch (mdItem.tag) {
                     case tag.code: {
-                        content.push(<MarkdownCode key={`code-${i}`}{...{mdItem}}/>);
+                        // content.push(<MarkdownCode key={`code-${i}`}{...{mdItem}}/>);
                         break;
                     }
                     case tag.bold: {

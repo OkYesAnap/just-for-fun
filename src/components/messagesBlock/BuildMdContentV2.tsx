@@ -3,6 +3,7 @@ import mdTagAdapter, {AdapterData} from "../../utils/mdTagAdapter";
 import {TEMP_TAGS} from "../../constants/textTags";
 import MarkdownBold from "./MarkdownBold";
 import MarkdownItalic from "./MarkdownItalic";
+import MarkdownCode from "./MarkdownCode";
 
 
 interface DataIndexes {
@@ -18,11 +19,9 @@ const BuildMdContentV2: React.FC<{ text: string }> = ({text}) => {
     const content = useMemo(() => {
         const data = mdTagAdapter(text);
         const dataIndexes: DataIndexes = {};
-
         for (let key in TEMP_TAGS) {
             dataIndexes[key] = 0
         }
-
         return (
             <>
                 {data.adoptedTextArr.map((val: keyof typeof TEMP_TAGS, i: number) => {
@@ -31,12 +30,16 @@ const BuildMdContentV2: React.FC<{ text: string }> = ({text}) => {
                             return <b>{getData(data, dataIndexes, "***")}</b>
                         }
                         case TEMP_TAGS["**"]: {
-                            const mdItem = getData(data, dataIndexes, "*");
+                            const mdItem = getData(data, dataIndexes, "**");
                             return <MarkdownBold key={`bold-${i}`}{...{mdItem}}/>
                         }
                         case TEMP_TAGS["*"]: {
                             const mdItem = getData(data, dataIndexes, "*");
                             return <MarkdownItalic key={`bold-${i}`}{...{mdItem}}/>
+                        }
+                        case TEMP_TAGS["```"]: {
+                            const mdItem = getData(data, dataIndexes, "```");
+                            return <MarkdownCode key={`code-${i}`}{...{mdItem}}/>
                         }
                         default:
                             return <>{val}</>
@@ -46,9 +49,6 @@ const BuildMdContentV2: React.FC<{ text: string }> = ({text}) => {
         );
     }, [text]);
 
-    return (
-        <>
-            <p>{content}</p>
-        </>)
+    return content;
 }
 export default BuildMdContentV2;
