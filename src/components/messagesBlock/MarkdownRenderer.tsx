@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {MarkdownItemProps} from "./interfaces";
 import {getMdContentIndexes} from "../../utils/getMdContentIndexes";
-import BuildMdContent from "./BuildMdContent";
 import {tag} from "../../constants/textTags";
+import BuildMdContent from "./BuildMdContent";
 
 const MarkdownRenderer: React.FC<{ text: string }> = ({text}) => {
     const [codePartIndexes, setCodePartIndexes] = useState<MarkdownItemProps[]>([]);
@@ -33,7 +33,10 @@ const MarkdownRenderer: React.FC<{ text: string }> = ({text}) => {
         setCodePartIndexes(clearedInterceptions);
     }, [text]);
 
-    return <BuildMdContent text={text} parsedArray={codePartIndexes}/>
+    return <>
+        <BuildMdContent text={text} parsedArray={codePartIndexes}/>
+        {/*<BuildMdContentV2 text={text}/>*/}
+    </>
 };
 
 export default MarkdownRenderer

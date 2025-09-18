@@ -25,11 +25,11 @@ const BuildMdContent: React.FC<{ text: string, parsedArray: MarkdownItemProps[] 
                         break;
                     }
                     case tag.bold: {
-                        content.push(<MarkdownBold key={`bold-${i}`}{...{mdItem}}/>);
+                        content.push(<MarkdownBold key={`bold-${i}`}{...{mdItem: mdItem.content || ""}}/>);
                         break;
                     }
                     case tag.italic: {
-                        content.push(<MarkdownItalic key={`italic-${i}`}{...{mdItem}}/>);
+                        content.push(<MarkdownItalic key={`italic-${i}`}{...{mdItem: mdItem.content || ""}}/>);
                         break;
                     }
                     case tag.head: {
