@@ -33,9 +33,6 @@ const BuildMdContentV2: React.FC<{ text: string }> = ({text}) => {
                             const mdItem = getData(data, dataIndexes, "**");
                             return <MarkdownBold key={`bold-${i}`}{...{mdItem}}/>
                         }
-                        case TEMP_TAGS["* "]: {
-                            return <b key={`bold-${i}`}>* </b>
-                        }
                         case TEMP_TAGS["*"]: {
                             const mdItem = getData(data, dataIndexes, "*");
                             return <MarkdownItalic key={`bold-${i}`}{...{mdItem}}/>
