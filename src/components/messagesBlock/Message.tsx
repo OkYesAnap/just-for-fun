@@ -51,7 +51,7 @@ const Message: React.FC<MessageProps> = ({i, message}) => {
         $engine={message.engine}>
         <MessageHeader {...{i, message, messageRef}}/>
         <MarkdownRenderer text={message.content}/>
-        {message.content}
+        {/*{message.content}*/}
     </MessageBlockStyled>)
 }
 

@@ -17,7 +17,7 @@ export interface ChatPageProps {
 }
 
 const ChatPage: React.FC<ChatPageProps> = (params: ChatPageProps) => {
-    const {setParams} = React.useContext(ChatContext);
+    const {setParams, askInProgress} = React.useContext(ChatContext);
     useGoogleRecognition();
     useVoiceRecorder();
 
@@ -29,7 +29,7 @@ const ChatPage: React.FC<ChatPageProps> = (params: ChatPageProps) => {
         <>
             <EngineHeader/>
             <MessagesBlock/>
-            <InputBlock/>
+            {!askInProgress && <InputBlock/>}
             <DraftText/>
             <ModalWindow/>
         </>
