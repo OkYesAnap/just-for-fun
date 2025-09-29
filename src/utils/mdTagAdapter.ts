@@ -20,12 +20,13 @@ const mdTagAdapter = (text: string): any => {
             let text = val;
             ///Table
             if (tag === "\n|") {
-                text = text.replace(/\n\|([\s\S]*?)\|\n\n/g, (match, p1) => {
+                text = text.replace(/(?:^|\n)\|([\s\S]*?)\|(?:\n\n|$)/g, (match, p1) => {
                     result.cuts[tagPlaceholder].push(`|${p1.trim()}|`);
                     return tagPlaceholder
                 });
                 return (text.split(new RegExp(`(${tagPlaceholder})`, 'g')) || []);
-            }
+            } else if (tag === "***")
+                {return text.split("***")}
             ////
 
             const splitInside = text.split(tag);
