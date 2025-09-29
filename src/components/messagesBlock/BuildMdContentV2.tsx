@@ -4,6 +4,7 @@ import {TEMP_TAGS} from "../../constants/textTags";
 import MarkdownBold from "./MarkdownBold";
 import MarkdownItalic from "./MarkdownItalic";
 import MarkdownCode from "./MarkdownCode";
+import MarkdownTable from "./MarkdownTable";
 
 
 interface DataIndexes {
@@ -40,6 +41,10 @@ const BuildMdContentV2: React.FC<{ text: string }> = ({text}) => {
                         case TEMP_TAGS["```"]: {
                             const mdItem = getData(data, dataIndexes, "```");
                             return <MarkdownCode key={`code-${i}`}{...{mdItem}}/>
+                        }
+                        case TEMP_TAGS["\n|"]: {
+                            const mdItem = getData(data, dataIndexes, "\n|");
+                            return <MarkdownTable key={`bold-${i}`}{...{mdItem}}/>
                         }
                         default:
                             return <>{val}</>

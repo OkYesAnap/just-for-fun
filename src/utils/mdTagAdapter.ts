@@ -15,9 +15,20 @@ const mdTagAdapter = (text: string): any => {
         const tagPlaceholder = TEMP_TAGS[tag];
 
         result.cuts[tagPlaceholder] = [];
-
         result.adoptedTextArr = result.adoptedTextArr.flatMap((val) => {
-            const splitInside = val.split(tag);
+
+            let text = val;
+            ///Table
+            if (tag === "\n|") {
+                text = text.replace(/\n\|([\s\S]*?)\|\n\n/g, (match, p1) => {
+                    result.cuts[tagPlaceholder].push(`|${p1.trim()}|`);
+                    return tagPlaceholder
+                });
+                return (text.split(new RegExp(`(${tagPlaceholder})`, 'g')) || []);
+            }
+            ////
+
+            const splitInside = text.split(tag);
             splitInside.forEach((part, index) => {
                 if (index % 2 === 1) {
                     result.cuts[tagPlaceholder].push(part);
@@ -26,7 +37,6 @@ const mdTagAdapter = (text: string): any => {
             return splitInside.map((part, index) => (index % 2 === 1 ? tagPlaceholder : part));
         });
     });
-
     return result;
 };
 
