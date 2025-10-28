@@ -22,7 +22,6 @@ const MessagesMargins = styled.div`
 const MessagesBlock: React.FC = () => {
     const chatBlockRef = useRef<HTMLDivElement>(null);
     const {messages} = useContext(ChatContext);
-
     useEffect(() => {
         if (chatBlockRef?.current) {
             chatBlockRef.current.scrollTop = chatBlockRef.current.scrollHeight;

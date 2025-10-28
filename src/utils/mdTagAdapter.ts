@@ -25,8 +25,9 @@ const mdTagAdapter = (text: string): any => {
                     return tagPlaceholder
                 });
                 return (text.split(new RegExp(`(${tagPlaceholder})`, 'g')) || []);
-            } else if (tag === "***")
-                {return text.split("***")}
+            } else if (tag === "***") {
+                return text.split("***")
+            }
             ////
 
             const splitInside = text.split(tag);

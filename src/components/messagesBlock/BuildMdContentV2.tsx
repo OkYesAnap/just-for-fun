@@ -28,7 +28,7 @@ const BuildMdContentV2: React.FC<{ text: string }> = ({text}) => {
                 {data.adoptedTextArr.map((val: keyof typeof TEMP_TAGS, i: number) => {
                     switch (val) {
                         case TEMP_TAGS["***"]: {
-                            return <b>{getData(data, dataIndexes, "***")}</b>
+                            return <b key={i}>{getData(data, dataIndexes, "***")}</b>
                         }
                         case TEMP_TAGS["**"]: {
                             const mdItem = getData(data, dataIndexes, "**");
@@ -47,7 +47,7 @@ const BuildMdContentV2: React.FC<{ text: string }> = ({text}) => {
                             return <MarkdownTable key={`bold-${i}`}{...{mdItem}}/>
                         }
                         default:
-                            return <>{val}</>
+                            return <div key={i}>{val}</div>
                     }
                 })}
             </>

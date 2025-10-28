@@ -2,14 +2,14 @@ import {ReactComponent as CopyIcon} from '../../icons/Copy.svg';
 import {ReactComponent as DeleteIcon} from '../../icons/Delete.svg';
 import {ReactComponent as RepeatIcon} from '../../icons/Repeat.svg';
 import React, {useContext, useRef} from "react";
-import {contextEngine, EngineRole} from "../../api/gptApi";
+import {contextEngine, EngineRole, IEngineMessage} from "../../api/gptApi";
 import {MessageRefProps} from "./models";
 import EnginePrefix from "./EnginePrefix";
 import {ChatContext} from "../../context/ChatContext";
 import {useAskEngine} from "../../hooks/useAskEngine";
 
 const MessageHeader: React.FC<MessageRefProps> = ({i, message, messageRef}) => {
-    const {messages, setMessages, params} = useContext(ChatContext);
+    const {messages, setMessages, params, engine, model} = useContext(ChatContext);
     const askEngine = useAskEngine(params);
 
     const copyIconRef = useRef<SVGSVGElement>(null);
@@ -20,9 +20,9 @@ const MessageHeader: React.FC<MessageRefProps> = ({i, message, messageRef}) => {
     const deleteMessage = () => {
         const messages = contextEngine.deleteMessage(i);
         setMessages([...messages]);
-    }
+    };
 
-    const handleDeleteMessage = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, messageNumber: number) => {
+    const handleDeleteMessage = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         if (e.ctrlKey || e.metaKey) {
             deleteMessage();
         }
@@ -39,10 +39,13 @@ const MessageHeader: React.FC<MessageRefProps> = ({i, message, messageRef}) => {
     };
 
     const handleRepeat = () => {
+        const lastMessage = messages.pop() as IEngineMessage;
+        deleteMessage();
+        contextEngine.update({content: lastMessage.content, role: EngineRole.user, engine, model});
         askEngine();
     };
 
-    return <div onClick={(e) => handleDeleteMessage(e, i)}>
+    return <div onClick={(e) => handleDeleteMessage(e)}>
         {(isValidRole || isInProgress) && <EnginePrefix {...{message}}/>}
         {!isInProgress && <CopyIcon ref={copyIconRef} cursor="pointer" onClick={handleCopy}/>}
         {!isInProgress && <DeleteIcon cursor="pointer" onClick={deleteMessage}/>}
