@@ -15,7 +15,8 @@ const ModelChanger: React.FC = () => {
 
     useEffect(() => {
         setCurrentModelsList(Models[engine]);
-        setModel(model || Models[engine][0])
+        const findModel = Models[engine].find(val => val === model);
+        setModel(findModel || Models[engine][0])
     }, [model, engine, setModel]);
 
     const items: MenuItems = getMenuItems({
