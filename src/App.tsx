@@ -12,7 +12,7 @@ import {ChatContextProvider} from "./context/ChatContext";
 // import params4 from '../src/api/params4'
 
 function App() {
-    const {chatEngine, mazeGame, translator} = params
+    const {chatEngine, mazeGame, translator, prompt} = params;
     // const {gpt4} = params4
     return (
         <div className="App">
@@ -24,6 +24,7 @@ function App() {
                         <Route path="/chat-engine" element={<ChatPage {...chatEngine}/>}/>
                         {/*<Route path="/gpt-chat-4" element={<ChatPage {...gpt4}/>}/>*/}
                         <Route path="/maze-game" element={<MazeGame {...mazeGame}/>}/>
+                        <Route path="/prompt" element={<ChatPage {...prompt}/>}/>
                         <Route path="/translator" element={<ChatPage {...translator}/>}/>
                         <Route path="/testPage" element={<TestPage/>}/>
                         <Route path="*" element={<Error404/>}/>

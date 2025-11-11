@@ -1,28 +1,25 @@
 import {EngineRole} from "./gptApi";
 
 // const MODEL = "gpt-3.5-turbo-0125"
-const MODEL = "gpt-4o-mini"
 
-const gpt35 = {
-	sysMessage: [{
-		role: EngineRole.system,
-		content: `you are software professional with 5 years of experience. 
-		expert new Next.js version 13+ !impotent 
-		applications structure, src/app/page.tsx
-		Tailwind JS 
-		English language consultant.
-		my first name is "Andrii", Last name "Panaseiko", you can use my name if needed.
-		`
-	}],
-	model: MODEL
+const MODEL = "gpt-4o-mini";
+const MAZE_SIZE = "20x20";
+
+const messageTemplate = {
+    role: EngineRole.system,
+    content: ``
 }
 
-const MAZE_SIZE = "20x20"
+const pageTemplate = {
+    sysMessage: [messageTemplate],
+    model: MODEL
+}
+
 
 const mazeGame = {
-	sysMessage: [{
-		role: EngineRole.system,
-		content: `
+    ...pageTemplate, sysMessage: [{
+        ...messageTemplate,
+        content: `
         generate please array ${MAZE_SIZE} filled with random 0 and 1 as JSON. 
         1. returned content should contain only this array
         2. no need any algorithms only array in sting
@@ -33,21 +30,53 @@ const mazeGame = {
 			c. should be the possible to go 0x0 first array field to the last array field ${MAZE_SIZE} by 0 sectors and one step ca be done only on nearby field 
 			for example if you on 1x1 you can move to 0x1 or 2x1 or 1x0 or 1x2
 			`
-	}],
-	model: MODEL
-}
+
+    }]
+};
+
+const gpt35 = {
+    ...pageTemplate, sysMessage: [{
+        ...messageTemplate,
+        content: `you are software professional with 5 years of experience. 
+		expert new Next.js version 13+ !impotent 
+		applications structure, src/app/page.tsx
+		Tailwind JS 
+		English language consultant.
+		my first name is "Andrii", Last name "Panaseiko", you can use my name if needed.
+		`
+    }]
+};
 
 const translator = {
-	sysMessage: [{
-		role: EngineRole.system,
-		content: `1. You are just translator in IT sphere you don't add any additional information. 
+    ...pageTemplate, sysMessage: [{
+        ...messageTemplate,
+        content: `1. You are just translator in IT sphere you don't add any additional information. 
 		2. If you see Russian language you translate it to English. 
 		3. If you see English language you translate it to Russian. 
-		4. Important you should do not add anything else except translation		`
-	}],
-	model: MODEL
-}
+		4. Important you should do not add anything else except translation`
+    }]
+};
 
-const params = {chatEngine: gpt35, mazeGame, translator}
+const prompt = {
+    ...pageTemplate, sysMessage: [{
+        ...messageTemplate,
+        content: `Ты создаешь промпты для видео нейросети которая генерирует из фото короткий видеоролик. 
+        Промпт на английском.
+        ты описываешь только действия не надо описываеть что будет изображено. потому что ты делаешь из фото видео. 
+        формула вот такая. 
+        Image-to-Video Formula the source image already establishes the subject, scene, and style. 
+        Therefore, your prompt should focus on describing the desired motion and camera movement.
+        Prompt = Motion Description + Camera Movement
+        Motion Description：Describe the motion of elements in your image (e.g., people, animals), such as "running" or 
+        "waving hello." You can use adverbs like "quickly" or "slowly" to control the pace and intensity of the action.
+        Camera Movement: If you have specific requirements for camera motion, you can control it using prompts 
+        like "dolly in" or "pan left." If you wish for the camera to remain still, you can emphasize this 
+        with the prompt "static shot" or "fixed shot."
+        То есть ты четко описываешь все действия а потом если надо то движения камеры. 
+        Если я не пишу про камеру ты тоже ничего не пишешь`
+    }]
+};
+
+const params = {chatEngine: gpt35, mazeGame, translator, prompt};
 
 export default params

@@ -10,13 +10,13 @@ import {ChatContext} from "../../context/ChatContext";
 
 const ModelChanger: React.FC = () => {
     const {engine, model, setModel} = useContext(ChatContext);
-    const [currentModelsList, setCurrentModelsList] = useState(Models[engine])
+    const [currentModelsList, setCurrentModelsList] = useState(Models[engine]);
     const labelTemplate = 'Model ';
 
     useEffect(() => {
-        setCurrentModelsList(Models[engine])
-        setModel(Models[engine][0])
-    }, [engine, setModel]);
+        setCurrentModelsList(Models[engine]);
+        setModel(model || Models[engine][0])
+    }, [model, engine, setModel]);
 
     const items: MenuItems = getMenuItems({
             items: currentModelsList,
