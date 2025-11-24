@@ -1,4 +1,4 @@
-import engine from './engines.json';
+import engines from './engines.json';
 import {ApiKeyInstructions, Engines, ModelTypes} from "../constants/constants";
 
 const keys = {
@@ -14,7 +14,7 @@ export enum EngineRole {
     inprogress = "inprogress"
 }
 
-const validEngineRoles = new Set(['system', 'assistant', 'user', 'function', 'tool', 'developer'])
+const validEngineRoles = new Set(['system', 'assistant', 'user', 'function', 'tool', 'developer']);
 
 export interface IEngineMessage {
     content: string,
@@ -56,12 +56,12 @@ export const contextEngine = new ContextEngine();
 export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) => {
 
     const messages = contextEngine.get();
-    const lastMessage = messages[messages.length - 1];
-    const currentEngine = engine[lastMessage?.engine || "gpt"];
+    const {engine, model} = messages[messages.length - 1];
+    const currentEngine = engines[engine || "gpt"];
     const messageWithoutCustomRoles = contextEngine.get().filter((item: IEngineMessage) => validEngineRoles.has(item.role));
     const apiRequestBody = {
-        "model": lastMessage.model,
-        "messages": [
+        model,
+        messages: [
             ...params.sysMessage,
             ...messageWithoutCustomRoles,
         ]
@@ -71,7 +71,7 @@ export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) 
             {
                 method: "POST",
                 headers: {
-                    "Authorization": "Bearer " + keys[lastMessage?.engine || "gpt"],
+                    "Authorization": "Bearer " + keys[engine || "gpt"],
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(apiRequestBody)
@@ -89,12 +89,12 @@ export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) 
             return contextEngine.update({
                 content,
                 role: EngineRole.error,
-                engine: lastMessage.engine
+                engine
             })
         }
         const newMessage = data.choices[0].message;
         delete newMessage.reasoning_content;
-        return contextEngine.update({...newMessage, engine: lastMessage.engine});
+        return contextEngine.update({...newMessage, engine, model});
 
     } catch (error) {
         let errorMessage: string;
@@ -106,7 +106,7 @@ export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) 
         return contextEngine.update({
             content: errorMessage,
             role: EngineRole.error,
-            engine: lastMessage.engine
+            engine
         })
     }
 };
@@ -114,11 +114,11 @@ export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) 
 export const sendAudioToServer = async (audioBlob: Blob) => {
     let textTranscription: string = '';
     const formData = new FormData();
-    formData.append('model', 'whisper-1')
+    formData.append('model', 'whisper-1');
     formData.append('file', audioBlob);
 
     try {
-        const response = await fetch(engine.gpt.audioUrl, {
+        const response = await fetch(engines.gpt.audioUrl, {
             method: "POST",
             headers: {
                 "Authorization": "Bearer " + keys.gpt,
