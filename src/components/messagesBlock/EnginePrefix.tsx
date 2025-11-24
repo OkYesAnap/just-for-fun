@@ -3,14 +3,10 @@ import {Engines} from '../../constants/constants';
 import {ReactComponent as DeepSeek} from '../../icons/DeepSeek_logo.svg';
 import {ReactComponent as OpenAI} from '../../icons/OpenAI_Logo.svg';
 import React, {RefObject, useEffect, useRef} from 'react';
+import ModelSup from "./ModelSup";
 
 const iconStyle = {height: '2.4vw', maxHeight: '30px'};
 
-const supStyle = {
-    fontSize: '0.6em',
-    marginLeft: '2px',
-    verticalAlign: 'top'
-};
 
 const onOffAnimation = (logoRef: RefObject<SVGSVGElement>, playAnimation: boolean) => {
     const animateTransformElement = logoRef?.current?.getElementsByTagName('animateTransform')[0];
@@ -21,7 +17,7 @@ const onOffAnimation = (logoRef: RefObject<SVGSVGElement>, playAnimation: boolea
             durAttribute.value = playAnimation ? '2s' : '0';
         }
     }
-}
+};
 
 const EnginePrefix: React.FC<{ message: IEngineMessage }> = ({message}) => {
     const deepSeekRef = useRef<SVGSVGElement>(null);
@@ -39,13 +35,13 @@ const EnginePrefix: React.FC<{ message: IEngineMessage }> = ({message}) => {
     if (message.engine === Engines.DEEP_SEEK) {
         return (<>
             <DeepSeek ref={deepSeekRef} style={iconStyle}/>
-            <sup style={supStyle}>{message.model}</sup>
+            <ModelSup {...{message}}/>
         </>)
     }
     if (message.engine === Engines.GPT) {
         return (<>
             <OpenAI ref={openAIRef} style={iconStyle}/>
-            <sup style={supStyle}>{message.model}</sup>
+            <ModelSup {...{message}}/>
         </>)
     }
     return null

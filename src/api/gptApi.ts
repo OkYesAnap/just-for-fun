@@ -17,11 +17,12 @@ export enum EngineRole {
 const validEngineRoles = new Set(['system', 'assistant', 'user', 'function', 'tool', 'developer']);
 
 export interface IEngineMessage {
-    content: string,
-    role: EngineRole,
-    engine?: Engines,
-    model?: ModelTypes,
-    reasoning_content?: string
+    content: string;
+    role: EngineRole;
+    engine?: Engines;
+    model?: ModelTypes;
+    time?: number;
+    reasoning_content?: string;
 }
 
 class ContextEngine {
@@ -55,6 +56,7 @@ export const contextEngine = new ContextEngine();
 
 export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) => {
 
+    const startTime = Date.now();
     const messages = contextEngine.get();
     const {engine, model} = messages[messages.length - 1];
     const currentEngine = engines[engine || "gpt"];
@@ -78,6 +80,7 @@ export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) 
             });
 
         const data = await response.json();
+        const endTime = Date.now();
 
         let content = data.error?.message;
 
@@ -94,7 +97,7 @@ export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) 
         }
         const newMessage = data.choices[0].message;
         delete newMessage.reasoning_content;
-        return contextEngine.update({...newMessage, engine, model});
+        return contextEngine.update({...newMessage, engine, model, time: endTime - startTime});
 
     } catch (error) {
         let errorMessage: string;
