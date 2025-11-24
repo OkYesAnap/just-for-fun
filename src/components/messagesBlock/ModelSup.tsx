@@ -12,8 +12,8 @@ const supStyle = {
 };
 
 const ModelSup: React.FC<ModelSupProps> = ({message}) => {
-    const startTimer = useRef<number>(Date.now());
-    const [currentTime, setCurrentTime] = useState<number | undefined>(message.time);
+    const startTimer = useRef<number | null>();
+    const [currentTime, setCurrentTime] = useState<number | undefined>();
     const timer = useRef<ReturnType<typeof setInterval> | null>(null);
 
     useEffect(() => {
@@ -21,8 +21,9 @@ const ModelSup: React.FC<ModelSupProps> = ({message}) => {
             setCurrentTime(message.time);
         }
         if (message.role === EngineRole.inprogress) {
+            startTimer.current = Date.now();
             timer.current = setInterval(() => {
-                setCurrentTime(Date.now() - (startTimer.current));
+                setCurrentTime(Date.now() - (startTimer.current || 0));
             }, 75)
         }
         return () => {
