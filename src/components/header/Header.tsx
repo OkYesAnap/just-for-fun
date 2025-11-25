@@ -1,41 +1,37 @@
 import React, {useContext, useEffect} from "react";
-import {headerLinks, routeHeader} from "../../constants/constants";
 import {Link, useLocation} from "react-router-dom";
-import {contextEngine} from "../../api/gptApi";
 import InputLabel from "../inputBlock/InputLabel";
 import {ChatContext} from "../../context/ChatContext";
 import styled from "styled-components";
+import {chatPages} from "../../api/params";
 
 const HeaderStyled = styled.div`
-  display: flex;
-  flex-direction: row;
-  margin-top: 0.5vh;
-  padding: 5px;
-  background-color: #282c34;
-  border: white 1px solid;
-  border-radius: 10px;
-  z-index: 1
+    display: flex;
+    flex-direction: row;
+    margin-top: 0.5vh;
+    padding: 5px;
+    background-color: #282c34;
+    border: white 1px solid;
+    border-radius: 10px;
+    z-index: 1
 `;
 
 const Header: React.FC = () => {
     const location = useLocation().pathname.slice(1);
     const {setMessages} = useContext(ChatContext);
-    const title = routeHeader.find(routeParam => routeParam.route === location)?.title || '';
-    const links = routeHeader.filter(routeParam => headerLinks.has(routeParam.route));
     useEffect(() => {
-        document.title = title || '';
+        document.title = location || '';
         return () => {
             document.title = "React app";
-            setMessages(contextEngine.clear());
         }
-    }, [location, setMessages, title]);
+    }, [location, setMessages]);
     return (<HeaderStyled>
-        {links.map(routeParam => {
-            const active = routeParam.title === title;
+        {Object.keys(chatPages).map(routeParam => {
+            const active = routeParam === location;
             return (
-                <InputLabel key={routeParam.route} noBorder={!(active)}>
-                    <Link className={`App-link ${active && 'active'}`} to={`/${routeParam.route}`}>
-                        {routeParam.title}
+                <InputLabel key={routeParam} noBorder={!(active)}>
+                    <Link className={`App-link ${active && 'active'}`} to={`/${routeParam}`}>
+                        {routeParam}
                     </Link>
                 </InputLabel>
             )
