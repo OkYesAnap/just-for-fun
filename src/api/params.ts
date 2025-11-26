@@ -42,7 +42,7 @@ const createDefaultParams = (content: string) => {
 };
 
 export const chatPages = {
-    "Chat-engine": createDefaultParams(`you are software professional with 5 years of experience. 
+    "Developer": createDefaultParams(`you are software professional with 5 years of experience. 
 		expert new Next.js version 13+ !impotent 
 		applications structure, src/app/page.tsx
 		Tailwind JS 
