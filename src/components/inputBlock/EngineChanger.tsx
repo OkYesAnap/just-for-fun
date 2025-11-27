@@ -19,10 +19,15 @@ const EngineChanger: React.FC = () => {
         }
     );
 
-    return (<Popover content={<OptionsMenu {...{items, activeItem: engine}}/>}
-                     placement="top">
-        <div><InputLabel>{labelTemplate} {engine.toUpperCase()}</InputLabel></div>
-    </Popover>)
-}
+    return (
+        <Popover content={<OptionsMenu {...{items, activeItem: engine, placement: "top"}}/>}>
+            <div>
+                <InputLabel>
+                    {labelTemplate} {engine.toUpperCase()}
+                </InputLabel>
+            </div>
+        </Popover>
+    )
+};
 
 export default EngineChanger

@@ -26,8 +26,6 @@ export const routeHeader: RouteParams[] = [
     }
 ];
 
-export const headerLinks = new Set(['chat-engine', 'translator', 'prompt']);
-
 export enum Engines {
     GPT = 'gpt',
     DEEP_SEEK = 'deepSeek'
@@ -42,8 +40,6 @@ export type ModelTypes = 'gpt-5' |
     'gpt-4.1' |
     'gpt-4.1-mini' |
     'gpt-4.1-nano' |
-    'gpt-4o-mini' |
-    'gpt-4o' |
     'deepseek-chat' |
     'deepseek-reasoner' |
     ''
@@ -53,8 +49,17 @@ type EngineModelsType = {
 }
 
 export const Models: EngineModelsType = {
-    [Engines.GPT]: ['gpt-5-nano', 'gpt-5', 'gpt-5-mini', 'gpt-5-chat-latest', 'gpt-5-codex',
-        'gpt-5-pro', 'gpt-4.1-nano', 'gpt-4.1-mini', 'gpt-4.1', 'gpt-4o-mini', 'gpt-4o'],
+    [Engines.GPT]: [
+        'gpt-4.1-nano',
+        'gpt-5-nano',
+        'gpt-4.1',
+        'gpt-5',
+        'gpt-4.1-mini',
+        'gpt-5-mini',
+        'gpt-5-codex',
+        'gpt-5-chat-latest',
+        'gpt-5-pro',
+    ],
     [Engines.DEEP_SEEK]: ['deepseek-chat', 'deepseek-reasoner']
 };
 

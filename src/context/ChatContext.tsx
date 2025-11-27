@@ -1,4 +1,4 @@
-import React, {createContext, Dispatch, ReactNode, SetStateAction, useState} from "react";
+import React, {createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState} from "react";
 import {Engines, ModelTypes, voiceEngines, VoiceEngineSingleType} from "../constants/constants";
 import {IEngineMessage} from "../api/gptApi";
 import {ChatPageProps} from "../pages/ChatPage";
@@ -35,6 +35,12 @@ interface ChatContextType {
 }
 
 export const ChatContext = createContext<ChatContextType>(null!);
+const url = new URL(window.location.href);
+
+const initialParams = {
+    engine: url.searchParams.get("engine") as Engines,
+    model: url.searchParams.get("model") as ModelTypes
+};
 
 const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const [text, setText] = useState('');
@@ -47,10 +53,15 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const [lang, setLang] = useState<string>('');
     const [askInProgress, setAskInProgress] = useState(false);
     const [showClearModal, setShowClearModal] = useState(false);
-    const [engine, setEngine] = useState<Engines>(Engines.GPT);
-    const [model, setModel] = useState<ModelTypes>("");
+    const [engine, setEngine] = useState<Engines>(initialParams.engine || Engines.GPT);
+    const [model, setModel] = useState<ModelTypes>(initialParams.model || "");
     const [params, setParams] = useState<ChatPageProps>({model: '', sysMessage: []});
 
+    useEffect(() => {
+        url.searchParams.set('engine', engine);
+        url.searchParams.set('model', model);
+        window.history.pushState({}, '', url);
+    }, [engine, model]);
 
     const startListenVoice = (lang: string) => {
         setLang(lang);

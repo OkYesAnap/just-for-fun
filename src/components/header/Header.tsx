@@ -17,20 +17,26 @@ const HeaderStyled = styled.div`
 `;
 
 const Header: React.FC = () => {
-    const location = useLocation().pathname.slice(1);
-    const {setMessages} = useContext(ChatContext);
+    const location = useLocation();
+    const currentLocation = location.pathname.slice(1);
+    const {setMessages, engine, model} = useContext(ChatContext);
+
     useEffect(() => {
-        document.title = location || '';
+        document.title = currentLocation || '';
         return () => {
             document.title = "React app";
         }
-    }, [location, setMessages]);
+    }, [currentLocation, setMessages]);
+
+    const chatPagesKeys = Object.keys(chatPages);
+
     return (<HeaderStyled>
-        {Object.keys(chatPages).map(routeParam => {
-            const active = routeParam === location;
+        {chatPagesKeys.map(routeParam => {
+            const active = routeParam === currentLocation;
             return (
                 <InputLabel key={routeParam} noBorder={!(active)}>
-                    <Link className={`App-link ${active && 'active'}`} to={`/${routeParam}`}>
+                    <Link className={`App-link ${active && 'active'}`}
+                          to={{pathname: `/${routeParam}`, search: `engine=${engine}&model=${model}`}}>
                         {routeParam}
                     </Link>
                 </InputLabel>

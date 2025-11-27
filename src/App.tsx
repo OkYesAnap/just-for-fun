@@ -14,16 +14,19 @@ import {ChatContextProvider} from "./context/ChatContext";
 function App() {
     const {mazeGame} = params;
     // const {gpt4} = params4;
+
+    const pages = Object.entries(chatPages);
+
     return (
         <div className="App">
             <ChatContextProvider>
                 <BrowserRouter>
                     <Routes>
-                        {Object.entries(chatPages).map(([key, value]) => (
+                        {pages.map(([key, value]) => (
                             <Route key={key} path={`/${key}`} element={<ChatPage {...value}/>}/>
                         ))}
                         {/*<Route path="/gpt-chat-4" element={<ChatPage {...gpt4}/>}/>*/}
-                        <Route path="/" element={<Navigate to="/chat-engine"/>}/>
+                        <Route path="/" element={<Navigate to={Object.keys(chatPages)[0]}/>}/>
                         <Route path="/main" element={<Main/>}/>
                         <Route path="/maze-game" element={<MazeGame {...mazeGame}/>}/>
                         <Route path="/testPage" element={<TestPage/>}/>
