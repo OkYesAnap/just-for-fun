@@ -69,15 +69,25 @@ export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) 
         ]
     };
     try {
-        const response = await fetch(currentEngine.chatUrl,
-            {
+        let response;
+
+
+        if (engine === "gpt") {
+            response = await fetch(currentEngine.chatUrl,
+                {
+                    method: "POST",
+                    headers: {
+                        "Authorization": "Bearer " + keys[engine || "gpt"],
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(apiRequestBody)
+                });
+        } else {
+            response = await fetch('http://localhost:4040/chat', {
                 method: "POST",
-                headers: {
-                    "Authorization": "Bearer " + keys[engine || "gpt"],
-                    "Content-Type": "application/json"
-                },
                 body: JSON.stringify(apiRequestBody)
             });
+        }
 
         const data = await response.json();
         const endTime = Date.now();
