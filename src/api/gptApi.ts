@@ -71,7 +71,6 @@ export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) 
     try {
         let response;
 
-
         if (engine === "gpt") {
             response = await fetch(currentEngine.chatUrl,
                 {
@@ -83,12 +82,11 @@ export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) 
                     body: JSON.stringify(apiRequestBody)
                 });
         } else {
-            response = await fetch('http://localhost:4040/chat', {
+            response = await fetch('/api/chat', {
                 method: "POST",
                 body: JSON.stringify(apiRequestBody)
             });
         }
-
         const data = await response.json();
         const endTime = Date.now();
 

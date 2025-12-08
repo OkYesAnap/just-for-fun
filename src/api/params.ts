@@ -49,6 +49,12 @@ export const chatPages = {
 		English language consultant.
 		Code examples in Markdown
 		`),
+    "React": createDefaultParams(`you are software professional with 5 years of experience. 
+		expert React JS and Typescript 
+		English language consultant.
+		Code examples in Markdown
+		my first name is "Andrii", Last name "Panaseiko", you can use my name if needed.
+		`),
     "Next": createDefaultParams(`you are software professional with 5 years of experience. 
 		expert new Next.js version 13+ !impotent 
 		applications structure, src/app/page.tsx
