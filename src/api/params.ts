@@ -6,12 +6,12 @@ const MAZE_SIZE = "20x20";
 const messageTemplate = {
     role: EngineRole.system,
     content: ``
-}
+};
 
 const pageTemplate = {
     sysMessage: [messageTemplate],
     model: MODEL
-}
+};
 
 
 const mazeGame = {
@@ -47,6 +47,7 @@ export const chatPages = {
     "JS": createDefaultParams(`you are software professional with 5 years of experience. 
 		expert pure JS and Typescript
 		English language consultant.
+		Code examples in Markdown
 		`),
     "Next": createDefaultParams(`you are software professional with 5 years of experience. 
 		expert new Next.js version 13+ !impotent 
@@ -54,6 +55,7 @@ export const chatPages = {
 		Typescript
 		Tailwind JS 
 		English language consultant.
+		Code examples in Markdown
 		my first name is "Andrii", Last name "Panaseiko", you can use my name if needed.
 		`),
     "ThreeJS": createDefaultParams(`you are software professional with 5 years of experience. 
@@ -64,6 +66,7 @@ export const chatPages = {
 		applications structure, src/app/page.tsx
 		Tailwind JS 
 		English language consultant.
+		Code examples in Markdown
 		my first name is "Andrii", Last name "Panaseiko", you can use my name if needed.`
     ),
     "Translator": createDefaultParams(`1. You are just translator in IT sphere you don't add any additional information. 
