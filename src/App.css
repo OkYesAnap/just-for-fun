@@ -13,19 +13,20 @@
 .App-link {
     color: darkgrey;
     text-decoration: none;
+    padding-left: 1px;
+    padding-right: 1px;
 }
 
-.App-link:hover,
+.App-link:hover {
+    color: white;
+}
 .App-link.active {
     color: white;
+    padding: 0;
 }
 
 .ant-spin-dot-item {
     background-color: white !important;
-}
-
-.ant-menu-title-content:hover, .ant-menu-item-active:hover {
-    color: white !important;
 }
 
 .ant-popover-inner {
@@ -33,13 +34,17 @@
     background-color: transparent !important;
 }
 
-.ant-menu-item {
-    color: darkgray !important;
+.ant-menu .ant-menu-item {
+    color: darkgray;
 }
 
-.ant-menu-item-selected {
-    color: #fff !important;
-    background-color: #282c34 !important;
+.ant-menu .ant-menu-item.ant-menu-item-only-child:hover .ant-menu-title-content {
+    color: white;
+}
+
+.ant-menu .ant-menu-item-selected {
+    color: #fff;
+    background-color: #282c34;
     border: white 1px solid;
 }
 
