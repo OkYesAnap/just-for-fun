@@ -19,8 +19,8 @@
       "dest": "/api/chat.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "/$1"
+      "src": "/(?!api/)(?!static/).*$",
+      "dest": "/index.html"
     }
   ]
 }
