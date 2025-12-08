@@ -24,7 +24,7 @@ const Header: React.FC = () => {
     useEffect(() => {
         document.title = currentLocation || '';
         return () => {
-            document.title = "React app";
+            document.title = "Choose AI";
         }
     }, [currentLocation, setMessages]);
 
