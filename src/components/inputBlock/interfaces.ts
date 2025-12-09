@@ -1,4 +1,5 @@
-import {MenuItemType} from "antd/lib/menu/interface";
+import {MenuItemType} from "antd/es/menu/interface";
+
 
 export interface IMenuItem extends MenuItemType {
     key: string,
