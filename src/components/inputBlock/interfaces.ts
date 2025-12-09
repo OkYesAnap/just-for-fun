@@ -1,7 +1,7 @@
-import {MenuItemType} from "antd/es/menu/interface";
+import {DataAttributes} from "styled-components";
 
 
-export interface IMenuItem extends MenuItemType {
+export interface IMenuItem extends DataAttributes {
     key: string,
     onClick: () => void,
     label: string
