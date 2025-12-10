@@ -4,7 +4,7 @@ import {ApiKeyInstructions, Engines, ModelTypes} from "../constants/constants";
 const keys = {
     gpt: process.env.REACT_APP_GPT_API_KEY,
     deepSeek: process.env.REACT_APP_DEEP_SEEK_API_KEY
-}
+};
 
 export enum EngineRole {
     assistant = "assistant",
@@ -59,9 +59,9 @@ export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) 
     const startTime = Date.now();
     const messages = contextEngine.get();
     const {engine, model} = messages[messages.length - 1];
-    const currentEngine = engines[engine || "gpt"];
     const messageWithoutCustomRoles = contextEngine.get().filter((item: IEngineMessage) => validEngineRoles.has(item.role));
     const apiRequestBody = {
+        engine,
         model,
         messages: [
             ...params.sysMessage,
@@ -69,28 +69,14 @@ export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) 
         ]
     };
     try {
-        let response;
+        const response = await fetch('/api/chat', {
+            method: "POST",
+            body: JSON.stringify(apiRequestBody)
+        });
 
-        if (engine === "gpt") {
-            response = await fetch(currentEngine.chatUrl,
-                {
-                    method: "POST",
-                    headers: {
-                        "Authorization": "Bearer " + keys[engine || "gpt"],
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(apiRequestBody)
-                });
-        } else {
-            response = await fetch('/api/chat', {
-                method: "POST",
-                body: JSON.stringify(apiRequestBody)
-            });
-        }
         const data = await response.json();
         const endTime = Date.now();
-
-        let content = data.error?.message;
+        let content = data.error;
 
         if (response.status === 401) {
             content += ApiKeyInstructions;
