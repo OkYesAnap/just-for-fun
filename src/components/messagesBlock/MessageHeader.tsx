@@ -17,9 +17,16 @@ const MessageHeader: React.FC<MessageRefProps> = ({i, message, messageRef}) => {
     const isValidRole = !(message.role === EngineRole.user);
     const isRepeatAvailable = !isValidRole && messages.length - 1 === i;
 
-    const deleteMessage = () => {
-        const messages = contextEngine.deleteMessage(i);
-        setMessages([...messages]);
+    const deleteMessage = async () => {
+        const response = await fetch('/api/delete', {
+            method: "DELETE",
+            body: JSON.stringify(contextEngine.get()[i])
+        });
+        console.log(response.status);
+        if (response.status === 200 || response.status === 404) {
+            const messages = contextEngine.deleteMessage(i);
+            setMessages([...messages]);
+        }
     };
 
     const handleDeleteMessage = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {

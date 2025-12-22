@@ -36,7 +36,6 @@ const mdTagAdapter = (text: string): any => {
                     result.cuts[tagPlaceholder].push(part);
                 }
             });
-            console.log(result);
             return splitInside.map((part, index) => (index % 2 === 1 ? tagPlaceholder : part));
         });
     });

@@ -19,14 +19,15 @@ const HeaderStyled = styled.div`
 const Header: React.FC = () => {
     const location = useLocation();
     const currentLocation = location.pathname.slice(1);
-    const {setMessages, engine, model} = useContext(ChatContext);
+    const {engine, model, setChatName} = useContext(ChatContext);
 
     useEffect(() => {
         document.title = currentLocation || '';
+        setChatName(currentLocation);
         return () => {
             document.title = "Choose AI";
         }
-    }, [currentLocation, setMessages]);
+    }, [currentLocation, setChatName]);
 
     const chatPagesKeys = Object.keys(chatPages);
 

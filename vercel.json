@@ -9,14 +9,30 @@
       }
     },
     {
+      "src": "api/get.js",
+      "use": "@vercel/node"
+    },
+    {
       "src": "api/chat.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/delete.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
+      "src": "/api/get",
+      "dest": "/api/get.js"
+    },
+    {
       "src": "/api/chat",
       "dest": "/api/chat.js"
+    },
+    {
+      "src": "/api/delete",
+      "dest": "/api/delete.js"
     },
     {
       "src": "/(?!api/)(?!static/).*$",

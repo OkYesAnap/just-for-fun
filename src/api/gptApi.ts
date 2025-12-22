@@ -41,6 +41,11 @@ class ContextEngine {
         return this.context;
     }
 
+    updateAll(messages: IEngineMessage[]) {
+        this.context = [...messages];
+        return this.context;
+    }
+
     clear() {
         this.context = [];
         return this.context;
@@ -105,6 +110,19 @@ export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) 
             role: EngineRole.error,
             engine
         })
+    }
+};
+
+
+export const supabaseGet = async (url: string): Promise<IEngineMessage[]> => {
+    try {
+        const response = await fetch(`/api/get${url}`, {
+            method: "GET"
+        });
+        const data = await response.json();
+        return contextEngine.updateAll(data);
+    } catch (error) {
+        return [{content: String(error), role: EngineRole.error}];
     }
 };
 

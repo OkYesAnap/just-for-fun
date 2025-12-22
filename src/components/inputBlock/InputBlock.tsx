@@ -111,11 +111,19 @@ const InputBlock: React.FC = () => {
                         </div>
                     </div>
                     <div style={{display: "flex"}}>
-                        <div><InputButton onClick={handlePaste}>Paste</InputButton></div>
-                        <div style={{width: "100%"}}><InputButton {...{
-                            onClick,
-                            disabled: askInProgress
-                        }}>Ask</InputButton></div>
+                        <div>
+                            <InputButton {...{onClick: handlePaste}}>
+                                Paste
+                            </InputButton>
+                        </div>
+                        <div style={{width: "100%"}}>
+                            <InputButton {...{
+                                onClick,
+                                disabled: askInProgress
+                            }}>
+                                Ask
+                            </InputButton>
+                        </div>
                     </div>
                 </div>
                 <VoiceInput/>

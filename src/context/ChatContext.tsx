@@ -1,8 +1,7 @@
-import React, {createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState} from "react";
+import React, {createContext, Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState} from "react";
 import {Engines, ModelTypes, voiceEngines, VoiceEngineSingleType} from "../constants/constants";
-import {IEngineMessage} from "../api/gptApi";
+import {IEngineMessage, supabaseGet} from "../api/gptApi";
 import {ChatPageProps} from "../pages/ChatPage";
-
 
 interface ChatContextType {
     text: string;
@@ -20,6 +19,8 @@ interface ChatContextType {
     setVoiceInputEngine: Dispatch<SetStateAction<VoiceEngineSingleType>>;
     googleRecognizerAvailable: boolean;
     setGoogleRecognizerAvailable: Dispatch<SetStateAction<boolean>>
+    chatName: string;
+    setChatName: Dispatch<SetStateAction<string>>;
     lang: string;
     setLang: Dispatch<SetStateAction<string>>;
     askInProgress: boolean;
@@ -35,14 +36,9 @@ interface ChatContextType {
 }
 
 export const ChatContext = createContext<ChatContextType>(null!);
-const url = new URL(window.location.href);
-
-const initialParams = {
-    engine: url.searchParams.get("engine") as Engines,
-    model: url.searchParams.get("model") as ModelTypes
-};
 
 const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
+
     const [text, setText] = useState('');
     const [draftText, setDraftText] = useState('');
     const [messages, setMessages] = useState<IEngineMessage[]>([]);
@@ -53,38 +49,87 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const [lang, setLang] = useState<string>('');
     const [askInProgress, setAskInProgress] = useState(false);
     const [showClearModal, setShowClearModal] = useState(false);
-    const [engine, setEngine] = useState<Engines>(initialParams.engine || Engines.GPT);
-    const [model, setModel] = useState<ModelTypes>(initialParams.model || "");
+
+    const {initialEngine, initialModel, initialChatName} = useMemo(() => {
+        const url = new URL(window.location.href);
+        return {
+            initialEngine: url.searchParams.get("engine") as Engines || "",
+            initialModel: url.searchParams.get("model") as ModelTypes || "",
+            initialChatName: url.pathname.split("/")[1],
+        };
+    }, []);
+
+    const [engine, setEngine] = useState<Engines>(initialEngine);
+    const [model, setModel] = useState<ModelTypes>(initialModel as ModelTypes);
     const [params, setParams] = useState<ChatPageProps>({model: '', sysMessage: []});
+    const [chatName, setChatName] = useState<string>(initialChatName);
 
     useEffect(() => {
-        url.searchParams.set('engine', engine);
-        url.searchParams.set('model', model);
-        window.history.pushState({}, '', url);
-    }, [engine, model]);
+        const url = new URL(window.location.href);
+
+        if (engine) {
+            url.searchParams.set('engine', engine);
+        }
+        if (model) {
+            url.searchParams.set('model', model);
+        }
+        if (chatName) {
+            url.searchParams.set('chat', chatName);
+        }
+
+        window.history.replaceState({}, '', url);
+
+        const fetchMessages = async () => {
+            const fetchedMessages = await supabaseGet(url.search);
+            console.log(fetchedMessages);
+            setMessages(fetchedMessages);
+        };
+
+        if (engine || model) {
+            fetchMessages();
+        }
+    }, [engine, model, chatName]);
 
     const startListenVoice = (lang: string) => {
         setLang(lang);
         setIsListening(true);
     };
 
+    const contextValue = useMemo(() => ({
+        text, setText,
+        draftText, setDraftText,
+        messages, setMessages,
+        isListening, setIsListening,
+        autoAsk, setAutoAsk,
+        startListenVoice,
+        voiceInputEngine, setVoiceInputEngine,
+        googleRecognizerAvailable, setGoogleRecognizerAvailable,
+        lang, setLang,
+        askInProgress, setAskInProgress,
+        showClearModal, setShowClearModal,
+        chatName, setChatName,
+        engine, setEngine,
+        model, setModel,
+        params, setParams,
+    }), [
+        text,
+        draftText,
+        messages,
+        isListening,
+        autoAsk,
+        chatName,
+        voiceInputEngine,
+        googleRecognizerAvailable,
+        lang,
+        askInProgress,
+        showClearModal,
+        engine,
+        model,
+        params
+    ]);
+
     return (
-        <ChatContext.Provider value={{
-            text, setText,
-            draftText, setDraftText,
-            messages, setMessages,
-            isListening, setIsListening,
-            autoAsk, setAutoAsk,
-            startListenVoice,
-            voiceInputEngine, setVoiceInputEngine,
-            googleRecognizerAvailable, setGoogleRecognizerAvailable,
-            lang, setLang,
-            askInProgress, setAskInProgress,
-            showClearModal, setShowClearModal,
-            engine, setEngine,
-            model, setModel,
-            params, setParams,
-        }}>
+        <ChatContext.Provider value={contextValue}>
             {children}
         </ChatContext.Provider>
     )
