@@ -1,5 +1,5 @@
 import React, {createContext, Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState} from "react";
-import {Engines, ModelTypes, voiceEngines, VoiceEngineSingleType} from "../constants/constants";
+import {Engines, Models, ModelTypes, voiceEngines, VoiceEngineSingleType} from "../constants/constants";
 import {IEngineMessage, supabaseGet} from "../api/gptApi";
 import {ChatPageProps} from "../pages/ChatPage";
 
@@ -53,8 +53,8 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const {initialEngine, initialModel, initialChatName} = useMemo(() => {
         const url = new URL(window.location.href);
         return {
-            initialEngine: url.searchParams.get("engine") as Engines || "",
-            initialModel: url.searchParams.get("model") as ModelTypes || "",
+            initialEngine: url.searchParams.get("engine") as Engines || Engines.GPT,
+            initialModel: url.searchParams.get("model") as ModelTypes || Models.gpt[0],
             initialChatName: url.pathname.split("/")[1],
         };
     }, []);
