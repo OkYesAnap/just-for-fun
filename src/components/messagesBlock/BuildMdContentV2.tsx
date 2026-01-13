@@ -36,7 +36,7 @@ const BuildMdContentV2: React.FC<{ text: string }> = ({text}) => {
                         }
                         case TEMP_TAGS[TAG.starOneItalic]: {
                             const mdItem = getData(data, dataIndexes, TAG.starOneItalic);
-                            return <MarkdownItalic key={`bold-${i}`}{...{mdItem}}/>
+                            return <MarkdownItalic key={`italic-${i}`}{...{mdItem}}/>
                         }
                         case TEMP_TAGS[TAG.code]: {
                             const mdItem = getData(data, dataIndexes, TAG.code);
@@ -47,7 +47,7 @@ const BuildMdContentV2: React.FC<{ text: string }> = ({text}) => {
                             return <MarkdownTable key={`bold-${i}`}{...{mdItem}}/>
                         }
                         default:
-                            return <div key={i}>{val}</div>
+                            return <span key={i}>{val}</span>
                     }
                 })}
             </>
