@@ -36,6 +36,11 @@ class ContextEngine {
         return this.context;
     }
 
+    getLastMessage() {
+        return this.context[this.context.length - 1];
+    }
+
+
     update(message: IEngineMessage) {
         this.context.push(message);
         return this.context;
@@ -95,6 +100,12 @@ export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) 
             })
         }
         const newMessage = data.choices[0].message;
+        const lastMessage = contextEngine.getLastMessage();
+        await fetch('/api/addMessage', {
+            method: "POST",
+            body: JSON.stringify({params, messages: [lastMessage, newMessage], engine, model})
+        });
+
         delete newMessage.reasoning_content;
         return contextEngine.update({...newMessage, engine, model, time: endTime - startTime});
 

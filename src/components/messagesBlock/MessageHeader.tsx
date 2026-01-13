@@ -22,7 +22,6 @@ const MessageHeader: React.FC<MessageRefProps> = ({i, message, messageRef}) => {
             method: "DELETE",
             body: JSON.stringify(contextEngine.get()[i])
         });
-        console.log(response.status);
         if (response.status === 200 || response.status === 404) {
             const messages = contextEngine.deleteMessage(i);
             setMessages([...messages]);

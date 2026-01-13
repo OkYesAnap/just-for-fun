@@ -20,7 +20,7 @@ const askGpt = async ({
                           setAskInProgress,
                           setMaze
                       }: {
-    params: { model: string, sysMessage: IEngineMessage[] },
+    params: { model?: string, sysMessage: IEngineMessage[] },
     setAskInProgress: React.Dispatch<React.SetStateAction<boolean>>,
     setMaze: React.Dispatch<React.SetStateAction<Array<Array<number>>>>
 }): Promise<void> => {
@@ -75,7 +75,7 @@ const Maze = ({maze}: { maze: Array<Array<number>> }) => {
     }</GridContainerStyled>)
 }
 
-const MazeGame = (params: { model: string, sysMessage: IEngineMessage[] }) => {
+const MazeGame = (params: { model?: string, sysMessage: IEngineMessage[] }) => {
     const [maze, setMaze] = useState<Array<Array<number>>>([]);
     const [askInProgress, setAskInProgress] = useState<boolean>(false);
     const getGeneratedData = useCallback(() => {

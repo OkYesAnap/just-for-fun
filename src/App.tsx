@@ -23,7 +23,7 @@ function App() {
                 <BrowserRouter>
                     <Routes>
                         {pages.map(([key, value]) => (
-                            <Route key={key} path={`/${key}`} element={<ChatPage {...value}/>}/>
+                            <Route key={key} path={`/${key}`} element={<ChatPage {...{...value, chatName: key}}/>}/>
                         ))}
                         {/*<Route path="/gpt-chat-4" element={<ChatPage {...gpt4}/>}/>*/}
                         <Route path="/" element={<Navigate to={Object.keys(chatPages)[0]}/>}/>

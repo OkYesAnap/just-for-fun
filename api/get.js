@@ -6,23 +6,17 @@ module.exports = async (req, res) => {
     const model = urlObj.searchParams.get('model');
     const chat = urlObj.searchParams.get('chat');
     try {
-        console.log(req.url, engine);
-
         const [engines, models, chats] = await Promise.all([
             supabase.from('engines').select('*').eq('engine_name', engine),
             supabase.from('models').select('*').eq('model_name', model),
             supabase.from('chats').select('*').eq('chat_name', chat),
         ]);
-
-        console.log(engines, '<<<<<<<<<<<', models, chats);
-
         if (engines.data.length === 0) {
             const {engineData, dataError} = await supabase
                 .from('engines')
                 .insert([
                     {engine_name: engine}
                 ]);
-            console.log(engineData);
         }
         if (models.data.length === 0) {
             const {modelData, dataError} = await supabase
@@ -30,7 +24,6 @@ module.exports = async (req, res) => {
                 .insert([
                     {model_name: model}
                 ]);
-            console.log(modelData);
         }
         if (chats.data.length === 0) {
             const {chatsData, dataError} = await supabase
@@ -38,7 +31,6 @@ module.exports = async (req, res) => {
                 .insert([
                     {chat_name: chat}
                 ]);
-            console.log(chatsData);
         }
 
         const {data, error} = await supabase

@@ -1,6 +1,5 @@
 import {EngineRole} from "./gptApi";
 
-const MODEL = "gpt-4o-mini";
 const MAZE_SIZE = "20x20";
 
 const messageTemplate = {
@@ -10,7 +9,6 @@ const messageTemplate = {
 
 const pageTemplate = {
     sysMessage: [messageTemplate],
-    model: MODEL
 };
 
 

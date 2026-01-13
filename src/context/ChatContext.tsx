@@ -61,7 +61,7 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
 
     const [engine, setEngine] = useState<Engines>(initialEngine);
     const [model, setModel] = useState<ModelTypes>(initialModel as ModelTypes);
-    const [params, setParams] = useState<ChatPageProps>({model: '', sysMessage: []});
+    const [params, setParams] = useState<ChatPageProps>({model: '', sysMessage: [], chatName: ''});
     const [chatName, setChatName] = useState<string>(initialChatName);
 
     useEffect(() => {

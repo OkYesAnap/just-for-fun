@@ -12,11 +12,12 @@ import {ChatContext} from "../context/ChatContext";
 
 
 export interface ChatPageProps {
-    model: string,
+    model?: string,
+    chatName: string,
     sysMessage: IEngineMessage[]
 }
 
-const ChatPage: React.FC<ChatPageProps> = (params: ChatPageProps) => {
+const ChatPage: React.FC<ChatPageProps> = (params) => {
     const {setParams, askInProgress} = React.useContext(ChatContext);
     useGoogleRecognition();
     useVoiceRecorder();
