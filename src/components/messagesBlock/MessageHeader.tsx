@@ -36,7 +36,7 @@ const MessageHeader: React.FC<MessageRefProps> = ({i, message, messageRef}) => {
 
     const handleCopy = () => {
         if (messageRef.current?.textContent) {
-            navigator.clipboard.writeText(messageRef.current.getElementsByTagName("div")[0].textContent || '');
+            navigator.clipboard.writeText(messageRef.current.getElementsByTagName("div")[1].textContent || '');
             const animateClick = copyIconRef?.current?.getElementsByTagName('animateTransform')[0];
             if (animateClick) {
                 animateClick.beginElement();
