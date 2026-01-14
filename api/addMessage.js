@@ -29,13 +29,13 @@ module.exports = async (req, res) => {
 
         const {data, error} = await supabase
             .from('messages')
-            .insert(DBData);
+            .insert(DBData)
+            .select('id');
 
         if (error) {
             console.error('Supabase error:', error);
             return res.status(500).json({error: 'Error fetching data'})
         }
-
         return res.status(200).json(data)
     } catch (err) {
         console.error('Unexpected error:', err);

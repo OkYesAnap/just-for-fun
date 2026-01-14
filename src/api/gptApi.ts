@@ -17,6 +17,7 @@ export enum EngineRole {
 const validEngineRoles = new Set(['system', 'assistant', 'user', 'function', 'tool', 'developer']);
 
 export interface IEngineMessage {
+    id?: number;
     content: string;
     role: EngineRole;
     engine?: Engines;
@@ -101,11 +102,15 @@ export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) 
         }
         const newMessage = data.choices[0].message;
         const lastMessage = contextEngine.getLastMessage();
-        await fetch('/api/addMessage', {
+        const newIdsResp = await fetch('/api/addMessage', {
             method: "POST",
             body: JSON.stringify({params, messages: [lastMessage, newMessage], engine, model})
         });
-
+        if (newIdsResp.status === 200) {
+            const newIds = await newIdsResp.json();
+            lastMessage.id = newIds[0].id;
+            newMessage.id = newIds[1].id;
+        }
         delete newMessage.reasoning_content;
         return contextEngine.update({...newMessage, engine, model, time: endTime - startTime});
 
