@@ -110,14 +110,21 @@ export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) 
         }
         const newMessage = data.choices[0].message;
         const lastMessage = contextEngine.getLastMessage();
+        const formAdditionalMessages = lastMessage.id ? [newMessage] : [lastMessage, newMessage];
+
         const newIdsResp = await fetch('/api/addMessage', {
             method: "POST",
-            body: JSON.stringify({params, messages: [lastMessage, newMessage], engine, model})
+            body: JSON.stringify({params, messages: formAdditionalMessages, engine, model})
         });
         if (newIdsResp.status === 200) {
             const newIds = await newIdsResp.json();
-            lastMessage.id = newIds[0].id;
-            newMessage.id = newIds[1].id;
+
+            if (newIds.length === 1) {
+                newMessage.id = newIds[0].id;
+            } else if (newIds.length === 2) {
+                lastMessage.id = newIds[0].id;
+                newMessage.id = newIds[1].id;
+            }
         }
         delete newMessage.reasoning_content;
         return contextEngine.update({...newMessage, engine, model, time: endTime - startTime});

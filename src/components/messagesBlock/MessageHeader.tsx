@@ -2,7 +2,7 @@ import {ReactComponent as CopyIcon} from '../../icons/Copy.svg';
 import {ReactComponent as DeleteIcon} from '../../icons/Delete.svg';
 import {ReactComponent as RepeatIcon} from '../../icons/Repeat.svg';
 import React, {useContext, useRef} from "react";
-import {contextEngine, EngineRole, IEngineMessage} from "../../api/gptApi";
+import {contextEngine, EngineRole} from "../../api/gptApi";
 import {MessageRefProps} from "./models";
 import EnginePrefix from "./EnginePrefix";
 import {ChatContext} from "../../context/ChatContext";
@@ -13,8 +13,6 @@ const MessageHeader: React.FC<MessageRefProps> = ({i, message, messageRef}) => {
     const {
         messages,
         params,
-        engine,
-        model,
         deleteMessagesList,
         setDeleteMessagesList,
         isDeleting,
@@ -50,9 +48,9 @@ const MessageHeader: React.FC<MessageRefProps> = ({i, message, messageRef}) => {
     };
 
     const handleRepeat = () => {
-        const lastMessage = messages.pop() as IEngineMessage;
+        const lastMessage = {...contextEngine.getLastMessage()};
         contextEngine.deleteMessage(i);
-        contextEngine.update({content: lastMessage.content, role: EngineRole.user, engine, model});
+        contextEngine.update(lastMessage);
         askEngine();
     };
 
