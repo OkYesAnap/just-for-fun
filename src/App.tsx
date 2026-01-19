@@ -9,11 +9,11 @@ import TestPage from "./pages/TestPage"
 import params, {chatPages} from '../src/api/params'
 import {ChatContextProvider} from "./context/ChatContext";
 
-// import params4 from '../src/api/params4'
+import params4 from '../src/api/params4'
 
 function App() {
     const {mazeGame} = params;
-    // const {gpt4} = params4;
+    const {gpt4} = params4;
 
     const pages = Object.entries(chatPages);
 
@@ -25,7 +25,7 @@ function App() {
                         {pages.map(([key, value]) => (
                             <Route key={key} path={`/${key}`} element={<ChatPage {...{...value, chatName: key}}/>}/>
                         ))}
-                        {/*<Route path="/gpt-chat-4" element={<ChatPage {...gpt4}/>}/>*/}
+                        <Route path="/gpt-chat-4" element={<ChatPage {...{...gpt4, chatName: ''}}/>}/>
                         <Route path="/" element={<Navigate to={Object.keys(chatPages)[0]}/>}/>
                         <Route path="/main" element={<Main/>}/>
                         <Route path="/maze-game" element={<MazeGame {...mazeGame}/>}/>

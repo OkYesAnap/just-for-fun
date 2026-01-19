@@ -7,9 +7,19 @@ import {MessageRefProps} from "./models";
 import EnginePrefix from "./EnginePrefix";
 import {ChatContext} from "../../context/ChatContext";
 import {useAskEngine} from "../../hooks/useAskEngine";
+import useSupabaseDelete from "../../hooks/useSupabaseDelete";
 
 const MessageHeader: React.FC<MessageRefProps> = ({i, message, messageRef}) => {
-    const {messages, setMessages, params, engine, model} = useContext(ChatContext);
+    const {
+        messages,
+        params,
+        engine,
+        model,
+        deleteMessagesList,
+        setDeleteMessagesList,
+        isDeleting,
+        setIsDeleting
+    } = useContext(ChatContext);
     const askEngine = useAskEngine(params);
 
     const copyIconRef = useRef<SVGSVGElement>(null);
@@ -17,20 +27,15 @@ const MessageHeader: React.FC<MessageRefProps> = ({i, message, messageRef}) => {
     const isValidRole = !(message.role === EngineRole.user);
     const isRepeatAvailable = !isValidRole && messages.length - 1 === i;
 
-    const deleteMessage = async () => {
-        const response = await fetch('/api/delete', {
-            method: "DELETE",
-            body: JSON.stringify(contextEngine.get()[i])
-        });
-        if (response.status === 200 || response.status === 404) {
-            const messages = contextEngine.deleteMessage(i);
-            setMessages([...messages]);
-        }
-    };
+    const deleteMessage = useSupabaseDelete();
 
-    const handleDeleteMessage = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        if (e.ctrlKey || e.metaKey) {
-            deleteMessage();
+    const handleDeleteMessage = async () => {
+        if (!isDeleting) {
+            setIsDeleting(true);
+            const newList = [...deleteMessagesList, {...message, index: i}];
+            setDeleteMessagesList(newList);
+            await deleteMessage(newList);
+            setIsDeleting(false);
         }
     };
 
@@ -46,17 +51,19 @@ const MessageHeader: React.FC<MessageRefProps> = ({i, message, messageRef}) => {
 
     const handleRepeat = () => {
         const lastMessage = messages.pop() as IEngineMessage;
-        deleteMessage();
+        contextEngine.deleteMessage(i);
         contextEngine.update({content: lastMessage.content, role: EngineRole.user, engine, model});
         askEngine();
     };
 
-    return <div onClick={(e) => handleDeleteMessage(e)}>
-        {(isValidRole || isInProgress) && <EnginePrefix {...{message}}/>}
-        {!isInProgress && <CopyIcon ref={copyIconRef} cursor="pointer" onClick={handleCopy}/>}
-        {!isInProgress && <DeleteIcon cursor="pointer" onClick={deleteMessage}/>}
-        {isRepeatAvailable && !isInProgress && <RepeatIcon cursor="pointer" onClick={handleRepeat}/>}
-    </div>
+    return (
+        <div>
+            {(isValidRole || isInProgress) && <EnginePrefix {...{message}}/>}
+            {!isInProgress && <CopyIcon ref={copyIconRef} cursor="pointer" onClick={handleCopy}/>}
+            {!isInProgress &&
+                <DeleteIcon style={{opacity: isDeleting ? 0.5 : 1}} cursor="pointer" onClick={handleDeleteMessage}/>}
+            {isRepeatAvailable && !isInProgress && <RepeatIcon cursor="pointer" onClick={handleRepeat}/>}
+        </div>)
 }
 
 export default MessageHeader;

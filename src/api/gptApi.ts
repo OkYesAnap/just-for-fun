@@ -18,6 +18,7 @@ const validEngineRoles = new Set(['system', 'assistant', 'user', 'function', 'to
 
 export interface IEngineMessage {
     id?: number;
+    index?: number;
     content: string;
     role: EngineRole;
     engine?: Engines;
@@ -57,8 +58,15 @@ class ContextEngine {
         return this.context;
     }
 
-    deleteMessage(messageMNumber: number) {
-        this.context.splice(messageMNumber, 1);
+    deleteMessage(messageIndex: number) {
+        this.context.splice(messageIndex, 1);
+        return this.context;
+    }
+
+    deleteMessagesList(messagesNumber: number[]) {
+        this.context = [...this.context.filter((_, index) => {
+            return !messagesNumber.includes(index);
+        })];
         return this.context;
     }
 }

@@ -12,6 +12,10 @@ interface ChatContextType {
     setMessages: Dispatch<SetStateAction<IEngineMessage[]>>
     isListening: boolean;
     setIsListening: Dispatch<SetStateAction<boolean>>;
+    isDeleting: boolean;
+    setIsDeleting: Dispatch<SetStateAction<boolean>>;
+    deleteMessagesList: IEngineMessage[];
+    setDeleteMessagesList: Dispatch<SetStateAction<IEngineMessage[]>>;
     autoAsk: boolean;
     setAutoAsk: Dispatch<SetStateAction<boolean>>;
     startListenVoice: (lang: string) => void;
@@ -43,6 +47,8 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const [draftText, setDraftText] = useState('');
     const [messages, setMessages] = useState<IEngineMessage[]>([]);
     const [isListening, setIsListening] = useState<boolean>(false);
+    const [isDeleting, setIsDeleting] = useState<boolean>(false);
+    const [deleteMessagesList, setDeleteMessagesList] = useState<IEngineMessage[]>([]);
     const [autoAsk, setAutoAsk] = useState<boolean>(false);
     const [voiceInputEngine, setVoiceInputEngine] = useState<VoiceEngineSingleType>(voiceEngines.google);
     const [googleRecognizerAvailable, setGoogleRecognizerAvailable] = useState<boolean>(true);
@@ -80,9 +86,10 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
         window.history.replaceState({}, '', url);
 
         const fetchMessages = async () => {
+            setAskInProgress(true);
             const fetchedMessages = await supabaseGet(url.search);
-            console.log(fetchedMessages);
             setMessages(fetchedMessages);
+            setAskInProgress(false);
         };
 
         if (engine || model) {
@@ -100,6 +107,8 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
         draftText, setDraftText,
         messages, setMessages,
         isListening, setIsListening,
+        isDeleting, setIsDeleting,
+        deleteMessagesList, setDeleteMessagesList,
         autoAsk, setAutoAsk,
         startListenVoice,
         voiceInputEngine, setVoiceInputEngine,
@@ -116,6 +125,8 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
         draftText,
         messages,
         isListening,
+        isDeleting,
+        deleteMessagesList,
         autoAsk,
         chatName,
         voiceInputEngine,

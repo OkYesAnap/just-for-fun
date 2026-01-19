@@ -2,12 +2,13 @@ const supabase = require('./supabase');
 
 module.exports = async (req, res) => {
     try {
-        const {id} = JSON.parse(req.body);
+        const deleteMessages = JSON.parse(req.body);
+        const deleteIds = deleteMessages.map(message => message.id);
 
         const {data, error} = await supabase
             .from('messages')
             .delete()
-            .eq('id', id);
+            .in('id', deleteIds);
 
         console.log(data, error);
 
