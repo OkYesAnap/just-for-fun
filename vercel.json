@@ -5,7 +5,8 @@
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "build"
+        "distDir": "build",
+        "zeroConfig": false
       }
     },
     {
@@ -27,24 +28,15 @@
   ],
   "routes": [
     {
-      "src": "/api/get",
-      "dest": "/api/get.js"
+      "src": "/api/(.*)",
+      "dest": "/api/$1.js"
     },
     {
-      "src": "/api/chat",
-      "dest": "/api/chat.js"
-    },
-    {
-      "src": "/api/delete",
-      "dest": "/api/delete.js"
-    },
-    {
-      "src": "/api/addMessage",
-      "dest": "/api/addMessage.js"
-    },
-    {
-      "src": "/(?!api/)(?!static/).*$",
-      "dest": "/index.html"
+      "src": "/manifest.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Cache-Control": "public, max-age=3600"
+      }
     },
     {
       "src": "/static/(.*)",
@@ -53,13 +45,8 @@
       }
     },
     {
-      "src": "/favicon.ico",
-      "dest": "/favicon.ico"
-    },
-    {
       "src": "/(.*)",
-      "dest": "/index.html",
-      "status": 200
+      "dest": "/index.html"
     }
   ]
 }
