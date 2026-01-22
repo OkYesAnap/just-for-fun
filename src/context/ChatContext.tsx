@@ -1,4 +1,4 @@
-import React, {createContext, Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState} from "react";
+import React, {createContext, Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useRef, useState} from "react";
 import {Engines, Models, ModelTypes, voiceEngines, VoiceEngineSingleType} from "../constants/constants";
 import {IEngineMessage, supabaseGet} from "../api/gptApi";
 import {ChatPageProps} from "../pages/ChatPage";
@@ -55,13 +55,13 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const [lang, setLang] = useState<string>('');
     const [askInProgress, setAskInProgress] = useState(false);
     const [showClearModal, setShowClearModal] = useState(false);
+    const url = useRef<URL>(new URL(window.location.href));
 
     const {initialEngine, initialModel, initialChatName} = useMemo(() => {
-        const url = new URL(window.location.href);
         return {
-            initialEngine: url.searchParams.get("engine") as Engines || Engines.GPT,
-            initialModel: url.searchParams.get("model") as ModelTypes || Models.gpt[0],
-            initialChatName: url.pathname.split("/")[1],
+            initialEngine: url.current.searchParams.get("engine") as Engines || Engines.GPT,
+            initialModel: url.current.searchParams.get("model") as ModelTypes || Models.gpt[0],
+            initialChatName: url.current.pathname.split("/")[1],
         };
     }, []);
 
@@ -71,31 +71,23 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const [chatName, setChatName] = useState<string>(initialChatName);
 
     useEffect(() => {
-        const url = new URL(window.location.href);
+        url.current.searchParams.set('engine', engine);
+    }, [engine]);
 
-        if (engine) {
-            url.searchParams.set('engine', engine);
-        }
-        if (model) {
-            url.searchParams.set('model', model);
-        }
-        if (chatName) {
-            url.searchParams.set('chat', chatName);
-        }
+    useEffect(() => {
+        url.current.searchParams.set('model', model);
+        url.current.searchParams.set('chat', chatName);
 
-        window.history.replaceState({}, '', url);
+        window.history.replaceState({}, '', url.current);
 
         const fetchMessages = async () => {
             setAskInProgress(true);
-            const fetchedMessages = await supabaseGet(url.search);
+            const fetchedMessages = await supabaseGet(url.current.search);
             setMessages(fetchedMessages);
             setAskInProgress(false);
         };
-
-        if (engine || model) {
-            fetchMessages();
-        }
-    }, [engine, model, chatName]);
+        fetchMessages();
+    }, [model, chatName]);
 
     const startListenVoice = (lang: string) => {
         setLang(lang);
