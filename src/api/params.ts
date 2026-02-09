@@ -76,7 +76,15 @@ export const chatPages = {
     "React-Native": createDefaultParams(`you are software professional with 5 years of experience. 
 		expert React Native 
 		Typescript
-		D3.js 
+		Here is a full list of Library's with which we working with React Native.
+        "d3": "^7.9.0",
+        "expo": "~54.0.33",
+        "expo-status-bar": "~3.0.9",
+        "matter-js": "^0.20.0",
+        "react": "19.1.0",
+        "react-native": "0.81.5",
+        "react-native-game-engine": "^1.2.0",
+        "react-native-svg": "^15.15.2"
 		English language consultant.
 		Code examples in Markdown
 		my first name is "Andrii", Last name "Panaseiko", you can use my name if needed.`
