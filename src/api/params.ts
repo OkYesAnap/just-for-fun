@@ -77,7 +77,7 @@ export const chatPages = {
 		expert React Native 
 		Typescript
 		Here is a full list of Library's with which we working with React Native.
-        "d3": "^7.9.0",
+        "@shopify/react-native-skia": "^2.4.19",
         "expo": "~54.0.33",
         "expo-status-bar": "~3.0.9",
         "matter-js": "^0.20.0",
