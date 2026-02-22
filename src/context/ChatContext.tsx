@@ -82,8 +82,10 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
 
         const fetchMessages = async () => {
             setAskInProgress(true);
-            const fetchedMessages = await supabaseGet(url.current.search);
-            setMessages(fetchedMessages);
+            if (model !== '' && chatName !== '') {
+                const fetchedMessages = await supabaseGet(url.current.search);
+                setMessages(fetchedMessages);
+            }
             setAskInProgress(false);
         };
         fetchMessages();
