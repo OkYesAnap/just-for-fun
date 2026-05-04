@@ -1,5 +1,6 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import styled from 'styled-components'
+import {AuthContext} from "../../context/AuthContext";
 
 const LoginContainer = styled.div`
     position: absolute;
@@ -8,7 +9,8 @@ const LoginContainer = styled.div`
     display: flex;
     flex-direction: row;
     margin-top: 0.5vh;
-    padding: 5px;
+    height: 40px;
+    padding: 5px 5px;
     background-color: #282c34;
     border: white 1px solid;
     border-radius: 10px;
@@ -30,7 +32,7 @@ const LoginLogoutButton = styled.div`
     border-radius: 4px;
     padding: 4px 8px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 15px;
     color: darkgrey;
 
     &:hover {
@@ -38,7 +40,8 @@ const LoginLogoutButton = styled.div`
     }
 `;
 
-const GoogleLogin: React.FC<any> = ({authUser}) => {
+const GoogleLogin: React.FC<any> = () => {
+    const {authUser} = useContext(AuthContext);
     const {user, signIn, signOut, isAuthenticated} = authUser;
 
     if (isAuthenticated) {

@@ -6,19 +6,20 @@ import Main from "../../pages/Main";
 import MazeGame from "../../pages/MazeGame";
 import TestPage from "../../pages/TestPage";
 import Error404 from "../../pages/Error404";
-import React from "react";
+import React, {useContext} from "react";
+import {AuthContext} from "../../context/AuthContext";
 // import params4 from "../../api/params4";
-import useAuth from "../../hooks/useAuth";
 
 const LoginRoutes = () => {
     const {mazeGame} = params;
     // const {gpt4} = params4;
     const pages = Object.entries(chatPages);
-    const authUser = useAuth();
-    const {isAuthenticated} = authUser;
+    const {authUser} = useContext(AuthContext);
+    const isAuthenticated = authUser?.isAuthenticated;
+    console.log(isAuthenticated);
     return (
         <BrowserRouter>
-            {<GoogleLogin {...{authUser}} />}
+            {<GoogleLogin/>}
             {isAuthenticated && <Routes>
                 {pages.map(([key, value]) => (
                     <Route key={key} path={`/${key}`} element={<ChatPage {...{...value, chatName: key}}/>}/>
