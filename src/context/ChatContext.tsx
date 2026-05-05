@@ -1,7 +1,18 @@
-import React, {createContext, Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useRef, useState} from "react";
+import React, {
+    createContext,
+    Dispatch,
+    ReactNode,
+    SetStateAction,
+    useContext,
+    useEffect,
+    useMemo,
+    useRef,
+    useState
+} from "react";
 import {Engines, Models, ModelTypes, voiceEngines, VoiceEngineSingleType} from "../constants/constants";
 import {IEngineMessage, supabaseGet} from "../api/gptApi";
 import {ChatPageProps} from "../pages/ChatPage";
+import {AuthContext} from "./AuthContext";
 
 interface ChatContextType {
     text: string;
@@ -56,6 +67,9 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const [askInProgress, setAskInProgress] = useState(false);
     const [showClearModal, setShowClearModal] = useState(false);
     const url = useRef<URL>(new URL(window.location.href));
+    const requestDebounce = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const {authUser} = useContext(AuthContext) || "unlogged";
+
 
     const {initialEngine, initialModel, initialChatName} = useMemo(() => {
         return {
@@ -72,24 +86,26 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
 
     useEffect(() => {
         url.current.searchParams.set('engine', engine);
-    }, [engine]);
-
-    useEffect(() => {
         url.current.searchParams.set('model', model);
         url.current.searchParams.set('chat', chatName);
+        url.current.searchParams.set('user_id', authUser.user?.id || "unlogged");
 
-        window.history.replaceState({}, '', url.current);
-
+        if (authUser.user?.id === "unlogged" || !authUser.isAuthenticated) return;
         const fetchMessages = async () => {
-            setAskInProgress(true);
-            if (model !== '' && chatName !== '') {
+            if (requestDebounce.current) {
+                clearTimeout(requestDebounce.current);
+            }
+            requestDebounce.current = setTimeout(async () => {
+                setAskInProgress(true);
                 const fetchedMessages = await supabaseGet(url.current.search);
                 setMessages(fetchedMessages);
-            }
-            setAskInProgress(false);
+                setAskInProgress(false);
+            }, 50);
+
+
         };
         fetchMessages();
-    }, [model, chatName]);
+    }, [engine, model, chatName, authUser, authUser.user?.id, authUser.isAuthenticated]);
 
     const startListenVoice = (lang: string) => {
         setLang(lang);

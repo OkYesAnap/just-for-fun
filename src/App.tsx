@@ -7,11 +7,11 @@ import {AuthContextProvider} from "./context/AuthContext";
 function App() {
     return (
         <div className="App">
-            <ChatContextProvider>
-                <AuthContextProvider>
+            <AuthContextProvider>
+                <ChatContextProvider>
                     <LoginRoutes/>
-                </AuthContextProvider>
-            </ChatContextProvider>
+                </ChatContextProvider>
+            </AuthContextProvider>
         </div>
     );
 }

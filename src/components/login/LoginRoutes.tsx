@@ -16,7 +16,6 @@ const LoginRoutes = () => {
     const pages = Object.entries(chatPages);
     const {authUser} = useContext(AuthContext);
     const isAuthenticated = authUser?.isAuthenticated;
-    console.log(isAuthenticated);
     return (
         <BrowserRouter>
             {<GoogleLogin/>}

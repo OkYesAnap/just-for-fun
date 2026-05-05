@@ -9,6 +9,7 @@ export const AuthContext = createContext<AuthContextType>(null!);
 
 const AuthContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const authUser = useAuth();
+
     const contextValue = {
         authUser
     };
