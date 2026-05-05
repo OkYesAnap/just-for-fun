@@ -27,7 +27,7 @@ const ChatPage: React.FC<ChatPageProps> = (params) => {
 
     useEffect(() => {
         setParams({...params, userId: authUser.user?.id || ""});
-    }, [setParams, params]);
+    }, [setParams, params, authUser.user?.id]);
 
     return (
         <>
