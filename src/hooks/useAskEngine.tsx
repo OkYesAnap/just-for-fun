@@ -10,6 +10,7 @@ const useAskEngine = (params: ChatPageProps) => {
         setMessages,
         engine,
         model,
+        setImageBase64
     } = useContext(ChatContext);
 
     const handleAsk = useCallback(async () => {
@@ -27,7 +28,8 @@ const useAskEngine = (params: ChatPageProps) => {
         setMessages(messagesFromGpt);
         setAskInProgress(false);
         setText('');
-    }, [params, engine, model, setAskInProgress, setMessages, setText]);
+        setImageBase64('');
+    }, [setAskInProgress, setMessages, engine, model, params, setText, setImageBase64]);
 
     return handleAsk;
 };

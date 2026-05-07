@@ -2,7 +2,7 @@ import EngineChanger from "./EngineChanger";
 import InputButton from "./InputButton";
 import VoiceInput from "./VoiceInput";
 import {Input} from "antd";
-import React, {useCallback, useContext, useEffect, useLayoutEffect, useRef} from "react";
+import React, {useCallback, useContext, useEffect, useLayoutEffect, useRef, useState} from "react";
 import styled from "styled-components";
 import {ChatContext} from "../../context/ChatContext";
 import {TextAreaRef} from "antd/es/input/TextArea";
@@ -10,6 +10,7 @@ import {setTextAreaActualHeight} from "../../utils/textArea";
 import ModelChanger from "./ModelChanger";
 import {contextEngine, EngineRole} from "../../api/gptApi";
 import {useAskEngine} from "../../hooks/useAskEngine";
+import Base64Image from "../image/Base64Image";
 
 const InputBlockStyled = styled.div`
     position: fixed;
@@ -18,7 +19,7 @@ const InputBlockStyled = styled.div`
     align-items: center;
     justify-content: center;
     height: auto;
-    max-height: 95%;
+    max-height: 100%;
     bottom: 0;
     padding-top: 10px;
     width: 80%;
@@ -40,6 +41,7 @@ const InfoAreaStyled = styled.div`
 const InputBlock: React.FC = () => {
     const textAreaRef = useRef<TextAreaRef>(null);
     const {engine, model, params} = useContext(ChatContext);
+    const [showImage, setShowImage] = useState(false);
     const askEngine = useAskEngine(params);
     const {
         setAutoAsk,
@@ -49,6 +51,8 @@ const InputBlock: React.FC = () => {
         text,
         setShowClearModal,
         setText,
+        imageBase64,
+        setImageBase64
     } = useContext(ChatContext);
     const hasText = !!text.trim().length;
 
@@ -56,7 +60,48 @@ const InputBlock: React.FC = () => {
         setTextAreaActualHeight(textAreaRef);
     }, [text]);
 
-    const handlePaste = async () => {
+    const fileToBase64 = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                resolve(reader.result as string);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    };
+
+    const handlePaste = async (e: React.ClipboardEvent<HTMLDivElement>) => {
+        const clipboardItems = e.clipboardData.items;
+
+        for (let i = 0; i < clipboardItems.length; i++) {
+            const item = clipboardItems[i];
+
+            if (item.type.startsWith('image/')) {
+                const blob = await item.getAsFile();
+                if (blob) {
+                    const base64 = await fileToBase64(blob);
+                    setImageBase64(base64);
+                    console.log({
+                        content: [
+                            {
+                                type: 'input_file',
+                                filename: 'pasted-image.png',
+                                file_data: base64,
+                            },
+                        ],
+                    });
+                }
+                return; // Skip to next item if needed
+            }
+        }
+        const text = e.clipboardData.getData('Text');
+        if (text) {
+            setText((prevText) => prevText + text + '\n');
+        }
+    };
+
+    const handlePasteClick = async () => {
         try {
             const text = await navigator.clipboard.readText();
             setText((prevText) => prevText + text + '\n');
@@ -66,9 +111,9 @@ const InputBlock: React.FC = () => {
     };
 
     const updateAndAskEngine = useCallback(() => {
-        contextEngine.update({content: text, role: EngineRole.user, engine, model});
+        contextEngine.update({content: text, role: EngineRole.user, engine, model, imageBase64});
         askEngine();
-    }, [text, engine, model, askEngine]);
+    }, [text, engine, model, imageBase64, askEngine]);
 
     const onClick = () => {
         setAutoAsk(false);
@@ -98,8 +143,13 @@ const InputBlock: React.FC = () => {
         setText(e.target.value);
     };
 
+    const handleShowImage = () => {
+        setShowImage(!showImage);
+    };
+
     return (
-        <InputBlockStyled>
+        <InputBlockStyled onPaste={handlePaste}>
+            {showImage && imageBase64 && <Base64Image/>}
             <InfoAreaStyled>
                 <div style={{flex: 5, display: "flex", flexFlow: "column"}}>
                     <div style={{display: "flex", justifyContent: "space-around", alignItems: "center"}}>
@@ -111,9 +161,15 @@ const InputBlock: React.FC = () => {
                         </div>
                     </div>
                     <div style={{display: "flex"}}>
-                        <div>
-                            <InputButton {...{onClick: handlePaste}}>
+                        <div style={{display: "flex"}}>
+                            <InputButton {...{onClick: handlePasteClick}}>
                                 Paste
+                            </InputButton>
+                            <InputButton {...{
+                                onClick: handleShowImage,
+                                disabled: !imageBase64
+                            }}>
+                                IMG
                             </InputButton>
                         </div>
                         <div style={{width: "100%"}}>
@@ -129,6 +185,7 @@ const InputBlock: React.FC = () => {
                 <VoiceInput/>
             </InfoAreaStyled>
             <TextAreaStyled value={text} ref={textAreaRef}
+                            onPaste={(e) => e.preventDefault()}
                             disabled={(autoAsk && isListening) || askInProgress}
                             onChange={onChangeTextAria} onKeyDown={handleEnterPress}/>
         </InputBlockStyled>)

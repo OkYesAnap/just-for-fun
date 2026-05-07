@@ -47,7 +47,9 @@ interface ChatContextType {
     model: ModelTypes;
     setModel: Dispatch<SetStateAction<ModelTypes>>;
     params: ChatPageProps;
-    setParams: Dispatch<SetStateAction<ChatPageProps>>
+    setParams: Dispatch<SetStateAction<ChatPageProps>>;
+    imageBase64: string;
+    setImageBase64: Dispatch<SetStateAction<string>>;
 }
 
 export const ChatContext = createContext<ChatContextType>(null!);
@@ -69,7 +71,7 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const url = useRef<URL>(new URL(window.location.href));
     const requestDebounce = useRef<ReturnType<typeof setTimeout> | null>(null);
     const {authUser} = useContext(AuthContext) || "unlogged";
-
+    const [imageBase64, setImageBase64] = useState<string>('');
 
     const {initialEngine, initialModel, initialChatName} = useMemo(() => {
         return {
@@ -130,6 +132,7 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
         engine, setEngine,
         model, setModel,
         params, setParams,
+        imageBase64, setImageBase64
     }), [
         text,
         draftText,
@@ -146,7 +149,8 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
         showClearModal,
         engine,
         model,
-        params
+        params,
+        imageBase64
     ]);
 
     return (

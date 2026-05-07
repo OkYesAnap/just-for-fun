@@ -27,7 +27,7 @@ const askGpt = async ({
     contextEngine.clear();
     setAskInProgress(true);
     const message = await messagesFromGpt(params);
-    setMaze(strToMazeArray(message[1].content));
+    setMaze(strToMazeArray(message[1].content as string));
     setAskInProgress(false);
 };
 
