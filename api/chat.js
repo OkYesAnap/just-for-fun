@@ -42,18 +42,17 @@ module.exports = async (req, res) => {
     if (req.method === 'POST') {
         try {
             const data = JSON.parse(req.body);
-            const {messages, model, engine} = data;
-            let aiEngine;
+            let {messages, model, engine} = data;
             if (engine === 'gpt') {
-                aiEngine = aiEngines.openAI;
+                engine = aiEngines.openAI;
                 messages = gptContentAdapter(messages);
             } else if (engine === 'deepSeek') {
-                aiEngine = aiEngines.deepSeek;
+                engine = aiEngines.deepSeek;
             } else {
                 throw Error('No such engine');
             }
             const body = {messages, model};
-            const completion = await fetchAI(aiEngine, body);
+            const completion = await fetchAI(engine, body);
             res.status(200).json(completion);
         } catch (error) {
             if (error.error) {
