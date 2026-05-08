@@ -1,5 +1,29 @@
 const {OpenAI} = require('openai');
 
+const gptContentAdapter = (messages) => messages.map((item) => {
+    if (item.imageBase64) {
+        return {
+            role: item.role,
+            content: [
+                {
+                    "type": "text",
+                    "text": item.content,
+                },
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": item.imageBase64
+                    }
+                },
+            ]
+        };
+    } else {
+        return {
+            role: item.role,
+            content: item.content
+        }
+    }
+});
 const fetchAI = async (aiEngine, body) => {
     return await aiEngine.chat.completions.create(body);
 };
@@ -21,7 +45,8 @@ module.exports = async (req, res) => {
             const {messages, model, engine} = data;
             let aiEngine;
             if (engine === 'gpt') {
-                aiEngine = aiEngines.openAI
+                aiEngine = aiEngines.openAI;
+                messages = gptContentAdapter(messages);
             } else if (engine === 'deepSeek') {
                 aiEngine = aiEngines.deepSeek;
             } else {

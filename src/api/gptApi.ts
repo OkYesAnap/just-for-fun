@@ -90,38 +90,13 @@ export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) 
     const messages = contextEngine.get();
     const {engine, model} = messages[messages.length - 1];
     const messageWithoutCustomRoles = contextEngine.get().filter((item: IEngineMessage) => validEngineRoles.has(item.role));
-    const imageMessageAdapter = messageWithoutCustomRoles.map((item: IEngineMessage, index, arr) => {
-        let message: IEngineMessage;
-        if (item.imageBase64) {
-            message = {
-                role: item.role,
-                content: [
-                    {
-                        "type": "text",
-                        "text": item.content as string,
-                    },
-                    {
-                        "type": "image_url",
-                        "image_url": {
-                            "url": item.imageBase64
-                        }
-                    },
-                ]
-            };
-        } else {
-            message = {
-                role: item.role,
-                content: item.content
-            }
-        }
-        return message;
-    });
+
     const apiRequestBody = {
         engine,
         model,
         messages: [
             ...params.sysMessage,
-            ...imageMessageAdapter,
+            ...messageWithoutCustomRoles,
         ]
     };
     try {
