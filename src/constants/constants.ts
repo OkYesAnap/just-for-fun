@@ -40,8 +40,8 @@ export type ModelTypes = 'gpt-5' |
     'gpt-4.1' |
     'gpt-4.1-mini' |
     'gpt-4.1-nano' |
-    'deepseek-chat' |
-    'deepseek-reasoner' |
+    'deepseek-v4-flash' |
+    'deepseek-v4-pro' |
     ''
 
 type EngineModelsType = {
@@ -60,7 +60,7 @@ export const Models: EngineModelsType = {
         'gpt-5-chat-latest',
         'gpt-5-pro',
     ],
-    [Engines.DEEP_SEEK]: ['deepseek-chat', 'deepseek-reasoner']
+    [Engines.DEEP_SEEK]: ['deepseek-v4-flash', 'deepseek-v4-pro']
 };
 
 export const defaultTextInputSize = 2;
