@@ -1,4 +1,4 @@
-const supabase = require('./supabase');
+const supabaseInit = require('./supabase');
 
 module.exports = async (req, res) => {
     const urlObj = new URL(req.url, `http://${req.headers.host}`);
@@ -6,6 +6,8 @@ module.exports = async (req, res) => {
     const model = urlObj.searchParams.get('model');
     const chat = urlObj.searchParams.get('chat');
     const userId = urlObj.searchParams.get('user_id');
+
+    const supabase = supabaseInit(req);
     try {
         const [engines, models, chats, user] = await Promise.all([
             supabase.from('engines').select('*').eq('engine_name', engine),
@@ -13,21 +15,21 @@ module.exports = async (req, res) => {
             supabase.from('chats').select('*').eq('chat_name', chat),
             supabase.from('users').select('*').eq('user_id', chat),
         ]);
-        if (engines.data.length === 0) {
+        if (engines.data?.length === 0) {
             const {engineData, dataError} = await supabase
                 .from('engines')
                 .insert([
                     {engine_name: engine}
                 ]);
         }
-        if (models.data.length === 0) {
+        if (models.data?.length === 0) {
             const {modelData, dataError} = await supabase
                 .from('models')
                 .insert([
                     {model_name: model}
                 ]);
         }
-        if (chats.data.length === 0) {
+        if (chats.data?.length === 0) {
             const {chatsData, dataError} = await supabase
                 .from('chats')
                 .insert([
@@ -35,7 +37,7 @@ module.exports = async (req, res) => {
                 ]);
         }
 
-        if (chats.data.length === 0) {
+        if (chats.data?.length === 0) {
             const {chatsData, dataError} = await supabase
                 .from('users')
                 .insert([

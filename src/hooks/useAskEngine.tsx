@@ -2,8 +2,10 @@ import {useCallback, useContext} from "react";
 import {contextEngine, EngineRole, requestToEngine} from "../api/gptApi";
 import {ChatPageProps} from "../pages/ChatPage";
 import {ChatContext} from "../context/ChatContext";
+import {AuthContext} from "../context/AuthContext";
 
 const useAskEngine = (params: ChatPageProps) => {
+    const {authUser} = useContext(AuthContext);
     const {
         setText,
         setAskInProgress,
@@ -24,12 +26,12 @@ const useAskEngine = (params: ChatPageProps) => {
                 role: EngineRole.inprogress,
             },
         ]);
-        const messagesFromGpt = await requestToEngine(params);
+        const messagesFromGpt = await requestToEngine({params, authUser});
         setMessages(messagesFromGpt);
         setAskInProgress(false);
         setText('');
         setImageBase64('');
-    }, [setAskInProgress, setMessages, engine, model, params, setText, setImageBase64]);
+    }, [setAskInProgress, setMessages, engine, model, params, authUser, setText, setImageBase64]);
 
     return handleAsk;
 };

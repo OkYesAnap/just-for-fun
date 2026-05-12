@@ -1,5 +1,6 @@
 import engines from './engines.json';
 import {ApiKeyInstructions, Engines, ModelTypes} from "../constants/constants";
+import {UseAuthReturn} from "../hooks/useAuth";
 
 const keys = {
     gpt: process.env.REACT_APP_GPT_API_KEY,
@@ -84,7 +85,10 @@ class ContextEngine {
 
 export const contextEngine = new ContextEngine();
 
-export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) => {
+export const requestToEngine = async ({params, authUser}: {
+    params: { sysMessage: IEngineMessage[] },
+    authUser: UseAuthReturn
+}) => {
 
     const startTime = Date.now();
     const messages = contextEngine.get();
@@ -126,6 +130,9 @@ export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) 
 
         const newIdsResp = await fetch('/api/addMessage', {
             method: "POST",
+            headers: {
+                'Authorization': `Bearer ${authUser?.token}`
+            },
             body: JSON.stringify({params, messages: formAdditionalMessages, engine, model})
         });
         if (newIdsResp.status === 200) {
@@ -157,10 +164,16 @@ export const requestToEngine = async (params: { sysMessage: IEngineMessage[] }) 
 };
 
 
-export const supabaseGet = async (url: string): Promise<IEngineMessage[]> => {
+export const supabaseGet = async ({url, authUser}: {
+    url: string,
+    authUser: UseAuthReturn
+}): Promise<IEngineMessage[]> => {
     try {
         const response = await fetch(`/api/get${url}`, {
-            method: "GET"
+            method: "GET",
+            headers: {
+                'Authorization': `Bearer ${authUser?.token}`
+            }
         });
         const data = await response.json();
         return contextEngine.updateAll(data);

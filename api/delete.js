@@ -1,10 +1,10 @@
-const supabase = require('./supabase');
+const supabaseInit = require('./supabase');
 
 module.exports = async (req, res) => {
+    const supabase = supabaseInit(req);
     try {
         const deleteMessages = JSON.parse(req.body);
         const deleteIds = deleteMessages.map(message => message.id);
-
         const {data, error} = await supabase
             .from('messages')
             .delete()

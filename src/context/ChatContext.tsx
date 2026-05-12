@@ -99,7 +99,7 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
             }
             requestDebounce.current = setTimeout(async () => {
                 setAskInProgress(true);
-                const fetchedMessages = await supabaseGet(url.current.search);
+                const fetchedMessages = await supabaseGet({url: url.current.search, authUser});
                 setMessages(fetchedMessages);
                 setAskInProgress(false);
             }, 50);

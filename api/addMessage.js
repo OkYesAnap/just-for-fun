@@ -1,4 +1,4 @@
-const supabase = require('./supabase');
+const supabaseInit = require("./supabase");
 
 const getId = (response) => response.data[0].id;
 
@@ -14,6 +14,8 @@ module.exports = async (req, res) => {
     const reqBody = JSON.parse(req.body);
     const {engine, model, messages} = reqBody;
     const {chatName, userId} = reqBody.params;
+    const supabase = supabaseInit(req);
+
     try {
         const [engineResp, modelResp, chatResp, roleResp, userIdResp] = await Promise.all([
             supabase.from('engines').select('id').eq('engine_name', engine),
