@@ -24,7 +24,7 @@ const MessagesBlock: React.FC = () => {
     const numOfMessages = useRef<number>(-1);
     const {messages} = useContext(ChatContext);
     useEffect(() => {
-        if (chatBlockRef?.current && numOfMessages.current <= messages.length) {
+        if (chatBlockRef?.current && numOfMessages.current < messages.length) {
             chatBlockRef.current.scrollTop = chatBlockRef.current.scrollHeight;
         }
         numOfMessages.current = messages.length;
