@@ -61,7 +61,7 @@ class ContextEngine {
     }
 
     updateAll(messages: IEngineMessage[]) {
-        this.context = [...messages];
+        this.context = messages.length ? [...messages] : [];
         return this.context;
     }
 
