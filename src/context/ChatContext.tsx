@@ -106,7 +106,7 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
                 const fetchedMessages = await supabaseGet({url: url.search, authUser});
                 setMessages(fetchedMessages);
                 setAskInProgress(false);
-            }, 50);
+            }, 100);
 
 
         };
