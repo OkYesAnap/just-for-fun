@@ -68,16 +68,16 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const [lang, setLang] = useState<string>('');
     const [askInProgress, setAskInProgress] = useState(false);
     const [showClearModal, setShowClearModal] = useState(false);
-    const url = useRef<URL>(new URL(window.location.href));
     const requestDebounce = useRef<ReturnType<typeof setTimeout> | null>(null);
     const {authUser} = useContext(AuthContext) || "unlogged";
     const [imageBase64, setImageBase64] = useState<string>('');
 
     const {initialEngine, initialModel, initialChatName} = useMemo(() => {
+        const url = new URL(window.location.href);
         return {
-            initialEngine: url.current.searchParams.get("engine") as Engines || Engines.GPT,
-            initialModel: url.current.searchParams.get("model") as ModelTypes || Models.gpt[0],
-            initialChatName: url.current.pathname.split("/")[1],
+            initialEngine: url.searchParams.get("engine") as Engines || Engines.GPT,
+            initialModel: url.searchParams.get("model") as ModelTypes || Models.gpt[0],
+            initialChatName: url.pathname.split("/")[1],
         };
     }, []);
 
@@ -87,10 +87,14 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const [chatName, setChatName] = useState<string>(initialChatName);
 
     useEffect(() => {
-        url.current.searchParams.set('engine', engine);
-        url.current.searchParams.set('model', model);
-        url.current.searchParams.set('chat', chatName);
-        url.current.searchParams.set('user_id', authUser.user?.id || "unlogged");
+        const url = new URL(window.location.href);
+        const params = url.searchParams;
+        params.set('engine', engine);
+        params.set('model', model);
+        params.set('chat', chatName);
+
+        const newUrl = `${url.origin}${url.pathname}?${params.toString()}`;
+        window.history.replaceState({}, '', newUrl);
 
         if (authUser.user?.id === "unlogged" || !authUser.isAuthenticated) return;
         const fetchMessages = async () => {
@@ -99,7 +103,7 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
             }
             requestDebounce.current = setTimeout(async () => {
                 setAskInProgress(true);
-                const fetchedMessages = await supabaseGet({url: url.current.search, authUser});
+                const fetchedMessages = await supabaseGet({url: url.search, authUser});
                 setMessages(fetchedMessages);
                 setAskInProgress(false);
             }, 50);
