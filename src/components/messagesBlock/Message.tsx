@@ -44,13 +44,14 @@ export const MessageBlockStyled = styled.div<MessageBlockStyledProps>`
 const Message: React.FC<MessageProps> = ({i, message}) => {
 
     const messageRef = useRef<HTMLDivElement>(null);
-
+    const content = message.content.toString();
+    const text = content.startsWith("```") ? `\n${content}` : content;
     return (<MessageBlockStyled
         ref={messageRef}
         $role={message.role}
         $engine={message.engine}>
         <MessageHeader {...{i, message, messageRef}}/>
-        <MarkdownRenderer text={message.content as string} index={i}/>
+        <MarkdownRenderer text={text as string} index={i}/>
         {/*<div>_________________________________</div>*/}
         {/*{message.content}*/}
     </MessageBlockStyled>)

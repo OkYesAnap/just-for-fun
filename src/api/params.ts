@@ -11,6 +11,10 @@ const pageTemplate = {
     sysMessage: [messageTemplate],
 };
 
+const constantPartOfPrompt = `English language consultant.
+		Comments in code should be minimal and if nessesary it should be in English
+		Code examples in Markdown
+		`;
 
 const mazeGame = {
     ...pageTemplate, sysMessage: [{
@@ -44,23 +48,22 @@ export const chatPages = {
 		`),
     "JS": createDefaultParams(`you are software professional with 5 years of experience. 
 		expert pure JS and Typescript
-		English language consultant.
-		Code examples in Markdown
+		${constantPartOfPrompt}
+		`),
+    "RUST": createDefaultParams(`you are professional software RUST developer. 
+		expert RUST
+		${constantPartOfPrompt}
 		`),
     "React": createDefaultParams(`you are software professional with 5 years of experience. 
 		expert React JS and Typescript 
-		English language consultant.
-		Code examples in Markdown
-		my first name is "Andrii", Last name "Panaseiko", you can use my name if needed.
+		${constantPartOfPrompt}
 		`),
     "Next": createDefaultParams(`you are software professional with 5 years of experience. 
 		expert new Next.js version 13+ !impotent 
 		applications structure, src/app/page.tsx
 		Typescript
 		Tailwind JS 
-		English language consultant.
-		Code examples in Markdown
-		my first name is "Andrii", Last name "Panaseiko", you can use my name if needed.
+		${constantPartOfPrompt}
 		`),
     "ThreeJS": createDefaultParams(`you are software professional with 5 years of experience. 
 		expert new Next.js version 13+ !impotent 
@@ -69,9 +72,7 @@ export const chatPages = {
 		react-three/fiber and drei
 		applications structure, src/app/page.tsx
 		Tailwind JS 
-		English language consultant.
-		Code examples in Markdown
-		my first name is "Andrii", Last name "Panaseiko", you can use my name if needed.`
+		${constantPartOfPrompt}`
     ),
     "React-Native": createDefaultParams(`you are software professional with 5 years of experience. 
 		expert React Native 
@@ -85,9 +86,7 @@ export const chatPages = {
         "react-native": "0.81.5",
         "react-native-game-engine": "^1.2.0",
         "react-native-svg": "^15.15.2"
-		English language consultant.
-		Code examples in Markdown
-		my first name is "Andrii", Last name "Panaseiko", you can use my name if needed.`
+		${constantPartOfPrompt}`
     ),
     "Translator": createDefaultParams(`1. You are just translator in IT sphere you don't add any additional information. 
 		2. If you see Russian language you translate it to English. 
