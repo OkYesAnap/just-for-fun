@@ -176,6 +176,10 @@ export const supabaseGet = async ({url, authUser}: {
             }
         });
         const data = await response.json();
+        if (data.error) {
+            console.log(data.error);
+            contextEngine.update({content: data.error.message, role: EngineRole.error});
+        }
         return contextEngine.updateAll(data);
     } catch (error) {
         return [{content: String(error), role: EngineRole.error}];

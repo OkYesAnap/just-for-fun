@@ -13,18 +13,30 @@ export interface UseAuthReturn {
 export function useAuth(): UseAuthReturn {
     const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | undefined>(undefined);
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
     useEffect(() => {
-        supabase.auth.getSession().then(({data: {session}}) => {
-            setToken(session?.access_token);
-            setUser(session?.user ?? null);
-        });
+        const {data: {subscription}} = supabase.auth.onAuthStateChange((event, session) => {
+            if (session) {
+                setUser(session.user ?? null)
+                setToken(session.access_token)
+                setIsAuthenticated(true)
+            } else {
+                setUser(null)
+                setToken(undefined)
+                setIsAuthenticated(false)
+            }
+        })
+
+        return () => {
+            subscription.unsubscribe()
+        }
     }, []);
 
     return {
         user,
         token,
-        isAuthenticated: !!user,
+        isAuthenticated: isAuthenticated,
         signIn: () => supabase.auth.signInWithOAuth({provider: 'google'}),
         signOut: () => supabase.auth.signOut(),
     }

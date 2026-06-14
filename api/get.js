@@ -45,7 +45,7 @@ module.exports = async (req, res) => {
 
         if (error) {
             console.error('Supabase error:', error);
-            return res.status(500).json({error: 'Error fetching data'})
+            return res.status(500).json({error})
         }
 
         return res.status(200).json(data)
