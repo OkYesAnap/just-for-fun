@@ -57,7 +57,8 @@ const MessageHeader: React.FC<MessageRefProps> = ({i, message, messageRef}) => {
     return (
         <div>
             {(isValidRole || isInProgress) && <EnginePrefix {...{message}}/>}
-            {!isInProgress && <CopyIcon ref={copyIconRef} cursor="pointer" onClick={handleCopy}/>}
+            {!isInProgress &&
+                <CopyIcon style={{fill: "white"}} ref={copyIconRef} cursor="pointer" onClick={handleCopy}/>}
             {!isInProgress &&
                 <DeleteIcon style={{opacity: isDeleting ? 0.5 : 1}} cursor="pointer" onClick={handleDeleteMessage}/>}
             {isRepeatAvailable && !isInProgress && <RepeatIcon cursor="pointer" onClick={handleRepeat}/>}
