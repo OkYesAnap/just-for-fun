@@ -8,6 +8,10 @@ import TestPage from "../../pages/TestPage";
 import Error404 from "../../pages/Error404";
 import React, {useContext} from "react";
 import {AuthContext} from "../../context/AuthContext";
+import {ChatContext} from "../../context/ChatContext";
+import Overlay from "../overlay/Overlay";
+
+
 // import params4 from "../../api/params4";
 
 const LoginRoutes = () => {
@@ -15,9 +19,11 @@ const LoginRoutes = () => {
     // const {gpt4} = params4;
     const pages = Object.entries(chatPages);
     const {authUser} = useContext(AuthContext);
+    const {isGettingAllChat} = useContext(ChatContext);
     const isAuthenticated = authUser?.isAuthenticated;
     return (
         <BrowserRouter>
+            {isGettingAllChat && <Overlay/>}
             {<GoogleLogin/>}
             {isAuthenticated && <Routes>
                 {pages.map(([key, value]) => (

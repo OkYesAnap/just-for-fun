@@ -40,6 +40,8 @@ interface ChatContextType {
     setLang: Dispatch<SetStateAction<string>>;
     askInProgress: boolean;
     setAskInProgress: Dispatch<SetStateAction<boolean>>;
+    isGettingAllChat: boolean;
+    setIsGettingAllChat: Dispatch<SetStateAction<boolean>>;
     showClearModal: boolean;
     setShowClearModal: Dispatch<SetStateAction<boolean>>;
     engine: Engines;
@@ -67,6 +69,7 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const [googleRecognizerAvailable, setGoogleRecognizerAvailable] = useState<boolean>(true);
     const [lang, setLang] = useState<string>('');
     const [askInProgress, setAskInProgress] = useState(false);
+    const [isGettingAllChat, setIsGettingAllChat] = useState(false);
     const [showClearModal, setShowClearModal] = useState(false);
     const url = useRef<URL>(new URL(window.location.href));
     const requestDebounce = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -97,10 +100,10 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
                 clearTimeout(requestDebounce.current);
             }
             requestDebounce.current = setTimeout(async () => {
-                setAskInProgress(true);
+                setIsGettingAllChat(true);
                 const fetchedMessages = await supabaseGet({url: url.current.search, authUser});
                 setMessages(fetchedMessages);
-                setAskInProgress(false);
+                setIsGettingAllChat(false);
             }, 50);
         };
         fetchMessages();
@@ -126,6 +129,7 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
         googleRecognizerAvailable, setGoogleRecognizerAvailable,
         lang, setLang,
         askInProgress, setAskInProgress,
+        isGettingAllChat, setIsGettingAllChat,
         showClearModal, setShowClearModal,
         chatName, setChatName,
         engine, setEngine,
@@ -145,6 +149,7 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
         googleRecognizerAvailable,
         lang,
         askInProgress,
+        isGettingAllChat,
         showClearModal,
         engine,
         model,
