@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React from 'react';
 import {IEngineMessage} from '../api/gptApi';
 import '../App.css';
 import {useGoogleRecognition} from "../hooks/useGoogleRecongnition";
@@ -9,7 +9,6 @@ import MessagesBlock from "../components/messagesBlock/MessagesBlock";
 import InputBlock from "../components/inputBlock/InputBlock";
 import EngineHeader from "../components/header/Header";
 import {ChatContext} from "../context/ChatContext";
-import {AuthContext} from "../context/AuthContext";
 
 
 export interface ChatPageProps {
@@ -19,15 +18,10 @@ export interface ChatPageProps {
     sysMessage: IEngineMessage[]
 }
 
-const ChatPage: React.FC<ChatPageProps> = (params) => {
-    const {setParams, askInProgress} = React.useContext(ChatContext);
-    const {authUser} = useContext(AuthContext);
+const ChatPage: React.FC = () => {
+    const {askInProgress} = React.useContext(ChatContext);
     useGoogleRecognition();
     useVoiceRecorder();
-
-    useEffect(() => {
-        setParams({...params, userId: authUser.user?.id || ""});
-    }, [setParams, params, authUser.user?.id]);
 
     return (
         <>
