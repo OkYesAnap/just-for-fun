@@ -102,6 +102,7 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
             requestDebounce.current = setTimeout(async () => {
                 setIsGettingAllChat(true);
                 const fetchedMessages = await supabaseGet({url: url.current.search, authUser});
+                console.log('fetchedMessages', fetchedMessages);
                 setMessages(fetchedMessages);
                 setIsGettingAllChat(false);
             }, 50);
