@@ -82,15 +82,6 @@ const InputBlock: React.FC = () => {
                 if (blob) {
                     const base64 = await fileToBase64(blob);
                     setImageBase64(base64);
-                    console.log({
-                        content: [
-                            {
-                                type: 'input_file',
-                                filename: 'pasted-image.png',
-                                file_data: base64,
-                            },
-                        ],
-                    });
                 }
                 return; // Skip to next item if needed
             }

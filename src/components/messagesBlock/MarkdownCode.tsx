@@ -37,8 +37,6 @@ const MarkdownCode: React.FC<{ mdItem: string }> = ({mdItem}) => {
 
     const handleCopy = () => {
         if (codeTextRef.current?.textContent) {
-            console.log(codeTextRef.current || '');
-
             navigator.clipboard.writeText(codeTextRef.current.textContent || '');
             const animateClick = copyIconRef?.current?.getElementsByTagName('animateTransform')[0];
             if (animateClick) {
