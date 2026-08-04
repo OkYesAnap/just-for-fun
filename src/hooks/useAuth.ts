@@ -48,7 +48,7 @@ export function useAuth(setAuthRequest: Dispatch<SetStateAction<boolean>>): UseA
             setAuthRequest(false);
         }
         setShouldRefreshToken(false);
-    }, [shouldRefreshToken]);
+    }, [setAuthRequest, shouldRefreshToken]);
 
     return {
         user,
