@@ -57,7 +57,6 @@ interface ChatContextType {
 export const ChatContext = createContext<ChatContextType>(null!);
 
 const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
-    const {authRequest} = useContext(AuthContext);
     const [text, setText] = useState('');
     const [draftText, setDraftText] = useState('');
     const [messages, setMessages] = useState<IEngineMessage[]>([]);
@@ -94,7 +93,7 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
         srchParams.set('engine', engine);
         srchParams.set('model', model);
         srchParams.set('chat', chatName);
-        if (authUser.user?.id === "unlogged" || !authUser.isAuthenticated || authRequest) return;
+        if (authUser.user?.id === "unlogged" || !authUser.isAuthenticated) return;
         const fetchMessages = async () => {
             if (requestDebounce.current) {
                 clearTimeout(requestDebounce.current);
@@ -109,7 +108,7 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
         fetchMessages();
         const newUrl = `${window.location.pathname}?${srchParams.toString()}`;
         window.history.pushState({}, '', newUrl);
-    }, [authRequest, engine, model, chatName, authUser, authUser.user?.id, authUser.isAuthenticated]);
+    }, [engine, model, chatName, authUser, authUser.user?.id, authUser.isAuthenticated]);
 
     const startListenVoice = (lang: string) => {
         setLang(lang);

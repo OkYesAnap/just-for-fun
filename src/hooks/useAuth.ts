@@ -1,4 +1,4 @@
-import {Dispatch, SetStateAction, useEffect, useRef, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {supabase} from '../supabaseClient'
 import type {AuthError, OAuthResponse, User} from '@supabase/supabase-js'
 
@@ -10,7 +10,7 @@ export interface UseAuthReturn {
     signOut: () => Promise<{ error: AuthError | null }>
 }
 
-export function useAuth(setAuthRequest: Dispatch<SetStateAction<boolean>>): UseAuthReturn {
+export function useAuth(): UseAuthReturn {
     const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | undefined>(undefined);
     const [shouldRefreshToken, setShouldRefreshToken] = useState(true);
@@ -40,15 +40,13 @@ export function useAuth(setAuthRequest: Dispatch<SetStateAction<boolean>>): UseA
     useEffect(() => {
         setShouldRefreshToken(tokenTimer.current === null);
         if (shouldRefreshToken) {
-            setAuthRequest(true);
             supabase.auth.getSession().then(({data: {session}}) => {
                 setToken(session?.access_token);
                 setUser(session?.user ?? null);
             });
-            setAuthRequest(false);
         }
         setShouldRefreshToken(false);
-    }, [setAuthRequest, shouldRefreshToken]);
+    }, [shouldRefreshToken]);
 
     return {
         user,

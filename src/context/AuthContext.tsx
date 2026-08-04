@@ -3,17 +3,14 @@ import useAuth, {UseAuthReturn} from "../hooks/useAuth";
 
 interface AuthContextType {
     authUser: UseAuthReturn;
-    authRequest: boolean
 }
 
 export const AuthContext = createContext<AuthContextType>(null!);
 
 const AuthContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
-    const [authRequest, setAuthRequest] = React.useState<boolean>(false);
-    const authUser = useAuth(setAuthRequest);
+    const authUser = useAuth();
 
     const contextValue = {
-        authRequest,
         authUser
     };
 
