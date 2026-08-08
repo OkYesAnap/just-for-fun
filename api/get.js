@@ -36,14 +36,14 @@ module.exports = async (req, res) => {
                 ]);
         }
 
-        if (chats.data?.length === 0) {
+        if (innerUserId.data?.length === 0) {
             const {usersData, dataError} = await supabase
                 .from('users')
                 .insert([
-                    {user_id: innerUserId}
+                    {user_id: userId}
                 ]);
         }
-        
+
         const {data, error} = await supabase
             .from('get_messages')
             .select(`*`)
