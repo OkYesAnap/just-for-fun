@@ -5,13 +5,14 @@ module.exports = async (req, res) => {
     const engine = urlObj.searchParams.get('engine');
     const model = urlObj.searchParams.get('model');
     const chat = urlObj.searchParams.get('chat');
-
+    const userId = urlObj.searchParams.get('userId');
     const supabase = supabaseInit(req);
     try {
-        const [engines, models, chats] = await Promise.all([
+        const [engines, models, chats, innerUserId] = await Promise.all([
             supabase.from('engines').select('*').eq('engine_name', engine),
             supabase.from('models').select('*').eq('model_name', model),
-            supabase.from('chats').select('*').eq('chat_name', chat)
+            supabase.from('chats').select('*').eq('chat_name', chat),
+            supabase.from('users').select('*').eq('user_id', userId),
         ]);
         if (engines.data?.length === 0) {
             const {engineData, dataError} = await supabase
@@ -35,12 +36,21 @@ module.exports = async (req, res) => {
                 ]);
         }
 
+        if (chats.data?.length === 0) {
+            const {usersData, dataError} = await supabase
+                .from('users')
+                .insert([
+                    {user_id: innerUserId}
+                ]);
+        }
+        
         const {data, error} = await supabase
             .from('get_messages')
             .select(`*`)
             .eq("engine", engine)
             .eq("model", model)
             .eq("chat", chat)
+            .eq("user_id", userId)
             .order('id');
 
         if (error) {

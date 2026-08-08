@@ -169,7 +169,7 @@ export const supabaseGet = async ({url, authUser}: {
     authUser: UseAuthReturn
 }): Promise<IEngineMessage[]> => {
     try {
-        const response = await fetch(`/api/get${url}`, {
+        const response = await fetch(`/api/get${url}&userId=${authUser.user?.id}`, {
             method: "GET",
             headers: {
                 'Authorization': `Bearer ${authUser?.token}`
