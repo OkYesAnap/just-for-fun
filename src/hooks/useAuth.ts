@@ -1,13 +1,13 @@
 import {useEffect, useRef, useState} from 'react'
 import {supabase} from '../supabaseClient'
-import type {AuthError, OAuthResponse, User} from '@supabase/supabase-js'
+import type {OAuthResponse, User} from '@supabase/supabase-js'
 
 export interface UseAuthReturn {
     user: User | null
     token: string | undefined
     isAuthenticated: boolean
     signIn: () => Promise<OAuthResponse>
-    signOut: () => Promise<{ error: AuthError | null }>
+    signOut: () => void;
 }
 
 export function useAuth(): UseAuthReturn {
@@ -15,6 +15,11 @@ export function useAuth(): UseAuthReturn {
     const [token, setToken] = useState<string | undefined>(undefined);
     const [shouldRefreshToken, setShouldRefreshToken] = useState(true);
     const tokenTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const quit = async () => {
+        await supabase.auth.signOut();
+        setUser(null);
+    };
 
     document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') {
@@ -53,7 +58,7 @@ export function useAuth(): UseAuthReturn {
         token,
         isAuthenticated: !!user,
         signIn: () => supabase.auth.signInWithOAuth({provider: 'google'}),
-        signOut: () => supabase.auth.signOut(),
+        signOut: quit
     }
 }
 
