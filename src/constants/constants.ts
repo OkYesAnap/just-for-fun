@@ -32,13 +32,9 @@ export enum Engines {
 }
 
 export type ModelTypes = 'gpt-5' |
-    'gpt-5-mini' |
-    'gpt-5-nano' |
-    'gpt-5-chat-latest' |
-    'gpt-5-codex' |
-    'gpt-5-pro' |
-    'gpt-4.1' |
-    'gpt-4.1-mini' |
+    'gpt-5.4-mini' |
+    'gpt-5.4-nano' |
+    'gpt-5.4-pro' |
     'gpt-4.1-nano' |
     'deepseek-v4-flash' |
     'deepseek-v4-pro' |
@@ -51,14 +47,9 @@ type EngineModelsType = {
 export const Models: EngineModelsType = {
     [Engines.GPT]: [
         'gpt-4.1-nano',
-        'gpt-5-nano',
-        'gpt-4.1',
-        'gpt-5',
-        'gpt-4.1-mini',
-        'gpt-5-mini',
-        'gpt-5-codex',
-        'gpt-5-chat-latest',
-        'gpt-5-pro',
+        'gpt-5.4-nano',
+        'gpt-5.4-mini',
+        'gpt-5.4-pro',
     ],
     [Engines.DEEP_SEEK]: ['deepseek-v4-flash', 'deepseek-v4-pro']
 };
