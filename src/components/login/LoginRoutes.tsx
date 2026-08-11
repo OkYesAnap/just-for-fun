@@ -11,12 +11,8 @@ import {AuthContext} from "../../context/AuthContext";
 import {ChatContext} from "../../context/ChatContext";
 import Overlay from "../overlay/Overlay";
 
-
-// import params4 from "../../api/params4";
-
 const LoginRoutes = () => {
     const {mazeGame} = params;
-    // const {gpt4} = params4;
     const pages = Object.entries(chatPages);
     const {authUser} = useContext(AuthContext);
     const {isGettingAllChat} = useContext(ChatContext);
@@ -29,7 +25,6 @@ const LoginRoutes = () => {
                 {pages.map(([key, value]) => (
                     <Route key={key} path={`/${key}`} element={<ChatPage/>}/>
                 ))}
-                {/*<Route path="/gpt-chat-4" element={<ChatPage {...{...gpt4, chatName: 'gpt-chat-4'}}/>}/>*/}
                 <Route path="/" element={<Navigate to={Object.keys(chatPages)[0]}/>}/>
                 <Route path="/main" element={<Main/>}/>
                 <Route path="/maze-game" element={<MazeGame {...mazeGame}/>}/>

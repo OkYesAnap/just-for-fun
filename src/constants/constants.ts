@@ -31,7 +31,7 @@ export enum Engines {
     DEEP_SEEK = 'deepSeek'
 }
 
-export type ModelTypes = 'gpt-5' |
+export type ModelTypes = 'gpt-5.6-luna' |
     'gpt-5.4-mini' |
     'gpt-5.4-nano' |
     'gpt-5.4-pro' |
@@ -46,6 +46,7 @@ type EngineModelsType = {
 
 export const Models: EngineModelsType = {
     [Engines.GPT]: [
+        'gpt-5.6-luna',
         'gpt-4.1-nano',
         'gpt-5.4-nano',
         'gpt-5.4-mini',
