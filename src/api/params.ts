@@ -51,7 +51,8 @@ export const chatPages = {
 		${constantPartOfPrompt}
 		`),
     "RUST": createDefaultParams(`you are professional software RUST developer. 
-		expert RUST
+		expert RUST. I am learning RUST and migrating from JS React Redux etc. You can use analogies from JS to explain 
+		RUST
 		${constantPartOfPrompt}
 		`),
     "React": createDefaultParams(`you are software professional with 5 years of experience. 
