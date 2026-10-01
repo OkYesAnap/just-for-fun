@@ -11,6 +11,7 @@ import ModelChanger from "./ModelChanger";
 import {contextEngine, EngineRole} from "../../api/gptApi";
 import {useAskEngine} from "../../hooks/useAskEngine";
 import Base64Image from "../image/Base64Image";
+import {useIsMobile} from "../../hooks/useIsMobile";
 
 const InputBlockStyled = styled.div`
     position: fixed;
@@ -55,6 +56,9 @@ const InputBlock: React.FC = () => {
         setImageBase64
     } = useContext(ChatContext);
     const hasText = !!text.trim().length;
+
+    const isMobile = useIsMobile();
+
 
     useLayoutEffect(() => {
         setTextAreaActualHeight(textAreaRef);
@@ -173,7 +177,7 @@ const InputBlock: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                <VoiceInput/>
+                {!isMobile && <VoiceInput/>}
             </InfoAreaStyled>
             <TextAreaStyled value={text} ref={textAreaRef}
                             onPaste={(e) => e.preventDefault()}
