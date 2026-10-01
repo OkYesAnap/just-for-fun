@@ -52,6 +52,8 @@ interface ChatContextType {
     setParams: Dispatch<SetStateAction<ChatPageProps>>;
     imageBase64: string;
     setImageBase64: Dispatch<SetStateAction<string>>;
+    errorMessage: string | null;
+    setErrorMessage: Dispatch<SetStateAction<string | null>>;
 }
 
 export const ChatContext = createContext<ChatContextType>(null!);
@@ -74,6 +76,7 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const requestDebounce = useRef<ReturnType<typeof setTimeout> | null>(null);
     const {authUser} = useContext(AuthContext) || "unlogged";
     const [imageBase64, setImageBase64] = useState<string>('');
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const {initialEngine, initialModel, initialChatName} = useMemo(() => {
         return {
@@ -100,9 +103,15 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
             }
             requestDebounce.current = setTimeout(async () => {
                 setIsGettingAllChat(true);
-                const fetchedMessages = await supabaseGet({url: url.current.search, authUser});
-                setMessages(fetchedMessages);
-                setIsGettingAllChat(false);
+                try {
+                    const fetchedMessages = await supabaseGet({url: url.current.search, authUser});
+                    setMessages(fetchedMessages);
+                } catch (error) {
+                    const errorMessage = error instanceof Error ? error.message : "Failed to load messages from Supabase";
+                    setErrorMessage(errorMessage);
+                } finally {
+                    setIsGettingAllChat(false);
+                }
             }, 50);
         };
         fetchMessages();
@@ -134,7 +143,8 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
         engine, setEngine,
         model, setModel,
         params, setParams,
-        imageBase64, setImageBase64
+        imageBase64, setImageBase64,
+        errorMessage, setErrorMessage
     }), [
         text,
         draftText,
@@ -153,7 +163,8 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
         engine,
         model,
         params,
-        imageBase64
+        imageBase64,
+        errorMessage
     ]);
 
     return (

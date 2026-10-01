@@ -9,6 +9,7 @@ import MessagesBlock from "../components/messagesBlock/MessagesBlock";
 import InputBlock from "../components/inputBlock/InputBlock";
 import EngineHeader from "../components/header/Header";
 import {ChatContext} from "../context/ChatContext";
+import ErrorWarning from "../components/errorWarning/ErrorWarning";
 
 
 export interface ChatPageProps {
@@ -19,12 +20,13 @@ export interface ChatPageProps {
 }
 
 const ChatPage: React.FC = () => {
-    const {askInProgress} = React.useContext(ChatContext);
+    const {askInProgress, errorMessage, setErrorMessage} = React.useContext(ChatContext);
     useGoogleRecognition();
     useVoiceRecorder();
 
     return (
         <>
+            <ErrorWarning message={errorMessage} onClear={() => setErrorMessage(null)} />
             <EngineHeader/>
             <MessagesBlock/>
             {!askInProgress && <InputBlock/>}
