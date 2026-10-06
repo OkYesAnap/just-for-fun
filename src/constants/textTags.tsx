@@ -10,6 +10,7 @@ export const TAG = {
     headFour: '\n#### ',
     headFive: '\n##### ',
     headSix: '\n###### ',
+    link: '[',
 };
 
 export const TEMP_TAGS = {
@@ -24,4 +25,5 @@ export const TEMP_TAGS = {
     [TAG.headFour]: '_HASH_FOUR_HEADER_',
     [TAG.headFive]: '_HASH_FIVE_HEADER_',
     [TAG.headSix]: '_HASH_SIX_HEADER_',
+    [TAG.link]: '_LINK_',
 };

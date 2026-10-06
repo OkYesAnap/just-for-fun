@@ -5,6 +5,7 @@ import MarkdownBold from "./MarkdownBold";
 import MarkdownItalic from "./MarkdownItalic";
 import MarkdownCode from "./MarkdownCode";
 import MarkdownTable from "./MarkdownTable";
+import MarkdownLink from "./MarkdownLink";
 
 
 interface DataIndexes {
@@ -41,6 +42,10 @@ const BuildMdContentV2: React.FC<{ text: string }> = ({text}) => {
                         case TEMP_TAGS[TAG.code]: {
                             const mdItem = getData(data, dataIndexes, TAG.code);
                             return <MarkdownCode key={`code-${i}`}{...{mdItem}}/>
+                        }
+                        case TEMP_TAGS[TAG.link]: {
+                            const mdItem = getData(data, dataIndexes, TAG.link);
+                            return <MarkdownLink key={`link-${i}`}{...{mdItem}}/>
                         }
                         case TEMP_TAGS[TAG.table]: {
                             const mdItem = getData(data, dataIndexes, TAG.table);

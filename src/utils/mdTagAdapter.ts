@@ -27,6 +27,13 @@ const mdTagAdapter = (text: string): any => {
                 return (text.split(new RegExp(`(${tagPlaceholder})`, 'g')) || []);
             } else if (TAG[tag] === TAG.starThree) {
                 return text.split(TAG.starThree)
+            } else if (TAG[tag] === TAG.link) {
+                // Link: capture [text](url) pattern
+                text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, linkText, linkUrl) => {
+                    result.cuts[tagPlaceholder].push(`${linkText}|||${linkUrl}`);
+                    return tagPlaceholder;
+                });
+                return (text.split(new RegExp(`(${tagPlaceholder})`, 'g')) || []);
             } else if (TAG[tag].startsWith('\n#')) {
                 // Header tags: only capture content up to the next newline
                 const escaped = TAG[tag].replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
