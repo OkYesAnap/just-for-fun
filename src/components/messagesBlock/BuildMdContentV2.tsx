@@ -46,6 +46,30 @@ const BuildMdContentV2: React.FC<{ text: string }> = ({text}) => {
                             const mdItem = getData(data, dataIndexes, TAG.table);
                             return <MarkdownTable key={`bold-${i}`}{...{mdItem}}/>
                         }
+                        case TEMP_TAGS[TAG.headOne]: {
+                            const mdItem = getData(data, dataIndexes, TAG.headOne);
+                            return <h1 key={`h1-${i}`}>{mdItem}</h1>
+                        }
+                        case TEMP_TAGS[TAG.headTwo]: {
+                            const mdItem = getData(data, dataIndexes, TAG.headTwo);
+                            return <h2 key={`h2-${i}`}>{mdItem}</h2>
+                        }
+                        case TEMP_TAGS[TAG.headThree]: {
+                            const mdItem = getData(data, dataIndexes, TAG.headThree);
+                            return <h3 key={`h3-${i}`}>{mdItem}</h3>
+                        }
+                        case TEMP_TAGS[TAG.headFour]: {
+                            const mdItem = getData(data, dataIndexes, TAG.headFour);
+                            return <h4 key={`h4-${i}`}>{mdItem}</h4>
+                        }
+                        case TEMP_TAGS[TAG.headFive]: {
+                            const mdItem = getData(data, dataIndexes, TAG.headFive);
+                            return <h5 key={`h5-${i}`}>{mdItem}</h5>
+                        }
+                        case TEMP_TAGS[TAG.headSix]: {
+                            const mdItem = getData(data, dataIndexes, TAG.headSix);
+                            return <h6 key={`h6-${i}`}>{mdItem}</h6>
+                        }
                         default:
                             return <span key={i}>{val}</span>
                     }
