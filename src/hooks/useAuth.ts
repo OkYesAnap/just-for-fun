@@ -8,6 +8,7 @@ export interface UseAuthReturn {
     isAuthenticated: boolean
     signIn: () => Promise<OAuthResponse>
     signOut: () => void;
+    refetchToken: () => void;
 }
 
 export function useAuth(): UseAuthReturn {
@@ -19,6 +20,10 @@ export function useAuth(): UseAuthReturn {
     const quit = async () => {
         await supabase.auth.signOut();
         setUser(null);
+    };
+
+    const refetchToken = () => {
+        setShouldRefreshToken(true);
     };
 
     document.addEventListener('visibilitychange', () => {
@@ -58,7 +63,8 @@ export function useAuth(): UseAuthReturn {
         token,
         isAuthenticated: !!user,
         signIn: () => supabase.auth.signInWithOAuth({provider: 'google'}),
-        signOut: quit
+        signOut: quit,
+        refetchToken
     }
 }
 

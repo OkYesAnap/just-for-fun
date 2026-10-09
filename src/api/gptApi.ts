@@ -179,12 +179,16 @@ export const supabaseGet = async ({url, authUser}: {
         if (data.error) {
             console.log(data.error);
             if (data.error.message === "JWT expired") {
-                return contextEngine.get()
+                throw new Error("JWT expired");
             }
             contextEngine.update({content: data.error.message, role: EngineRole.error});
+            return contextEngine.get();
         }
         return contextEngine.updateAll(data);
     } catch (error) {
+        if (error instanceof Error && error.message === "JWT expired") {
+            throw error;
+        }
         return [{content: String(error), role: EngineRole.error}];
     }
 };

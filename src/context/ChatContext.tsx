@@ -107,8 +107,12 @@ const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
                     const fetchedMessages = await supabaseGet({url: url.current.search, authUser});
                     setMessages(fetchedMessages);
                 } catch (error) {
-                    const errorMessage = error instanceof Error ? error.message : "Failed to load messages from Supabase";
-                    setErrorMessage(errorMessage);
+                    const errorMessageText = error instanceof Error ? error.message : "Failed to load messages from Supabase";
+                    if (errorMessageText === "JWT expired") {
+                        // Try to refresh the token
+                        authUser.refetchToken();
+                    }
+                    setErrorMessage(errorMessageText);
                 } finally {
                     setIsGettingAllChat(false);
                 }
