@@ -1,6 +1,12 @@
 import {useEffect, useRef, useState} from 'react'
-import {supabase} from '../supabaseClient'
 import type {OAuthResponse, User} from '@supabase/supabase-js'
+import {createClient} from '@supabase/supabase-js'
+
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL!
+const supabaseAnonKey = process.env.REACT_APP_SUPABASE_API_KEY!
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
 
 export interface UseAuthReturn {
     user: User | null

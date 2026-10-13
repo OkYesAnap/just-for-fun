@@ -5,7 +5,7 @@ if (process.env.VERCEL_ENV !== 'production') {
 
 const {createClient} = require('@supabase/supabase-js');
 
-const API_KEY = process.env.SUPABASE_ANON_KEY || process.env.REACT_APP_SUPABASE_API_KEY;
+const API_KEY = process.env.REACT_APP_SUPABASE_API_KEY;
 ;
 const URL = process.env.REACT_APP_SUPABASE_URL;
 
