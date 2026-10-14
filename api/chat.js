@@ -32,7 +32,7 @@ const fetchAI = async (aiEngine, body) => {
     return await aiEngine.chat.completions.create(body);
 };
 
-const aiEngines = {
+const aiEngines = () => ({
     openAI: new OpenAI({
         apiKey: process.env.GPT_API_KEY || process.env.REACT_APP_GPT_API_KEY,
     }),
@@ -40,7 +40,7 @@ const aiEngines = {
         baseURL: 'https://api.deepseek.com',
         apiKey: process.env.DEEPSEEK_API_KEY || process.env.REACT_APP_DEEP_SEEK_API_KEY,
     })
-}
+});
 
 module.exports = async (req, res) => {
     if (req.method === 'POST') {
@@ -48,10 +48,10 @@ module.exports = async (req, res) => {
             const data = JSON.parse(req.body);
             let {messages, model, engine} = data;
             if (engine === 'gpt') {
-                engine = aiEngines.openAI;
+                engine = aiEngines().openAI;
                 messages = gptContentAdapter(messages);
             } else if (engine === 'deepSeek') {
-                engine = aiEngines.deepSeek;
+                engine = aiEngines().deepSeek;
             } else {
                 throw Error('No such engine');
             }
