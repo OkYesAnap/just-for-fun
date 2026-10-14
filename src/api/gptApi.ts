@@ -2,10 +2,10 @@ import engines from './engines.json';
 import {ApiKeyInstructions, Engines, ModelTypes} from "../constants/constants";
 import {UseAuthReturn} from "../hooks/useAuth";
 
-const keys = {
-    gpt: process.env.REACT_APP_GPT_API_KEY,
-    deepSeek: process.env.REACT_APP_DEEP_SEEK_API_KEY
-};
+// const keys = {
+//     gpt: process.env.REACT_APP_GPT_API_KEY,
+//     deepSeek: process.env.REACT_APP_DEEP_SEEK_API_KEY
+// };
 
 export enum EngineRole {
     assistant = "assistant",
@@ -203,7 +203,7 @@ export const sendAudioToServer = async (audioBlob: Blob) => {
         const response = await fetch(engines.gpt.audioUrl, {
             method: "POST",
             headers: {
-                "Authorization": "Bearer " + keys.gpt,
+                "Authorization": "Bearer " // + keys.gpt,
             },
             body: formData,
         });

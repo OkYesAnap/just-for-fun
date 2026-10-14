@@ -30,11 +30,11 @@ const fetchAI = async (aiEngine, body) => {
 
 const aiEngines = {
     openAI: new OpenAI({
-        apiKey: process.env.REACT_APP_GPT_API_KEY,
+        apiKey: process.env.REACT_APP_GPT_API_KEY || process.env.GPT_API_KEY,
     }),
     deepSeek: new OpenAI({
         baseURL: 'https://api.deepseek.com',
-        apiKey: process.env.REACT_APP_DEEP_SEEK_API_KEY,
+        apiKey: process.env.REACT_APP_DEEP_SEEK_API_KEY || process.env.DEEPSEEK_API_KEY,
     })
 }
 
