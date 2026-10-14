@@ -1,12 +1,10 @@
 if (process.env.VERCEL_ENV !== 'production') {
     require('dotenv').config({path: '.env.local'});
-    console.log(process.env.VERCEL_ENV);
 }
 
 const {createClient} = require('@supabase/supabase-js');
 
 const API_KEY = process.env.REACT_APP_SUPABASE_API_KEY;
-;
 const URL = process.env.REACT_APP_SUPABASE_URL;
 
 module.exports = (req = null) => {

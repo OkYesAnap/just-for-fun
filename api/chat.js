@@ -1,5 +1,9 @@
 const {OpenAI} = require('openai');
 
+if (process.env.VERCEL_ENV !== 'production') {
+    require('dotenv').config({path: '.env.local'});
+}
+
 const gptContentAdapter = (messages) => messages.map((item) => {
     if (item.imageBase64) {
         return {

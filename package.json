@@ -25,6 +25,7 @@
   },
   "scripts": {
     "start": "set PORT=3030 && react-scripts start",
+    "dev:vercel": "vercel dev",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -51,6 +52,7 @@
     ]
   },
   "devDependencies": {
+    "dotenv": "^16.6.1",
     "nodemon": "^3.1.11"
   }
 }
