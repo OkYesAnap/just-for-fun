@@ -41,6 +41,7 @@ const InfoAreaStyled = styled.div`
 
 const InputBlock: React.FC = () => {
     const textAreaRef = useRef<TextAreaRef>(null);
+    const lastCaretPosRef = useRef<{ start: number; end: number }>({ start: 0, end: 0 });
     const {engine, model, params} = useContext(ChatContext);
     const [showImage, setShowImage] = useState(false);
     const askEngine = useAskEngine(params);
@@ -58,6 +59,28 @@ const InputBlock: React.FC = () => {
     const hasText = !!text.trim().length;
 
     const isMobile = useIsMobile();
+
+    // Capture caret position on the textarea when selection changes
+    const handleSelect = () => {
+        const textarea = textAreaRef.current?.resizableTextArea?.textArea;
+        if (textarea) {
+            lastCaretPosRef.current = {
+                start: textarea.selectionStart,
+                end: textarea.selectionEnd
+            };
+        }
+    };
+
+    // Capture caret position when user presses keys (arrow keys, home/end, etc.)
+    const handleKeyUp: React.KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
+        const textarea = textAreaRef.current?.resizableTextArea?.textArea;
+        if (textarea && !e.ctrlKey && !e.altKey && !e.metaKey) {
+            lastCaretPosRef.current = {
+                start: textarea.selectionStart,
+                end: textarea.selectionEnd
+            };
+        }
+    };
 
 
     useLayoutEffect(() => {
@@ -90,16 +113,44 @@ const InputBlock: React.FC = () => {
                 return; // Skip to next item if needed
             }
         }
-        const text = e.clipboardData.getData('Text');
-        if (text) {
-            setText((prevText) => prevText + text + '\n');
+        const pastedText = e.clipboardData.getData('Text');
+        if (pastedText) {
+            // Use captured caret position from last selection/keypress, fallback to end of text
+            const caret = lastCaretPosRef.current;
+            const start = caret.start;
+            const end = caret.end;
+            const newContent = text.slice(0, start) + pastedText + text.slice(end);
+            const newCaretPos = start + pastedText.length;
+            setText(newContent);
+            // Restore caret position after React re-renders the textarea
+            requestAnimationFrame(() => {
+                const textarea = textAreaRef.current?.resizableTextArea?.textArea;
+                if (textarea) {
+                    textarea.focus();
+                    textarea.setSelectionRange(newCaretPos, newCaretPos);
+                }
+            });
         }
     };
 
     const handlePasteClick = async () => {
         try {
-            const text = await navigator.clipboard.readText();
-            setText((prevText) => prevText + text + '\n');
+            const pastedText = await navigator.clipboard.readText();
+            // Use captured caret position from last selection/keypress, fallback to end of text
+            const caret = lastCaretPosRef.current;
+            const start = caret.start;
+            const end = caret.end;
+            const newContent = text.slice(0, start) + pastedText + text.slice(end);
+            const newCaretPos = start + pastedText.length;
+            setText(newContent);
+            // Restore caret position after React re-renders the textarea
+            requestAnimationFrame(() => {
+                const textarea = textAreaRef.current?.resizableTextArea?.textArea;
+                if (textarea) {
+                    textarea.focus();
+                    textarea.setSelectionRange(newCaretPos, newCaretPos);
+                }
+            });
         } catch (err) {
             console.error('Error reading from clipboard!', err);
         }
@@ -182,7 +233,8 @@ const InputBlock: React.FC = () => {
             <TextAreaStyled value={text} ref={textAreaRef}
                             onPaste={(e) => e.preventDefault()}
                             disabled={(autoAsk && isListening) || askInProgress}
-                            onChange={onChangeTextAria} onKeyDown={handleEnterPress}/>
+                            onChange={onChangeTextAria} onKeyDown={handleEnterPress}
+                            onSelect={handleSelect} onKeyUp={handleKeyUp}/>
         </InputBlockStyled>)
 }
 
